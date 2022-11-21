@@ -35,7 +35,7 @@
 
 (in-package :nox) ;a.k.a. Wilbur
 
-(defun whitespace-char-p (char)
+(defun unicode-whitespace-char-p (char)
   "Return true if CHAR is a whitespace character.
 Argument CHAR has to be a character object."
   (declare (type character char))
@@ -52,10 +52,10 @@ with a single space character."
     (loop :for char :across string
 	  :with state = :start
 	  :do (cond ((eq state :parse)
-		     (if (whitespace-char-p char)
+		     (if (unicode-whitespace-char-p char)
 			 (setf state :space)
 		       (princ char stream)))
-		    ((not (whitespace-char-p char))
+		    ((not (unicode-whitespace-char-p char))
 		     ;; Found a non-whitespace character after skipping
 		     ;; a sequence of whitespace characters.
 		     (when (eq state :space)
