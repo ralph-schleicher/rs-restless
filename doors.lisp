@@ -43,6 +43,7 @@ DOORS Web Access provides an OSLC interface for the DOORS requirements
 management system."))
 
 (defmethod initialize-instance :after ((client doors-client) &rest arguments &key &allow-other-keys)
+  (declare (ignore arguments))
   ;; DOORS uses non-standard XML tags in the root services document.
   (setf (oauth-request-token-tag client)
 	"http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthRequestTokenUrl"
