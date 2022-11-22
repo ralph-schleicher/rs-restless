@@ -35,6 +35,9 @@
 
 (in-package :rs-restless)
 
+(defvar *oslc-trace* nil
+  "True means to trace OSLC HTTP requests.")
+
 (defparameter *oslc-namespaces*
   '(;; Dublin Core Metadata Initiative (DCMI) properties.
     ("dcterms" . "http://purl.org/dc/terms/")
@@ -192,8 +195,10 @@ Return the values of the Drakma HTTP request."
 	       :headers headers
 	       :accept accept
 	       arguments)
-      #+oslc-trace
-      (progn
+      (alexandria:when-let ((*trace-output* (cond ((streamp *oslc-trace*)
+						   *oslc-trace*)
+						  ((not (null *oslc-trace*))
+						   *trace-output*))))
 	(format *trace-output* "== REQUEST (OSLC) ======================~%")
 	(format *trace-output* (~ "Method: ~S~%"
 				  "URI: ~S~%"
