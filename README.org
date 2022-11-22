@@ -1,4 +1,4 @@
-# RESTless
+* RESTless
 
 A Common Lisp library for communicating with web services.
 
