@@ -243,14 +243,14 @@ Value is a list of URLs."))
      ;;   Requirements Management Service Provider Catalog Resource.
      ;;   See the OSLC Service Provider Catalog 1.0 specification and
      ;;   the OSLC Requirements Management Specification for details.
-     (iter (for triple :in (wilbur:query nil !"http://open-services.net/xmlns/rm/1.0/rmServiceProviders" nil))
+     (iter (for triple :in (wilbur:query nil (wilbur:node "http://open-services.net/xmlns/rm/1.0/rmServiceProviders") nil))
 	   (collect (wilbur:node-uri (wilbur:triple-object triple))))
      ;; As an alternative, find all service provider catalogs in the
      ;; requirements management domain.  This is the OSLC 2.0 way, I
      ;; suppose.
-     (iter (for triple :in (wilbur:query nil !rdf:type !oslc:ServiceProviderCatalog))
+     (iter (for triple :in (wilbur:query nil (wilbur:node "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") (wilbur:node "http://open-services.net/ns/core#ServiceProviderCatalog")))
 	   (for subject = (wilbur:triple-subject triple))
-	   (when (wilbur:query subject !oslc:domain !"http://open-services.net/ns/rm#")
+	   (when (wilbur:query subject (wilbur:node "http://open-services.net/ns/core#domain") (wilbur:node "http://open-services.net/ns/rm#"))
 	     (collect (wilbur:node-uri subject))))
      :test #'string=)))
 
@@ -271,7 +271,7 @@ cons cells."
 	     (make-branch (url title leafs)
 	       (list (cons url title) leafs))
 	     (node-title (subject)
-	       (let ((title (wilbur:query subject !"http://purl.org/dc/terms/title" nil)))
+	       (let ((title (wilbur:query subject (wilbur:node "http://purl.org/dc/terms/title") nil)))
 		 (when (= (length title) 1)
 		   ;; Value should be a string literal.
 		   (wilbur:triple-object (first title)))))
@@ -284,13 +284,13 @@ cons cells."
 		 (make-branch
 		  url (node-title (wilbur:node url))
 		  (nconc
-		   (iter (for triple :in (wilbur:query nil !rdf:type !oslc:ServiceProviderCatalog))
+		   (iter (for triple :in (wilbur:query nil (wilbur:node "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") (wilbur:node "http://open-services.net/ns/core#ServiceProviderCatalog")))
 			 (for subject = (wilbur:triple-subject triple))
 			 (for needle = (wilbur:node-uri subject))
 			 ;; Avoid infinite recursion.
 			 (unless (find needle haystack :test #'string=)
 			   (collect (browse-catalog needle))))
-		   (iter (for triple :in (wilbur:query nil !rdf:type !oslc:ServiceProvider))
+		   (iter (for triple :in (wilbur:query nil (wilbur:node "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") (wilbur:node "http://open-services.net/ns/core#ServiceProvider")))
 			 (for subject = (wilbur:triple-subject triple))
 			 (collect (make-leaf
 				   (wilbur:node-uri subject)
