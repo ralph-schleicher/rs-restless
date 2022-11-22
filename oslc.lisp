@@ -39,7 +39,7 @@
   '(;; Dublin Core Metadata Initiative (DCMI) properties.
     ("dcterms" . "http://purl.org/dc/terms/")
     ;; FOAF (friend of a friend) namespace.
-    ("foaf" . "http://http://xmlns.com/foaf/0.1/")
+    ("foaf" . "http://xmlns.com/foaf/0.1/")
     ;; Jazz Discovery Services XML namespace.
     ("jd" . "http://jazz.net/xmlns/prod/jazz/discovery/1.0/")
     ;; Jazz Foundation Services XML namespace.
