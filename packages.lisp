@@ -46,6 +46,7 @@
    #:P)
   (:export
    ;; drakma.lisp
+   #:trace-drakma-requests
    #:with-drakma-response
    ;; uri.lisp
    #:string-from-uri
