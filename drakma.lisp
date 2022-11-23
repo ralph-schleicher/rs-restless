@@ -38,6 +38,46 @@
 (eval-when (:load-toplevel :execute)
   (setf drakma:*drakma-default-external-format* :utf-8))
 
+(defun around-drakma-http-request (next-function request-uri &rest arguments)
+  (multiple-value-bind (body status-code headers effective-uri stream closep reason-phrase)
+      (apply next-function request-uri arguments)
+    (let ((method (or (getf arguments :method) :get))
+	  (parameters (getf arguments :parameters))
+	  (headers* (getf arguments :additional-headers))
+	  (cookie-jar (getf arguments :cookie-jar)))
+      (iter (for key :in '(:method :parameters :additional-headers :cookie-jar))
+	    (iter (while (remf arguments key))))
+      (format *trace-output* "== REQUEST =============================~%")
+      (format *trace-output* (~ "Method: ~S~%"
+				"URI: ~S~%"
+				"Parameters: ~S~%"
+				"Headers: ~S~%"
+				"Cookies: ~S~%"
+				"Other: ~S~%")
+	      method request-uri parameters headers* cookie-jar arguments)
+      (format *trace-output* "== RESPONSE ============================~%")
+      (format *trace-output* (~ "URI: ~S~%"
+				"Status: ~S, ~A~%"
+				"Headers: ~S~%")
+	      effective-uri status-code reason-phrase headers)
+      (format *trace-output* "== BODY ================================~%")
+      (format *trace-output* "~S~%" body)
+      (format *trace-output* "========================================~%"))
+    ;; Return values.
+    (values body status-code headers effective-uri stream closep reason-phrase)))
+
+(defun trace-drakma-requests (&optional (enable t))
+  "Enable or disable tracing of Drakma HTTP requests."
+  (cond (enable
+	 (unless (cl-advice:advisable-function-p #'drakma:http-request)
+	   (cl-advice:make-advisable 'drakma:http-request))
+	 (cl-advice:add-advice :around #'drakma:http-request
+			       'around-drakma-http-request))
+	(t
+	 (when (cl-advice:advisable-function-p #'drakma:http-request)
+	   (cl-advice:remove-advice :around #'drakma:http-request
+				    'around-drakma-http-request)))))
+
 (defmacro with-drakma-response ((&optional body-var status-code-var headers-var url-var reason-phrase-var) request &body forms)
   "Wrapper for a Drakma HTTP request.
 
