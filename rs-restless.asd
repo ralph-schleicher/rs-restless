@@ -42,6 +42,7 @@
   :version "α"
   :depends-on (:alexandria
 	       :iterate
+	       :cl-advice
 	       :drakma
 	       :puri
 	       :quri
