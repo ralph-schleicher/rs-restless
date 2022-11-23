@@ -35,9 +35,6 @@
 
 (in-package :rs-restless)
 
-(defvar *oslc-trace* nil
-  "True means to trace OSLC HTTP requests.")
-
 (defparameter *oslc-namespaces*
   '(;; Dublin Core Metadata Initiative (DCMI) properties.
     ("dcterms" . "http://purl.org/dc/terms/")
@@ -187,40 +184,13 @@ Return the values of the Drakma HTTP request."
   (iter (for key :in '(:client :parameters :headers :accept :oslc-core-version))
 	(iter (while (remf arguments key))))
   (with-oslc-defaults
-    (multiple-value-bind (body status-code headers* effective-uri stream closep reason-phrase)
-	(apply #'oauth1-http-request request-uri
-	       :client client
-	       :method method
-	       :parameters parameters
-	       :headers headers
-	       :accept accept
-	       arguments)
-      (alexandria:when-let ((*trace-output* (cond ((streamp *oslc-trace*)
-						   *oslc-trace*)
-						  ((not (null *oslc-trace*))
-						   *trace-output*))))
-	(format *trace-output* "== REQUEST (OSLC) ======================~%")
-	(format *trace-output* (~ "Method: ~S~%"
-				  "URI: ~S~%"
-				  "Parameters: ~S~%"
-				  "Headers: ~S~%"
-				  "Accept: ~S~%"
-				  "Cookies: ~S~%"
-				  "Other Keys: ~S~%")
-		method request-uri parameters headers accept
-		(oauth1-cookie-jar client) arguments)
-	(format *trace-output* "== RESPONSE (OSLC) =====================~%")
-	(format *trace-output* (~ "URI: ~S~%"
-				  "Status: ~S, ~S~%"
-				  "Headers: ~S~%"
-				  "Stream: ~S~%"
-				  "Close: ~S~%")
-		effective-uri status-code reason-phrase headers* stream closep)
-	(format *trace-output* "== BODY (OSLC) =========================~%")
-	(format *trace-output* "~S~%" body)
-	(format *trace-output* "========================================~%"))
-      ;; Return values.
-      (values body status-code headers* effective-uri stream closep reason-phrase))))
+    (apply #'oauth1-http-request request-uri
+	   :client client
+	   :method method
+	   :parameters parameters
+	   :headers headers
+	   :accept accept
+	   arguments)))
 
 (defgeneric oslc-service-provider-catalogs (source domain)
   (:documentation "Return all service provider catalogs for a domain.
