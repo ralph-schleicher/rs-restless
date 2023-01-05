@@ -56,6 +56,7 @@
 	       (:file "common")
 	       (:file "drakma")
 	       (:file "uri")
+	       (:file "yason")
 	       (:file "json")
 	       (:file "rdf")
 	       (:file "wilbur")

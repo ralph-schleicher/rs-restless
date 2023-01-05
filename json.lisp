@@ -42,21 +42,13 @@
 ;;      values ‘true’, ‘false’, and ‘null’ respectively.
 ;;
 ;;    * A JSON object is an alist with elements of the form
-;;      ‘(KEY . VALUE)’.
+;;      ‘(KEY . VALUE)’.  As a consequence, an empty JSON object
+;;      is represented by an empty list and vice versa.  There is
+;;      no need to discuss whether or not ‘nil’ means false or null.
 ;;
 ;;    * A JSON array is a vector.
 
 ;;; Code:
-
-(in-package :yason)
-
-(defmethod encode ((object (eql :true)) &optional (stream *standard-output*))
-  (write-string "true" stream)
-  object)
-
-(defmethod encode ((object (eql :false)) &optional (stream *standard-output*))
-  (write-string "false" stream)
-  object)
 
 (in-package :rs-restless)
 
@@ -95,12 +87,10 @@ are strings."
 (defun json-encode (data &optional (stream *standard-output*))
   "Print Lisp data as a JSON value.
 This is the inverse of the ‘json-decode’ function."
-  (let ((yason:*list-encoder* #'yason:encode-alist)
+  (let ((yason:*nil-encoder* #'yason:encode-list)
+        (yason:*list-encoder* #'yason:encode-alist)
         (yason:*symbol-key-encoder* #'symbol-name))
-    ;; FIXME: Indentation is only enabled for debugging purpose.
-    ;; Disable it when going to production for the sake of speed.
-    (with-open-stream (output (yason:make-json-output-stream stream :indent nil))
-      (yason:encode data output))))
+    (yason:encode data stream)))
 
 (defun json-encode-to-string (data)
   "Like ‘json-encode’ but return the output as a string."
