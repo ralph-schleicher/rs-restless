@@ -33,9 +33,9 @@
 
 ;;; Code:
 
-(in-package :common-lisp-user)
+(in-package :asdf-user)
 
-(asdf:defsystem :rs-restless
+(defsystem "rs-restless"
   :description "A Common Lisp library for communicating with web services."
   :author "Ralph Schleicher <rs@ralph-schleicher.de>"
   :license "Modified BSD License"
