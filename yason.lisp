@@ -33,12 +33,6 @@
 
 (in-package :yason)
 
-(export '*nil-encoder*)
-(defvar *nil-encoder* #'encode-null
-  "The actual function used to encode ‘nil’.
-Default is ‘encode-null’, but ‘encode-false’ or ‘encode-list’ may be
-appropriate, too.")
-
 (export 'encode-true)
 (defun encode-true (object &optional (stream *json-output*))
   "Constantly encode OBJECT as true."
@@ -62,14 +56,20 @@ appropriate, too.")
   "Encode OBJECT as a list by calling ‘*list-encoder*’."
   (funcall *list-encoder* object stream))
 
+(export '*nil-encoder*)
+(defvar *nil-encoder* #'encode-null
+  "The actual function used to encode ‘nil’.
+Default is ‘encode-null’, but ‘encode-false’ or ‘encode-list’ may be
+appropriate, too.")
+
+(defmethod encode ((object (eql nil)) &optional (stream *json-output*))
+  (funcall *nil-encoder* object stream))
+
 (defmethod encode ((object (eql :true)) &optional (stream *standard-output*))
   (encode-true object stream))
 
 (defmethod encode ((object (eql :false)) &optional (stream *standard-output*))
   (encode-false object stream))
-
-(defmethod encode ((object (eql nil)) &optional (stream *json-output*))
-  (funcall *nil-encoder* object stream))
 
 (defun encode-alist (object &optional (stream *json-output*))
   "Encode OBJECT (an alist) as a JSON object."
