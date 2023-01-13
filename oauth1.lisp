@@ -62,7 +62,8 @@
     :initform nil)
    (cookie-jar
     :accessor oauth1-cookie-jar
-    :initform (make-instance 'drakma:cookie-jar))))
+    :initform (make-instance 'drakma:cookie-jar)))
+  (:documentation "Base class for OAuth 1.0a clients."))
 
 (defun make-oauth1-client (&key (class 'oauth1-client) user-name password consumer-key secret-key)
   "Create an OAuth client."
