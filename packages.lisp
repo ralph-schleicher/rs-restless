@@ -65,6 +65,7 @@
    #:wilbur-parse-rdf/xml
    ;; oauth1.lisp
    #:make-oauth1-client
+   #:oauth1-client
    #:oauth1-user-name
    #:oauth1-password
    #:oauth1-consumer-key
@@ -78,6 +79,7 @@
    ;; oslc.lisp
    #:*oslc-client*
    #:make-oslc-client
+   #:oslc-client
    #:oslc-root-services-url
    #:oslc-invoke
    #:oslc-service-provider-catalogs
