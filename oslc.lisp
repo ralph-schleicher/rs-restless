@@ -107,7 +107,8 @@
     :initform "http://open-services.net/ns/core#authorizationURI")
    (oauth-access-token-tag
     :accessor oauth-access-token-tag
-    :initform "http://open-services.net/ns/core#oauthAccessTokenURI")))
+    :initform "http://open-services.net/ns/core#oauthAccessTokenURI"))
+  (:documentation "Base class for OSLC clients."))
 
 (defun make-oslc-client (base-url &rest arguments &key (class 'oslc-client) &allow-other-keys)
   "Create an OSLC client.
