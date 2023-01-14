@@ -1,0 +1,257 @@
+DE.RALPH-SCHLEICHER.RESTLESS
+
+A Common Lisp library for communicating with web services.
+
+The RESTless library provides convenience functions for HTTP
+requests/responses, URI handling, JSON encoding/decoding, RDF/XML
+parsing, OAuth 1.0a user authorization, OSLC clients, and more.
+
+                                                                         [Class]
+doors-client
+   DOORS Web Access client.
+
+   DOORS Web Access provides an OSLC interface for the DOORS requirements
+   management system.
+
+                                                                         [Class]
+oauth1-client
+   Base class for OAuth 1.0a clients.
+
+                                                                         [Class]
+oslc-client
+   Base class for OSLC clients.
+
+                                                              [Special Variable]
+*json-keyword-package*
+   Home package for the keys of JSON object members.
+   A value of ‘nil’ means that keys are strings.
+
+                                                              [Special Variable]
+*oslc-client*
+   The default OSLC client.
+
+                                                              [Special Variable]
+*rdf-triples*
+   Convenience variable for binding RDF triples.
+
+                                                                      [Function]
+browse-oslc-service-provider-catalog (url &optional (client *oslc-client*))
+   Browse an OSLC service provider catalog.
+
+   Value is a tree of service provider catalogs of the form
+
+        ((URL . TITLE) LEAFS)
+
+   The LEAFS is a list of subordinate service provider catalogs or
+   service providers.  A service provider has the form ‘(URL . TITLE)’.
+   Thus, service provider catalogs are lists and service providers are
+   cons cells.
+
+                                                                      [Function]
+json-decode (&optional (stream *standard-input*))
+   Read a JSON value and return it as Lisp data.
+
+                                                                      [Function]
+json-decode-from-string (string)
+   Like ‘json-decode’ but read the JSON value from STRING.
+
+                                                                      [Function]
+json-encode (data &optional (stream *standard-output*))
+   Print Lisp data as a JSON value.
+   This is the inverse of the ‘json-decode’ function.
+
+                                                                      [Function]
+json-encode-to-string (data)
+   Like ‘json-encode’ but return the output as a string.
+
+                                                                      [Function]
+json-object-key (name)
+   Return the JSON object key for the string NAME.
+   If the ‘*json-keyword-package*’ parameter is not null, keys for
+   JSON object members are symbols in that package.  Otherwise, keys
+   are strings.
+
+                                                                      [Function]
+make-oauth1-client (&key (class 'oauth1-client) user-name password consumer-key
+                    secret-key)
+   Create an OAuth client.
+
+                                                                      [Function]
+make-oslc-client (base-url &rest arguments &key (class 'oslc-client)
+                           &allow-other-keys)
+   Create an OSLC client.
+
+   The base URL must not end with a slash.
+
+                                                                        [Method]
+oauth1-access-token-url ((oauth1-client oauth1-client))
+   URL to obtain an access token.
+
+                                                                        [Method]
+oauth1-consumer-key ((oauth1-client oauth1-client))
+   Consumer key with the service provider.
+
+                                                                      [Function]
+oauth1-http-request (request-uri &rest arguments &key client unsigned
+                     (method get) parameters headers &allow-other-keys)
+   Issue an OAuth 1.0a authorized HTTP request.
+
+   First argument REQUEST-URI is the requested URI.
+   Keyword argument CLIENT is the OAuth client object.
+   If keyword argument UNSIGNED is true, the HTTP request will not use
+    the client's OAuth authentication credentials.  Otherwise, the HTTP
+    request will be signed and authorized – including a silent refresh in
+    case an authorization error occurs.
+   Keyword argument METHOD is the HTTP method, e.g. ‘:get’ or ‘:put’.
+   Keyword argument PARAMETERS is an alist of parameters.  The parameters
+    are usually added to the query part of the request URI.  However, for
+    a POST request, the parameters comprise the body of the request.
+   Keyword argument HEADERS is an alist of additional HTTP headers which
+    should be sent with the request.
+   Remaining keyword arguments are forwarded to the underlying Drakma
+    HTTP request.
+
+   Return the values of the Drakma HTTP request.
+
+                                                                        [Method]
+oauth1-password ((oauth1-client oauth1-client))
+   Password for the user authorization process.
+
+                                                                        [Method]
+oauth1-request-token-url ((oauth1-client oauth1-client))
+   URL to obtain an unauthorized request token.
+
+                                                                        [Method]
+oauth1-secret-key ((oauth1-client oauth1-client))
+   Consumer secret with the service provider.
+
+                                                                        [Method]
+oauth1-user-authorization-cleanup ((client oauth1-client))
+   Cleanup the OAuth user authorization process.
+
+                                                                        [Method]
+oauth1-user-authorization-setup ((client doors-client))
+   Setup the OAuth user authorization process.
+
+                                                                        [Method]
+oauth1-user-authorization-setup ((client oauth1-client))
+   Setup the OAuth user authorization process.
+
+                                                                        [Method]
+oauth1-user-authorization-url ((oauth1-client oauth1-client))
+   URL to authorize the request token by the user.
+
+                                                                        [Method]
+oauth1-user-name ((oauth1-client oauth1-client))
+   User name for the user authorization process.
+
+                                                                      [Function]
+oslc-invoke (method request-uri &rest arguments &key (client *oslc-client*)
+             parameters headers (accept application/rdf+xml)
+             (oslc-core-version 2.0) &allow-other-keys)
+   Invoke an OSLC REST method.
+
+   First argument METHOD is the HTTP method, e.g. ‘:get’ or ‘:put’.
+   Second argument REQUEST-URI is the REST API end point.
+   Keyword argument CLIENT is the OSLC client object.
+   If keyword argument UNSIGNED is true, the HTTP request will not use
+    the client's OAuth authentication credentials.  Otherwise, the HTTP
+    request will be signed and authorized – including a silent refresh in
+    case an authorization error occurs.
+   Keyword argument PARAMETERS is an alist of parameters.  The parameters
+    are usually added to the query part of the request URI.  However, for
+    a POST request, the parameters comprise the body of the request.
+   Keyword argument HEADERS is an alist of additional HTTP headers which
+    should be sent with the request.
+   If keyword argument ACCEPT is non-null, it specifies the contents of
+    the ‘Accept’ header.  Default is ‘application/rdf+xml’.
+   If keyword argument OSLC-CORE-VERSION is non-null, it specifies the
+    contents of the ‘OSLC-Core-Version’ header sent.  Default is ‘2.0’.
+   Remaining keyword arguments are forwarded to the underlying Drakma
+    HTTP request.
+
+   Return the values of the Drakma HTTP request.
+
+                                                                      [Function]
+oslc-root-services-url (&optional (client *oslc-client*))
+   Return the URL of the OSLC root services document.
+
+                                                                        [Method]
+oslc-service-provider-catalogs ((source db) (domain (eql rm)))
+   Return all service provider catalogs in the requirements management domain.
+
+                                                                        [Method]
+oslc-service-provider-catalogs ((source oslc-client) domain)
+   Return all service provider catalogs for a domain.
+
+   First argument SOURCE is the RDF database.
+   Second argument DOMAIN is the OSLC domain (a keyword).
+
+   Value is a list of URLs.
+
+                                                                      [Function]
+parse-rdf/xml (source &rest arguments)
+   Parse an RDF/XML document.
+
+   First argument SOURCE is the RDF/XML document; value has to be a
+    stream, a pathname, or a string.
+   Remaining arguments are passed to the ‘cl-rdfxml:parse-document’
+    function.
+
+   Value is a list of triples.
+
+                                                                        [Method]
+string-from-uri ((uri string))
+   Return the string representation of an URI.
+
+                                                                        [Method]
+string-from-uri ((uri uri))
+   Return the string representation of an URI.
+
+                                                                        [Method]
+string-from-uri ((uri uri))
+   Return the string representation of an URI.
+
+                                                                      [Function]
+trace-drakma-requests (&optional (enable t))
+   Enable or disable tracing of Drakma HTTP requests.
+
+                                                                      [Function]
+wilbur-add-namespaces (namespaces)
+   Announce namespaces to Wilbur.
+
+   Argument NAMESPACES is an alist with cons cells of the
+   form ‘(PREFIX . URI)’.
+
+                                                                      [Function]
+wilbur-parse-rdf/xml (source source-uri &key destination (parser cl-rdfxml))
+   Parse an RDF/XML document into a Wilbur database.
+
+   First argument SOURCE is the RDF/XML document; value has to be
+    a stream, a pathname, or a string.
+   Second argument SOURCE-URI is the URI of the RDF/XML document.
+    The source URI is only required if the RDF description element
+    has no ‘about’ attribute (TBC).
+   Keyword argument DESTINATION is the Wilbur database; ‘nil’ means
+    to create a new database.
+   Keyword argument PARSER is the RDF/XML parser.  Value is either
+    ‘:wilbur’ (the built-in Wilbur RDF/XML parser) or ‘:cl-rdfxml’.
+
+   Return value is the Wilbur database.
+
+                                                                         [Macro]
+with-drakma-response ((&optional body-var status-code-var headers-var url-var
+                       reason-phrase-var)
+                      request &body forms)
+   Wrapper for a Drakma HTTP request.
+
+   Optional arguments BODY-VAR, STATUS-CODE-VAR, HEADERS-VAR, URL-VAR,
+    and REASON-PHRASE-VAR are symbols for binding the corresponding
+    return value of the ‘drakma:http-request’ function; ‘nil’ means to
+    ignore the value.
+   Second argument REQUEST is any form returning the same values as a
+    ‘drakma:http-request’ function call.
+   Remaining arguments FORMS is the macro body.
+
+   If the body, i.e. the primary value, of the HTTP request is a stream,
+   the ‘with-drakma-response’ macro ensures that it will be closed.
