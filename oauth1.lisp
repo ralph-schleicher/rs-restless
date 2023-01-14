@@ -37,30 +37,39 @@
 
 (defclass oauth1-client ()
   ((user-name
+    :documentation "User name for the user authorization process."
     :accessor oauth1-user-name
     :initform nil)
    (password
+    :documentation "Password for the user authorization process."
     :accessor oauth1-password
     :initform nil)
    (consumer-key
+    :documentation "Consumer key with the service provider."
     :accessor oauth1-consumer-key
     :initform nil)
    (secret-key
+    :documentation "Consumer secret with the service provider."
     :accessor oauth1-secret-key
     :initform nil)
    (request-token-url
+    :documentation "URL to obtain an unauthorized request token."
     :accessor oauth1-request-token-url
     :initform nil)
    (user-authorization-url
+    :documentation "URL to authorize the request token by the user."
     :accessor oauth1-user-authorization-url
     :initform nil)
    (access-token-url
+    :documentation "URL to obtain an access token."
     :accessor oauth1-access-token-url
     :initform nil)
    (north-client
+    :documentation "North client object."
     :accessor oauth1-north-client
     :initform nil)
    (cookie-jar
+    :documentation "HTTP cookies; value is a Drakma ‘cookie-jar’ object."
     :accessor oauth1-cookie-jar
     :initform (make-instance 'drakma:cookie-jar)))
   (:documentation "Base class for OAuth 1.0a clients."))
