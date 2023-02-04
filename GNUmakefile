@@ -34,7 +34,7 @@
 ## Code:
 
 PACKAGE := rs-restless
-VERSION := $(shell cat version.text)
+VERSION := $(shell cat VERSION)
 TARNAME := $(PACKAGE)-$(VERSION)
 
 ### Rules

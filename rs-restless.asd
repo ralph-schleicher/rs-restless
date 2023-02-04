@@ -39,7 +39,7 @@
   :description "A Common Lisp library for communicating with web services."
   :author "Ralph Schleicher <rs@ralph-schleicher.de>"
   :license "Modified BSD License"
-  :version (:read-file-line "version.text")
+  :version (:read-file-line "VERSION")
   :depends-on (:alexandria
 	       :iterate
 	       :cl-advice
