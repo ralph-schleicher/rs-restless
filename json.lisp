@@ -69,32 +69,19 @@ are strings."
 
 (defun json-decode (&optional (stream *standard-input*))
   "Read a JSON value and return it as Lisp data."
-  (let ((data (yason:parse stream
-			   :object-as :alist
-			   :object-key-fn #'json-object-key
-			   :json-arrays-as-vectors t
-			   :json-booleans-as-symbols t
-			   :json-nulls-as-keyword t)))
-    (setf data (nsubst :true 'yason:true data :test #'eq))
-    (setf data (nsubst :false 'yason:false data :test #'eq))
-    data))
+  (rs-json:parse stream))
 
 (defun json-decode-from-string (string)
   "Like ‘json-decode’ but read the JSON value from STRING."
-  (with-input-from-string (stream string)
-    (json-decode stream)))
+  (rs-json:parse string))
 
 (defun json-encode (data &optional (stream *standard-output*))
   "Print Lisp data as a JSON value.
 This is the inverse of the ‘json-decode’ function."
-  (let ((yason:*nil-encoder* #'yason:encode-list)
-        (yason:*list-encoder* #'yason:encode-alist)
-        (yason:*symbol-key-encoder* #'symbol-name))
-    (yason:encode data stream)))
+  (rs-json:serialize stream data))
 
 (defun json-encode-to-string (data)
   "Like ‘json-encode’ but return the output as a string."
-  (with-output-to-string (stream)
-    (json-encode data stream)))
+  (rs-json:serialize nil data))
 
 ;;; json.lisp ends here

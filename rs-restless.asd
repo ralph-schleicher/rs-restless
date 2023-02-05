@@ -46,7 +46,7 @@
 	       :drakma
 	       :puri
 	       :quri
-	       :yason
+	       "rs-restless/json"
 	       :cl-unicode
 	       :cl-rdfxml
 	       :wilbur
@@ -56,12 +56,27 @@
 	       (:file "common")
 	       (:file "drakma")
 	       (:file "uri")
-	       (:file "yason")
 	       (:file "json")
 	       (:file "rdf")
 	       (:file "wilbur")
 	       (:file "oauth1")
 	       (:file "oslc")
 	       (:file "doors")))
+
+(defsystem "rs-restless/json"
+  :description "Yet another JSON decoder/encoder."
+  :author "Ralph Schleicher <rs@ralph-schleicher.de>"
+  :license "Modified BSD License"
+  :version (:read-file-line "VERSION")
+  :depends-on (:alexandria
+	       :iterate
+	       :cl-unicode)
+  :components ((:module "json"
+		:serial t
+		:components ((:file "packages")
+			     (:file "specials")
+			     (:file "common")
+			     (:file "decoder")
+			     (:file "encoder")))))
 
 ;;; rs-restless.asd ends here
