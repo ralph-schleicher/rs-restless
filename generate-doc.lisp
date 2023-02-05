@@ -56,4 +56,22 @@
 			  :type "txt"))
   (values))
 
+(let ((data (rs-doc:gather-doc
+	     :package :rs-json
+	     :generic-functions t
+	     :undocumented t)))
+  (rs-doc:generate-doc
+   :data data
+   :output-format :html
+   :output (make-pathname :directory '(:relative "doc")
+			  :name "rs-json"
+			  :type "html"))
+  (rs-doc:generate-doc
+   :data data
+   :output-format :text
+   :output (make-pathname :directory '(:relative "doc")
+			  :name "rs-json"
+			  :type "txt"))
+  (values))
+
 ;;; generate-doc.lisp ends here
