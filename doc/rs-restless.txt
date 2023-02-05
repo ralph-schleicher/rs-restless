@@ -78,7 +78,7 @@ make-oauth1-client (&key (class 'oauth1-client) user-name password consumer-key
 
                                                                       [Function]
 make-oslc-client (base-url &rest arguments &key (class 'oslc-client)
-                           &allow-other-keys)
+                  &allow-other-keys)
    Create an OSLC client.
 
    The base URL must not end with a slash.
@@ -93,7 +93,7 @@ oauth1-consumer-key ((oauth1-client oauth1-client))
 
                                                                       [Function]
 oauth1-http-request (request-uri &rest arguments &key client unsigned
-                     (method get) parameters headers &allow-other-keys)
+                     (method :get) parameters headers &allow-other-keys)
    Issue an OAuth 1.0a authorized HTTP request.
 
    First argument REQUEST-URI is the requested URI.
@@ -147,8 +147,8 @@ oauth1-user-name ((oauth1-client oauth1-client))
 
                                                                       [Function]
 oslc-invoke (method request-uri &rest arguments &key (client *oslc-client*)
-             parameters headers (accept application/rdf+xml)
-             (oslc-core-version 2.0) &allow-other-keys)
+             parameters headers (accept "application/rdf+xml")
+             (oslc-core-version "2.0") &allow-other-keys)
    Invoke an OSLC REST method.
 
    First argument METHOD is the HTTP method, e.g. ‘:get’ or ‘:put’.
@@ -177,7 +177,7 @@ oslc-root-services-url (&optional (client *oslc-client*))
    Return the URL of the OSLC root services document.
 
                                                                         [Method]
-oslc-service-provider-catalogs ((source db) (domain (eql rm)))
+oslc-service-provider-catalogs ((source wilbur:db) (domain (eql :rm)))
    Return all service provider catalogs in the requirements management domain.
 
                                                                         [Method]
@@ -205,11 +205,11 @@ string-from-uri ((uri string))
    Return the string representation of an URI.
 
                                                                         [Method]
-string-from-uri ((uri uri))
+string-from-uri ((uri quri.uri:uri))
    Return the string representation of an URI.
 
                                                                         [Method]
-string-from-uri ((uri uri))
+string-from-uri ((uri puri:uri))
    Return the string representation of an URI.
 
                                                                       [Function]
@@ -224,7 +224,7 @@ wilbur-add-namespaces (namespaces)
    form ‘(PREFIX . URI)’.
 
                                                                       [Function]
-wilbur-parse-rdf/xml (source source-uri &key destination (parser cl-rdfxml))
+wilbur-parse-rdf/xml (source source-uri &key destination (parser :cl-rdfxml))
    Parse an RDF/XML document into a Wilbur database.
 
    First argument SOURCE is the RDF/XML document; value has to be

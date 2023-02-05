@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <title>DE.RALPH-SCHLEICHER.RESTLESS/JSON</title>
+  <style type="text/css">
+   *{margin:0;border:0;padding:0}
+   body{color:#000;background-color:#fff;font-family:sans-serif;padding:1em;min-width:46em}
+   a{color:inherit;background-color:transparent;text-decoration:none}
+   table{border-collapse:collapse}
+   div.title{padding:1em}
+   div.subtitle{padding:1em}
+   div.prologue{padding:1em}
+   div.epilogue{padding:1em}
+   span.category{color:#212121;font-style:italic}
+   span.package,span.symbol{color:#212121;font-weight:700;white-space:nowrap}
+   span.lambda-list{color:#616161}
+   span.lambda-list-keyword{color:#388E3C;white-space:nowrap}
+   span.keyword{color:#212121;white-space:nowrap}
+   span.variable{color:#212121;font-style:italic;white-space:nowrap}
+   span.init-form{white-space:nowrap}
+   span.method-specializers{color:#616161}
+   span.method-specializer{color:#212121;white-space:nowrap}
+   span.method-qualifier{color:#212121;white-space:nowrap}
+   span.error{color:#f57c00}
+   div.contents{padding:1em}
+   div.contents-listing{padding:1em}
+   div.contents-listing ul{list-style-type:none}
+   @media all and (min-width:68em){div.contents-listing{column-count:2;column-gap:2em}}
+   div.definition{padding:1em}
+   div.signature{background-color:#F5F5F5;padding:1ex 1em}
+   table.signature td.symbol{text-align:left;vertical-align:baseline;white-space:nowrap;padding-right:.5em}
+   table.signature td.lambda-list{text-align:left;vertical-align:baseline;width:100%}
+   table.signature td.category{text-align:right;vertical-align:baseline;white-space:nowrap;padding-left:1.5em}
+   div.documentation{padding:1em}
+  </style>
+ </head>
+ <body>
+  <div class="title">
+   <h1>DE.RALPH-SCHLEICHER.RESTLESS/JSON</h1>
+  </div>
+  <div class="prologue">
+   <pre>Yet another JSON decoder/encoder.
+
+If you can't wait until YASON is fixed, then this library is for you.
+The main differences are listed below.
+
+   * The parser is strictly RFC 8259 compliant whenever it makes
+     sense.  However, you can tweak the behavior of the parser to
+     suite your needs.
+
+   * The printer does not support indentation.
+
+   * JSON objects can be represented as hash-tables, associated lists,
+     or property lists.  The default is to use alists.
+
+   * JSON arrays can be represented as vectors or lists.  The default
+     is to use vectors.
+
+   * The JSON values ‘true’, ‘false’, and ‘null’ are represented by
+     the keywords ‘:true’, ‘:false’, and ‘:null’ respectively.  But
+     you can change that to suite your needs.
+
+   * The default configuration is round-trip save, i.e. you can read
+     a JSON value and write it back without loss of information.  This
+     is a strict requirement when updating a Web resource via an HTTP
+     GET/PUT cycle.
+
+   * Performance is competitive to other “fast” JSON libraries out
+     there.</pre>
+  </div>
+  <div class="contents" id="contents">
+   <h2>Contents</h2>
+   <div class="contents-listing">
+    <ul>
+     <li>
+      <a href="#_a218e6e8-8eb8-55af-911f-3ccb68e04986">
+       <span class="category">Condition</span>
+       <span class="symbol">encoding-error</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_1f83c053-f739-5028-8592-03755be1310a">
+       <span class="category">Condition</span>
+       <span class="symbol">json-error</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_ab35cd22-7209-50bc-8625-238e47ace53b">
+       <span class="category">Condition</span>
+       <span class="symbol">syntax-error</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_aae7d96f-17e7-5695-93d5-6d64a730b33e">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*allow-duplicate-object-keys*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_163e44d7-c371-5ae8-95bd-9aeb800cc675">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*allow-lax-numbers*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_29a01b43-d97d-5841-bdef-654d7b7c9929">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*allow-literal-object-keys*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_942f8ca2-f91b-52da-9a69-df4ed730afaf">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*allow-trailing-comma*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_64656454-eac8-5604-8291-ed66ff582540">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*allow-unicode-whitespace*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_361c037b-ae47-5a56-b83e-25a174e1de90">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*array-as*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_34729410-fc11-591f-8b6f-0af440532707">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*false*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_46f4c73e-ea01-565d-b8c6-22effa05697c">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*list-encoder*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_678b2794-8464-5a99-bd7a-efd6dc34cfef">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*maximum-nesting-depth*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_cabdc21c-f344-5042-8620-55aa861af77c">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*nil-encoder*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_71eeb893-d6d0-53b1-9641-1d9d26350452">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*null*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_d4b537ed-b58d-5126-9cfb-041224fa87b2">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*object-as*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_3e03d672-26e7-52b5-8cbd-f4ed4290f5d4">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*object-key-decoder*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_7ba0ad70-c88a-5fd2-a299-235f8513ebbc">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*true*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_1a236ed0-a6aa-5386-ad30-b8b0cb91b997">
+       <span class="category">Generic Function</span>
+       <span class="symbol">encode</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_d7ec3bca-022d-53c8-9f7a-b9d82436e8f3">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">list</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_14899034-cc62-53e3-8733-0339f89e06c4">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">(eql nil)</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_63b74aa6-3542-5b54-bb0d-aa7cb77df9bb">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">(eql t)</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_69e4d18f-5a31-5282-956b-fdc7746d76bf">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">(eql :null)</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_1c1bd796-5875-596c-b1ba-d19f8510b445">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">(eql :false)</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_dab96810-3fef-5f09-9c08-e7bd6390e644">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">(eql :true)</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_e58232de-9d0d-5d4a-bda1-2ed7c8b84fab">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">real</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_25cf6141-0e47-5486-b9e6-9956568ea779">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">rational</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_142b2ab1-4e72-5a94-8519-19b4412cf6c7">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">integer</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_b5f34c17-7429-5597-958c-33bd11ff2949">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">character</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_36242324-2f28-5246-bf59-952ab0b48863">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">symbol</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_663dcfaa-a3f4-5bf5-9af5-3a7cfb688277">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">string</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_11fc68fa-9f4f-55b5-a7fd-463dc0b958a4">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">vector</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_5b9ccf23-e843-5f0a-80a9-212c4f6cad4d">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">hash-table</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_b83b8fc7-1694-5bc0-ac02-6e5546222f7f">
+       <span class="category">Method</span>
+       <span class="symbol">encode</span>
+       <span class="method-specializers">(<span class="method-specializer">t</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_9d1bed4f-74ec-5e0f-9c03-3fc2651a3e1b">
+       <span class="category">Function</span>
+       <span class="symbol">encode-array</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_8e2eefed-c7f2-5ddf-8c5a-a28a60e1dacf">
+       <span class="category">Function</span>
+       <span class="symbol">encode-false</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_c12e88c3-bfe6-5fd0-aaaa-8b7094640957">
+       <span class="category">Function</span>
+       <span class="symbol">encode-list</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_fa8685c5-a4b8-5b5b-af49-6847326f9d73">
+       <span class="category">Function</span>
+       <span class="symbol">encode-null</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_286c5292-90fc-5814-adc6-4fa316cc591f">
+       <span class="category">Function</span>
+       <span class="symbol">encode-object</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_4756a676-23b7-598a-ba23-ad12cad57fb5">
+       <span class="category">Function</span>
+       <span class="symbol">encoding-error</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_17ce9da4-3cf2-5a91-97af-c07bc1b1bb71">
+       <span class="category">Function</span>
+       <span class="symbol">parse</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_23135103-3405-595f-9cfb-a572bfa931e6">
+       <span class="category">Function</span>
+       <span class="symbol">serialize</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_d7edf775-0102-59fe-adf5-ac133674d751">
+       <span class="category">Function</span>
+       <span class="symbol">syntax-error</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_fb33ec4a-7179-59c7-9969-4b7e5b4dba76">
+       <span class="category">Macro</span>
+       <span class="symbol">with-default-values</span>
+      </a>
+     </li>
+    </ul>
+   </div>
+  </div>
+  <div class="dictionary">
+   <div class="definition" id="_a218e6e8-8eb8-55af-911f-3ccb68e04986">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encoding-error</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Condition type for an encoding error.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_1f83c053-f739-5028-8592-03755be1310a">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">json-error</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Base class for all JSON errors.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_ab35cd22-7209-50bc-8625-238e47ace53b">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">syntax-error</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Condition type for a syntax error.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_aae7d96f-17e7-5695-93d5-6d64a730b33e">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*allow-duplicate-object-keys*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Whether or not to accept duplicate keys in JSON objects.
+If enabled, the value of an existing object member is replaced by a
+successive object member with the same key.  Special value ‘:ignore’
+means to ignore successive duplicate object members, i.e. the value
+of an existing object member will not be replaced.
+If disabled, signal a ‘syntax-error’.  This is the default.
+
+ECMA-404 says nothing about duplicate object keys.  RFC 8259 says
+that object keys should be unique.  Anyway, with this user option,
+you have the choice.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_163e44d7-c371-5ae8-95bd-9aeb800cc675">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*allow-lax-numbers*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Whether or not to accept non-standard syntax of numbers.
+If enabled, numbers may have an explicit plus sign and digits
+before or after the decimal point may be omitted.  Disabled
+by default.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_29a01b43-d97d-5841-bdef-654d7b7c9929">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*allow-literal-object-keys*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Whether or not to accept literal names as keys of object members.
+Disabled by default.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_942f8ca2-f91b-52da-9a69-df4ed730afaf">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*allow-trailing-comma*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Whether or not to accept a comma after the last object member
+or after the last array element.  Disabled by default.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_64656454-eac8-5604-8291-ed66ff582540">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*allow-unicode-whitespace*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Whether or not to accept any Unicode whitespace character.
+Disabled by default.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_361c037b-ae47-5a56-b83e-25a174e1de90">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*array-as*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The Lisp data structure used to represent JSON arrays.
+Value is either ‘:vector’ or ‘:list’.  The default is to use
+vectors.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_34729410-fc11-591f-8b6f-0af440532707">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*false*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The symbol to represent the JSON value ‘false’.
+Default is ‘:false’, but ‘nil’ may be appropriate, too.
+For the later, please take care of ambiguities since ‘nil’
+also represents the empty list.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_46f4c73e-ea01-565d-b8c6-22effa05697c">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*list-encoder*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The actual function used to encode a list.
+
+Suitable values are ‘encode-object’ or ‘encode-array’ to encode
+a list as a JSON object or as a JSON array respectively.  Default
+is ‘encode-object’ in accordance with the default value of the
+‘*object-as*’ special variable.
+
+The function is called with one argument, the list.  The return
+value of the function is ignored.
+
+See also the ‘*nil-encoder*’ special variable.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_678b2794-8464-5a99-bd7a-efd6dc34cfef">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*maximum-nesting-depth*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The maximum number of nested JSON structures.
+Value must be a positive number and should be at least 20.
+A value of ‘nil’ means to not limit the depth of nesting.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_cabdc21c-f344-5042-8620-55aa861af77c">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*nil-encoder*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The actual function used to encode ‘nil’.
+
+Suitable values are ‘encode-list’, ‘encode-false’, or ‘encode-null’
+to encode ‘nil’ as a list, as the JSON ‘false’ value, or as the JSON
+‘null’ value respectively.  Default is ‘encode-list’ in accordance
+with the default value of the ‘*object-as*’ special variable.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_71eeb893-d6d0-53b1-9641-1d9d26350452">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*null*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The symbol to represent the JSON value ‘null’.
+Default is ‘:null’, but ‘nil’ may be appropriate, too.
+For the later, please take care of ambiguities since ‘nil’
+also represents falsity and the empty list.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_d4b537ed-b58d-5126-9cfb-041224fa87b2">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*object-as*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The Lisp data structure used to represent a JSON object.
+Value is either ‘:hash-table’, ‘:alist’, or ‘:plist’.  The default
+is to use alists.
+
+For hash tables and alists, object keys are compared with ‘equal’,
+i.e. using strings as object keys works as expected.  For plists,
+object keys are compared with ‘eql’, i.e. you should also set
+‘*object-key-decoder*’ to a function returning a symbol when
+parsing objects as plists.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_3e03d672-26e7-52b5-8cbd-f4ed4290f5d4">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*object-key-decoder*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The function to convert the key string of an object member.
+Default is the ‘identity’ function.
+
+The function is called with one argument, the key string.  The value
+of the function is used as the key for the data structure produced.
+See also the ‘*decode-object-as*’ special variable.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_7ba0ad70-c88a-5fd2-a299-235f8513ebbc">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*true*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The symbol to represent the JSON value ‘true’.
+Default is ‘:true’, but ‘t’ may be appropriate, too.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_1a236ed0-a6aa-5386-ad30-b8b0cb91b997">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="category"><span class="category">Generic Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a Lisp object as a JSON value.
+
+Argument OBJECT is the Lisp object to be serialized.
+
+The JSON output is written to the ‘*standard-output*’ stream.
+The return value of an ‘encode’ method is ignored.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_d7ec3bca-022d-53c8-9f7a-b9d82436e8f3">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">list</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a list by calling ‘*list-encoder*’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_14899034-cc62-53e3-8733-0339f89e06c4">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">(eql nil)</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode ‘nil’ by calling ‘*nil-encoder*’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_63b74aa6-3542-5b54-bb0d-aa7cb77df9bb">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">(eql t)</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode ‘t’ as a JSON ‘true’ value.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_69e4d18f-5a31-5282-956b-fdc7746d76bf">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">(eql :null)</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode ‘:null’ as a JSON ‘null’ value.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_1c1bd796-5875-596c-b1ba-d19f8510b445">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">(eql :false)</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode ‘:false’ as a JSON ‘false’ value.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_dab96810-3fef-5f09-9c08-e7bd6390e644">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">(eql :true)</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode ‘:true’ as a JSON ‘true’ value.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_e58232de-9d0d-5d4a-bda1-2ed7c8b84fab">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">real</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a floating-point number as a JSON number.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_25cf6141-0e47-5486-b9e6-9956568ea779">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">rational</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a rational number as a JSON number.
+Affected by ‘*read-default-float-format*’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_142b2ab1-4e72-5a94-8519-19b4412cf6c7">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">integer</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode an integer as a JSON number.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_b5f34c17-7429-5597-958c-33bd11ff2949">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">character</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a character as a JSON string.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_36242324-2f28-5246-bf59-952ab0b48863">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">symbol</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a symbol as a JSON string.
+Affected by ‘*print-case*’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_663dcfaa-a3f4-5bf5-9af5-3a7cfb688277">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">string</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a string as a JSON string.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_11fc68fa-9f4f-55b5-a7fd-463dc0b958a4">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">vector</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a vector as a JSON array.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_5b9ccf23-e843-5f0a-80a9-212c4f6cad4d">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">hash-table</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a hash table as a JSON object.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_b83b8fc7-1694-5bc0-ac02-6e5546222f7f">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The default encoding method.
+Signals an ‘encoding-error’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_9d1bed4f-74ec-5e0f-9c03-3fc2651a3e1b">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode-array</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a Lisp object as a JSON array.
+
+Argument OBJECT is the Lisp object to be serialized as a JSON array.
+ Value has to be a sequence, i.e. a vector or a list.
+
+Mostly useful for binding ‘*list-encoder*’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_8e2eefed-c7f2-5ddf-8c5a-a28a60e1dacf">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode-false</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Constantly print a JSON ‘false’ value.
+
+Mostly useful for binding ‘*nil-encoder*’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_c12e88c3-bfe6-5fd0-aaaa-8b7094640957">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode-list</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a list by calling ‘*list-encoder*’.
+
+Mostly useful for binding ‘*nil-encoder*’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_fa8685c5-a4b8-5b5b-af49-6847326f9d73">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode-null</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Constantly print a JSON ‘null’ value.
+
+Mostly useful for binding ‘*nil-encoder*’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_286c5292-90fc-5814-adc6-4fa316cc591f">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encode-object</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a Lisp object as a JSON object.
+
+Argument OBJECT is the Lisp object to be serialized as a JSON object.
+ Value has to be a hash table, an associated list, or a property list.
+If OBJECT is a list, the value of the ‘*object-as*’ special variable
+ affects the interpretation of OBJECT.
+
+Mostly useful for binding the ‘*list-encoder*’ special variable.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_4756a676-23b7-598a-ba23-ad12cad57fb5">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">encoding-error</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="lambda-list-keyword">&amp;optional</span> <span class="variable">datum</span> <span class="lambda-list-keyword">&amp;rest</span> <span class="variable">arguments</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Signal an encoding error.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_17ce9da4-3cf2-5a91-97af-c07bc1b1bb71">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">parse</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">source</span> <span class="lambda-list-keyword">&amp;key</span> <span class="variable">junk-allowed</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Read a JSON value.
+
+First argument SOURCE is the input object.  Value is either a
+ stream, a string, or a pathname.  The special value ‘t’ is
+ equal to ‘*standard-input*’
+If keyword argument JUNK-ALLOWED is false, signal an error of
+ type ‘syntax-error’ if a non-whitespace character occurs after
+ the JSON value.
+
+Return value is the Lisp representation of the JSON value.
+
+Exceptional situations:
+
+   * Signals an ‘end-of-file’ error if the input ends in the
+     middle of a JSON value.
+
+   * Signals a ‘syntax-error’ if the input contains an invalid
+     JSON structure.
+
+   * May signal an ‘arithmetic-error’ if a JSON number can not
+     be represented as a Lisp number.
+
+   * Signals a ‘program-error’ if JSON objects are parsed as
+     plists and the return value of ‘*object-key-decoder*’
+     is not a symbol, number, or character.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_23135103-3405-595f-9cfb-a572bfa931e6">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">serialize</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">destination</span> <span class="variable">object</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Print a Lisp data structure as a JSON value.
+
+First argument DESTINATION is the output object.  Value is either a
+ stream, a string, or a pathname.  The special value ‘t’ is equal to
+ ‘*standard-output*’ and ‘nil’ means to return a string.
+Second argument OBJECT is the Lisp object to be serialized.
+
+The actual serialization of a Lisp object as a JSON value is performed
+by the ‘encode’ methods (which see).
+
+If DESTINATION is a stream, a string, a pathname, or ‘t’, then the
+result is ‘nil’.  Otherwise, the result is a string containing the
+output.
+
+Exceptional situations:
+
+   * Signals an ‘encoding-error’ if a Lisp object can not be
+     encoded as a JSON value.
+
+   * May signal an ‘arithmetic-error’ if a rational number is
+     converted to a floating-point number.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_d7edf775-0102-59fe-adf5-ac133674d751">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">syntax-error</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="lambda-list-keyword">&amp;optional</span> <span class="variable">datum</span> <span class="lambda-list-keyword">&amp;rest</span> <span class="variable">arguments</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Signal a syntax error.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_fb33ec4a-7179-59c7-9969-4b7e5b4dba76">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">with-default-values</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="lambda-list-keyword">&amp;rest</span> <span class="variable">ignored</span>) <span class="lambda-list-keyword">&amp;body</span> <span class="variable">body</span>)</span></td>
+	<td class="category"><span class="category">Macro</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Establish a lexical environment with all special variables bound
+to their default values.</pre>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -22,6 +22,7 @@
    span.method-specializers{color:#616161}
    span.method-specializer{color:#212121;white-space:nowrap}
    span.method-qualifier{color:#212121;white-space:nowrap}
+   span.error{color:#f57c00}
    div.contents{padding:1em}
    div.contents-listing{padding:1em}
    div.contents-listing ul{list-style-type:none}
@@ -570,7 +571,7 @@ are strings.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">make-oauth1-client</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="lambda-list-keyword">&amp;key</span> (<span class="variable">class</span>&nbsp;<span class="init-form">(quote oauth1-client)</span>) <span class="variable">user-name</span> <span class="variable">password</span> <span class="variable">consumer-key</span> <span class="variable">secret-key</span>)</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="lambda-list-keyword">&amp;key</span> (<span class="variable">class</span>&nbsp;<span class="init-form">'oauth1-client</span>) <span class="variable">user-name</span> <span class="variable">password</span> <span class="variable">consumer-key</span> <span class="variable">secret-key</span>)</span></td>
 	<td class="category"><span class="category">Function</span></td>
        </tr>
       </tbody>
@@ -591,7 +592,7 @@ are strings.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">make-oslc-client</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="variable">base-url</span> <span class="lambda-list-keyword">&amp;rest</span> <span class="variable">arguments</span> <span class="lambda-list-keyword">&amp;key</span> (<span class="variable">class</span>&nbsp;<span class="init-form">(quote oslc-client)</span>) <span class="lambda-list-keyword">&amp;allow-other-keys</span>)</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">base-url</span> <span class="lambda-list-keyword">&amp;rest</span> <span class="variable">arguments</span> <span class="lambda-list-keyword">&amp;key</span> (<span class="variable">class</span>&nbsp;<span class="init-form">'oslc-client</span>) <span class="lambda-list-keyword">&amp;allow-other-keys</span>)</span></td>
 	<td class="category"><span class="category">Function</span></td>
        </tr>
       </tbody>
@@ -862,7 +863,7 @@ Return the values of the Drakma HTTP request.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">oslc-invoke</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="variable">method</span> <span class="variable">request-uri</span> <span class="lambda-list-keyword">&amp;rest</span> <span class="variable">arguments</span> <span class="lambda-list-keyword">&amp;key</span> (<span class="variable">client</span>&nbsp;<span class="init-form">*oslc-client*</span>) <span class="variable">parameters</span> <span class="variable">headers</span> (<span class="variable">accept</span>&nbsp;<span class="init-form">application/rdf+xml</span>) (<span class="variable">oslc-core-version</span>&nbsp;<span class="init-form">2.0</span>) <span class="lambda-list-keyword">&amp;allow-other-keys</span>)</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">method</span> <span class="variable">request-uri</span> <span class="lambda-list-keyword">&amp;rest</span> <span class="variable">arguments</span> <span class="lambda-list-keyword">&amp;key</span> (<span class="variable">client</span>&nbsp;<span class="init-form">*oslc-client*</span>) <span class="variable">parameters</span> <span class="variable">headers</span> (<span class="variable">accept</span>&nbsp;<span class="init-form">"application/rdf+xml"</span>) (<span class="variable">oslc-core-version</span>&nbsp;<span class="init-form">"2.0"</span>) <span class="lambda-list-keyword">&amp;allow-other-keys</span>)</span></td>
 	<td class="category"><span class="category">Function</span></td>
        </tr>
       </tbody>
@@ -1141,7 +1142,7 @@ Return value is the Wilbur database.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">with-drakma-response</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">&amp;optional</span>&nbsp;<span class="init-form">body-var</span>) <span class="variable">request</span> <span class="lambda-list-keyword">&amp;body</span> <span class="variable">forms</span>)</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="lambda-list-keyword">&amp;optional</span> <span class="variable">body-var</span> <span class="variable">status-code-var</span> <span class="variable">headers-var</span> <span class="variable">url-var</span> <span class="variable">reason-phrase-var</span>) <span class="variable">request</span> <span class="lambda-list-keyword">&amp;body</span> <span class="variable">forms</span>)</span></td>
 	<td class="category"><span class="category">Macro</span></td>
        </tr>
       </tbody>
