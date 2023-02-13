@@ -43,14 +43,14 @@
   :depends-on (:alexandria
 	       :iterate
 	       :cl-advice
+	       :cl-unicode
 	       :drakma
+	       :north-drakma
 	       :puri
 	       :quri
 	       "rs-restless/json"
-	       :cl-unicode
 	       :cl-rdfxml
-	       :wilbur
-	       :north-drakma)
+	       :wilbur)
   :serial t
   :components ((:file "packages")
 	       (:file "common")
