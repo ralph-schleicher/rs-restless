@@ -49,6 +49,8 @@
 	       :puri
 	       :quri
 	       "rs-restless/json"
+	       :cxml
+	       :xpath
 	       :cl-rdfxml
 	       :wilbur)
   :serial t
@@ -57,6 +59,7 @@
 	       (:file "drakma")
 	       (:file "uri")
 	       (:file "json")
+	       (:file "xml")
 	       (:file "rdf")
 	       (:file "wilbur")
 	       (:file "oauth1")
