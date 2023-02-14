@@ -87,6 +87,30 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       </a>
      </li>
      <li>
+      <a href="#_c74ff6f3-83b3-5c1f-9f1e-91ac3762a386">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*soap-namespace-prefix*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_f7f3385e-b204-521f-9850-915248d5cd79">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*soap-version*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_60b6284f-9a6b-56db-b334-22cab1458194">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*xml-document*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_8d427e5b-57a4-5a57-a9d2-70c8ff679e4a">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*xml-namespaces*</span>
+      </a>
+     </li>
+     <li>
       <a href="#_a09b631f-d522-5527-b97a-212b4a7d3704">
        <span class="category">Function</span>
        <span class="symbol">browse-oslc-service-provider-catalog</span>
@@ -287,6 +311,24 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
        <span class="symbol">with-drakma-response</span>
       </a>
      </li>
+     <li>
+      <a href="#_53419076-11ee-524f-815b-0fdd88d394c7">
+       <span class="category">Macro</span>
+       <span class="symbol">with-soap-envelope</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_49ab58fe-8c25-5c6a-98ec-abdf868b5557">
+       <span class="category">Function</span>
+       <span class="symbol">xmlns-name</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_0ebc87de-ca10-5f91-a928-a16b0fc29330">
+       <span class="category">Function</span>
+       <span class="symbol">xmlns-prefix</span>
+      </a>
+     </li>
     </ul>
    </div>
   </div>
@@ -419,6 +461,105 @@ A value of ‘nil’ means that keys are strings.</pre>
     </div>
     <div class="documentation">
      <pre>Convenience variable for binding RDF triples.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_c74ff6f3-83b3-5c1f-9f1e-91ac3762a386">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*soap-namespace-prefix*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The SOAP namespace prefix.
+Value has to be a string.  Default is ‘env’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_f7f3385e-b204-521f-9850-915248d5cd79">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*soap-version*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The SOAP standard identifier.
+Possible values together with their meaning are listed in the
+following table.
+
+     :soap-1.2
+          SOAP version 1.2, see ‹https://www.w3.org/TR/soap12/›.
+
+     :soap-1.1
+          SOAP version 1.1 (this is no standard, just a note),
+          see ‹https://www.w3.org/TR/2000/NOTE-SOAP-20000508/›.
+
+Default is ‘:soap-1.2’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_60b6284f-9a6b-56db-b334-22cab1458194">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*xml-document*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Convenience variable for binding an XML document.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_8d427e5b-57a4-5a57-a9d2-70c8ff679e4a">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*xml-namespaces*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Alist of well known XML namespaces.
+List elements are cons cells of the form ‘(PREFIX . NAME)’ where
+PREFIX is the common namespace prefix and NAME is the standardized
+namespace name.</pre>
     </div>
    </div>
    <div class="definition" id="_a09b631f-d522-5527-b97a-212b4a7d3704">
@@ -1161,6 +1302,128 @@ Remaining arguments FORMS is the macro body.
 
 If the body, i.e. the primary value, of the HTTP request is a stream,
 the ‘with-drakma-response’ macro ensures that it will be closed.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_53419076-11ee-524f-815b-0fdd88d394c7">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">with-soap-envelope</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="lambda-list-keyword">&amp;rest</span> <span class="variable">options</span> <span class="lambda-list-keyword">&amp;key</span> <span class="variable">version</span> <span class="variable">namespace-prefix</span> <span class="variable">xml-declaration</span> <span class="variable">xml-namespaces</span> <span class="variable">header</span> <span class="lambda-list-keyword">&amp;allow-other-keys</span>) <span class="lambda-list-keyword">&amp;body</span> <span class="variable">body</span>)</span></td>
+	<td class="category"><span class="category">Macro</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Create a SOAP message, i.e. an XML document.
+
+Keyword argument VERSION is the SOAP standard identifier.
+ The resulting SOAP message will conform to this SOAP version.
+ Default is the value of the ‘*soap-version*’ special variable.
+Keyword argument NAMESPACE-PREFIX is the SOAP namespace prefix
+ for the SOAP message.  Value has to be a string.  Default is
+ the value of the ‘*soap-namespace-prefix*’ special variable.
+If keyword argument XML-DECLARATION is true, add an XML declaration
+ to the SOAP message.  Default is to omit the XML declaration.
+Keyword argument XML-NAMESPACES is a list of additional XML namespaces
+ for the XML document.  List elements are either XML namespace objects
+ or strings.  For XML namespace objects, the namespace prefix and name
+ is evaluated by calling the ‘xmlns-prefix’ and ‘xmlns-name’ function
+ respectively.  Strings are interpreted as namespace prefixes and the
+ corresponding namespace names are looked up in the ‘*xml-namespaces*’
+ special variable.
+Keyword argument HEADER is the contents of the SOAP header.
+The body (and the header) are CXML serialization forms.
+
+Return value is the SOAP message as a string.
+
+For example, the form
+
+     (with-soap-envelope (:xml-namespaces '(("ser" . "http://example.com/service/1.0/")))
+       (cxml:with-element "ser:fubar"
+         (cxml:with-element "baz" (cxml:text "hack"))))
+
+creates this SOAP message:
+
+     &lt;env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope"
+                   xmlns:ser="http://example.com/service/1.0/"&gt;
+      &lt;env:Header/&gt;
+      &lt;env:Body&gt;
+       &lt;ser:fubar&gt;
+        &lt;baz&gt;hack&lt;/baz&gt;
+       &lt;/ser:fubar&gt;
+      &lt;/env:Body&gt;
+     &lt;/env:Envelope&gt;
+
+The indentation is only added for visualization effects.  The actual
+SOAP message does not contain any superfluous whitespace characters.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_49ab58fe-8c25-5c6a-98ec-abdf868b5557">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">xmlns-name</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Return the namespace name of an XML namespace object.
+
+Argument OBJECT is the XML namespace object.
+
+Return value is a string.
+
+Exceptional situations:
+
+   * Signals a type error if the value returned by the
+     ‘xmlns-get-name’ function is not a string.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_0ebc87de-ca10-5f91-a928-a16b0fc29330">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">xmlns-prefix</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Return the namespace prefix of an XML namespace object.
+
+Argument OBJECT is the XML namespace object.
+
+Return value is a string.
+
+Exceptional situations:
+
+   * Signals a type error if the value returned by the
+     ‘xmlns-get-prefix’ function is not a string.</pre>
     </div>
    </div>
   </div>

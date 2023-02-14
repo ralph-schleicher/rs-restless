@@ -34,6 +34,37 @@ oslc-client
 *rdf-triples*
    Convenience variable for binding RDF triples.
 
+                                                              [Special Variable]
+*soap-namespace-prefix*
+   The SOAP namespace prefix.
+   Value has to be a string.  Default is ‘env’.
+
+                                                              [Special Variable]
+*soap-version*
+   The SOAP standard identifier.
+   Possible values together with their meaning are listed in the
+   following table.
+
+        :soap-1.2
+             SOAP version 1.2, see ‹https://www.w3.org/TR/soap12/›.
+
+        :soap-1.1
+             SOAP version 1.1 (this is no standard, just a note),
+             see ‹https://www.w3.org/TR/2000/NOTE-SOAP-20000508/›.
+
+   Default is ‘:soap-1.2’.
+
+                                                              [Special Variable]
+*xml-document*
+   Convenience variable for binding an XML document.
+
+                                                              [Special Variable]
+*xml-namespaces*
+   Alist of well known XML namespaces.
+   List elements are cons cells of the form ‘(PREFIX . NAME)’ where
+   PREFIX is the common namespace prefix and NAME is the standardized
+   namespace name.
+
                                                                       [Function]
 browse-oslc-service-provider-catalog (url &optional (client *oslc-client*))
    Browse an OSLC service provider catalog.
@@ -255,3 +286,76 @@ with-drakma-response ((&optional body-var status-code-var headers-var url-var
 
    If the body, i.e. the primary value, of the HTTP request is a stream,
    the ‘with-drakma-response’ macro ensures that it will be closed.
+
+                                                                         [Macro]
+with-soap-envelope ((&rest options &key version namespace-prefix
+                     xml-declaration xml-namespaces header &allow-other-keys)
+                    &body body)
+   Create a SOAP message, i.e. an XML document.
+
+   Keyword argument VERSION is the SOAP standard identifier.
+    The resulting SOAP message will conform to this SOAP version.
+    Default is the value of the ‘*soap-version*’ special variable.
+   Keyword argument NAMESPACE-PREFIX is the SOAP namespace prefix
+    for the SOAP message.  Value has to be a string.  Default is
+    the value of the ‘*soap-namespace-prefix*’ special variable.
+   If keyword argument XML-DECLARATION is true, add an XML declaration
+    to the SOAP message.  Default is to omit the XML declaration.
+   Keyword argument XML-NAMESPACES is a list of additional XML namespaces
+    for the XML document.  List elements are either XML namespace objects
+    or strings.  For XML namespace objects, the namespace prefix and name
+    is evaluated by calling the ‘xmlns-prefix’ and ‘xmlns-name’ function
+    respectively.  Strings are interpreted as namespace prefixes and the
+    corresponding namespace names are looked up in the ‘*xml-namespaces*’
+    special variable.
+   Keyword argument HEADER is the contents of the SOAP header.
+   The body (and the header) are CXML serialization forms.
+
+   Return value is the SOAP message as a string.
+
+   For example, the form
+
+        (with-soap-envelope (:xml-namespaces '(("ser" . "http://example.com/service/1.0/")))
+          (cxml:with-element "ser:fubar"
+            (cxml:with-element "baz" (cxml:text "hack"))))
+
+   creates this SOAP message:
+
+        <env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope"
+                      xmlns:ser="http://example.com/service/1.0/">
+         <env:Header/>
+         <env:Body>
+          <ser:fubar>
+           <baz>hack</baz>
+          </ser:fubar>
+         </env:Body>
+        </env:Envelope>
+
+   The indentation is only added for visualization effects.  The actual
+   SOAP message does not contain any superfluous whitespace characters.
+
+                                                                      [Function]
+xmlns-name (object)
+   Return the namespace name of an XML namespace object.
+
+   Argument OBJECT is the XML namespace object.
+
+   Return value is a string.
+
+   Exceptional situations:
+
+      * Signals a type error if the value returned by the
+        ‘xmlns-get-name’ function is not a string.
+
+                                                                      [Function]
+xmlns-prefix (object)
+   Return the namespace prefix of an XML namespace object.
+
+   Argument OBJECT is the XML namespace object.
+
+   Return value is a string.
+
+   Exceptional situations:
+
+      * Signals a type error if the value returned by the
+        ‘xmlns-get-prefix’ function is not a string.
