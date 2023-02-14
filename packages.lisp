@@ -62,6 +62,10 @@
    #:*xml-namespaces*
    #:xmlns-prefix
    #:xmlns-name
+   ;; soap.lisp
+   #:*soap-version*
+   #:*soap-namespace-prefix*
+   #:with-soap-envelope
    ;; rdf.lisp
    #:*rdf-triples*
    #:parse-rdf/xml
