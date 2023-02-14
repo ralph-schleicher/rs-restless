@@ -57,6 +57,11 @@
    #:json-decode-from-string
    #:json-encode
    #:json-encode-to-string
+   ;; xml.lisp
+   #:*xml-document*
+   #:*xml-namespaces*
+   #:xmlns-prefix
+   #:xmlns-name
    ;; rdf.lisp
    #:*rdf-triples*
    #:parse-rdf/xml
