@@ -60,6 +60,7 @@
 	       (:file "uri")
 	       (:file "json")
 	       (:file "xml")
+	       (:file "soap")
 	       (:file "rdf")
 	       (:file "wilbur")
 	       (:file "oauth1")
