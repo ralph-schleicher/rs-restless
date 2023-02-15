@@ -131,7 +131,7 @@ Value is the verification code (a string).")
 
 First argument is an OAuth client object.
 The body should call ‘oauth1-user-authorization-visit’."
-  (alexandria:once-only (client)
+  (once-only (client)
     `(progn
        (oauth1-user-authorization-setup ,client)
        (unwind-protect

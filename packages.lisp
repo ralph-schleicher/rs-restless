@@ -38,6 +38,10 @@
 (defpackage #:de.ralph-schleicher.restless
   (:nicknames :rs-restless)
   (:use :common-lisp :iterate)
+  (:import-from :alexandria
+   #:when-let
+   #:when-let*
+   #:once-only)
   (:intern
    ;; common.lisp
    #:defconst
