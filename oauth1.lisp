@@ -112,7 +112,7 @@ Value is the verification code (a string).")
 			     :cookie-jar (oauth1-cookie-jar client)
 			     :want-stream t)
       (unless (= status-code 200)
-	(error 'program-error))
+	(error (make-http-status status-code)))
       (flet ((extract (query)
 	       ;; Extract the verification code from
 	       ;; the query parameters of an URL.
