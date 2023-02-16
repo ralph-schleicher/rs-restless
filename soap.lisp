@@ -68,6 +68,160 @@ VERSION is the SOAP standard identifier (see the ‘*soap-version*’
 special variable) and NAME is the corresponding SOAP namespace
 name (a string).")
 
+(define-condition soap-fault (error)
+  ((message
+    :initform nil
+    :type (or null string dom:document)
+    :accessor soap-fault-message
+    :documentation "The SOAP message describing the fault.")
+   (version
+    :initform nil
+    :type (or null soap-version)
+    :accessor soap-fault-version
+    :documentation "The SOAP version of the fault message.")
+   (code
+    :initform nil
+    :type (or null string (cons string))
+    :accessor soap-fault-code
+    :documentation "The fault code and optional sub-codes.")
+   (reason
+    :initform nil
+    :type (or null string)
+    :accessor soap-fault-reason
+    :documentation "The human-readable explanation of the fault.")
+   (node
+    :initform nil
+    :type (or null string)
+    :accessor soap-fault-node
+    :documentation "The SOAP node on the SOAP message path issuing the fault.")
+   (role
+    :initform nil
+    :type (or null string)
+    :accessor soap-fault-role
+    :documentation "The role the SOAP node was operating in at the point the fault occurred.")
+   (detail
+    :initform nil
+    :type boolean
+    :accessor soap-fault-detail
+    :documentation "Whether or not the fault message has a detail entry."))
+  (:documentation "Condition type for a SOAP fault.")
+  (:report (lambda (condition stream)
+	     (let ((code (soap-fault-code condition))
+		   (reason (soap-fault-reason condition))
+		   (node (soap-fault-node condition))
+		   (role (soap-fault-role condition))
+		   (detail (soap-fault-detail condition))
+		   (message (soap-fault-message condition)))
+	       (format stream "SOAP fault")
+	       (when code
+		 (if (consp code)
+		     (format stream " ‘~{~A~^.~}’" code)
+		   (format stream " ‘~A’" code)))
+	       (when detail
+		 (format stream " in detail"))
+	       (when node
+		 (format stream " on node ‘~A’" node)
+		 (when role
+		   (format stream " as ‘~A’" role)))
+	       (format stream ".")
+	       (when reason
+		 (terpri stream)
+		 (format stream "Reason: ~A" reason))
+	       (when message
+		 (terpri stream)
+		 (format stream "Message:~%~A"
+			 (typecase message
+			   (dom:document
+			    (dom:map-document (cxml:make-rod-sink :omit-xml-declaration-p t :indentation 1) message))
+			   (t
+			    message))))
+	       ()))))
+
+(defun make-soap-fault (datum)
+  "Create a ‘soap-fault’ condition.
+
+Argument DATUM is a SOAP message designator.  Value is either
+ a stream, a string, a pathname, or a DOM node.
+
+If the SOAP message contains a ‘Fault’ element, return value is
+a ‘soap-fault’ condition.  Otherwise, return ‘nil’.
+
+Exceptional situations:
+
+   * Signals an error if DATUM does not designate a SOAP message."
+  (when-let* ((document (typecase datum
+			  (dom:document
+			   datum)
+			  (dom:node
+			   (dom:owner-document datum))
+			  (t
+			   (cxml:parse datum (cxml-dom:make-dom-builder)))))
+	      ;; Lookup the SOAP version from the namespace
+	      ;; name of the document element.
+	      (name (dom:namespace-uri (dom:document-element document)))
+	      (version (let ((tem (rassoc name soap-namespace-alist :test #'string=)))
+			 (when (null tem)
+			   (error "Unknown SOAP namespace name ‘~A’." name))
+			 (car tem)))
+	      ;; Lookup the ‘Fault’ element.
+	      (fault (xpath:with-namespaces (("env" name))
+		       (xpath:first-node (xpath:evaluate "/env:Envelope/env:Body/env:Fault" document))))
+	      ;; Looks good, create the condition.
+	      (condition (make-instance 'soap-fault)))
+    ;; Common slots.
+    (setf (soap-fault-message condition) document
+	  (soap-fault-version condition) version)
+    ;; Decompose the fault.
+    (ecase version
+      (:soap-1.2
+       (xpath:with-namespaces (("env" name))
+	 (let ((codes (iter (with node = (xpath:first-node (xpath:evaluate "env:Code" fault)))
+			    (while node)
+			    (for value = (xpath:first-node (xpath:evaluate "env:Value" node)))
+			    (while value)
+			    ;; Get the local name of the code.
+			    (let* ((code (xpath:string-value value))
+				   (pos (position #\: code)))
+			      (when pos
+				(setf code (subseq code (1+ pos))))
+			      (collecting code))
+			    ;; Recurse on the sub-codes.
+			    (setf node (xpath:first-node (xpath:evaluate "env:Subcode" node))))))
+	   (setf (soap-fault-code condition) codes))
+	 ;; Prefer reason phrase in English.
+	 (when-let ((node (or (xpath:first-node (xpath:evaluate "env:Reason/env:Text[@xml:lang=\"en-US\"]" fault))
+			      (xpath:first-node (xpath:evaluate "env:Reason/env:Text[@xml:lang=\"en\"]" fault))
+			      (xpath:first-node (xpath:evaluate "env:Reason/env:Text[@xml:lang=\"\"]" fault))
+			      (xpath:first-node (xpath:evaluate "env:Reason/env:Text" fault)))))
+	   (let ((reason (xpath:string-value node)))
+	     (when (plusp (length reason))
+	       (setf (soap-fault-reason condition) reason))))
+	 (when-let ((node (xpath:first-node (xpath:evaluate "env:Node" fault))))
+	   (setf (soap-fault-node condition) (xpath:string-value node)))
+	 (when-let ((node (xpath:first-node (xpath:evaluate "env:Role" fault))))
+	   (setf (soap-fault-role condition) (xpath:string-value node)))
+	 (when-let ((node (xpath:first-node (xpath:evaluate "env:Detail" fault))))
+	   (setf (soap-fault-detail condition) t))))
+      (:soap-1.1
+       (when-let ((node (xpath:first-node (xpath:evaluate "faultcode" fault))))
+	 (let* ((code (xpath:string-value node))
+		(pos (position #\: code)))
+	   (when pos
+	     (setf code (subseq code (1+ pos))))
+	   (setf (soap-fault-code condition) code)))
+       (when-let ((node (xpath:first-node (xpath:evaluate "faultstring" fault))))
+	 (let ((reason (xpath:string-value node)))
+	   (when (plusp (length reason))
+	     (setf (soap-fault-reason condition) reason))))
+       (when-let ((node (xpath:first-node (xpath:evaluate "faultactor" fault))))
+	 (let ((actor (xpath:string-value node)))
+	   (when (plusp (length actor))
+	     (setf (soap-fault-node condition) actor))))
+       (when-let ((node (xpath:first-node (xpath:evaluate "detail" fault))))
+	 (setf (soap-fault-detail condition) t))))
+    ;; Return value.
+    condition))
+
 (defmacro with-soap-envelope ((&rest options &key version namespace-prefix xml-declaration xml-namespaces header &allow-other-keys) &body body)
   "Create a SOAP message, i.e. an XML document.
 
@@ -145,5 +299,51 @@ SOAP message does not contain any superfluous whitespace characters."
 		    ,form)))
     ;; Create it.
     (eval form)))
+
+(defun soap-http-request (request-uri message
+			  &rest options
+			  &key
+			    (method :post)
+			    (fault-error-p t)
+			    (if-not-successful :error)
+			  &allow-other-keys)
+  "Send a SOAP message via HTTP.
+
+First argument REQUEST-URI is the SOAP end point.
+Second argument MESSAGE is the SOAP message (a string).  See the
+ ‘with-soap-envelope’ macro for how to serialize a SOAP message.
+Keyword argument METHOD is the HTTP method.  Default is ‘:post’.
+If keyword argument FAULT-ERROR-P is true, signal an error of type
+ ‘soap-fault’ if the HTTP status code is 500.  Enabled by default.
+Keyword argument IF-NOT-SUCCESSFUL specifies the action to be taken
+ if the HTTP status code is not in the range from 200 to 299.  A value
+ of ‘:error’ means to signal an error of type ‘http-status’ and ‘nil’
+ means to do nothing.  Default is ‘:error’.
+
+Remaining keyword arguments are forwarded to the underlying Drakma
+ HTTP request.
+
+Return the values of the Drakma HTTP request."
+  (check-type if-not-successful (member nil :error))
+  ;; Remove known keys.
+  (iter (for key :in '(:method :fault-error-p :if-not-successful))
+	(iter (while (remf options key))))
+  (multiple-value-bind (body status-code headers effective-uri stream closep reason-phrase)
+      (apply #'drakma:http-request request-uri
+	     :method method
+	     :content message
+	     :content-type "text/xml" ;or "application/soap+xml"
+	     options)
+    (cond ((and fault-error-p (= status-code 500))
+	   (let ((fault (or (make-soap-fault body)
+			    (make-http-status status-code reason-phrase))))
+	     (cleanup-drakma-response body closep)
+	     (error fault)))
+	  ((and (eq if-not-successful :error)
+		(not (<= 200 status-code 299)))
+	   (cleanup-drakma-response body closep)
+	   (error (make-http-status status-code reason-phrase))))
+    ;; Return values.
+    (values body status-code headers effective-uri stream closep reason-phrase)))
 
 ;;; soap.lisp ends here
