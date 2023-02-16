@@ -200,22 +200,21 @@ Optional second argument REASON is the HTTP status reason
 The returned condition is a subtype of ‘http-status’ if CODE is
 in the range from 100 to 599.  Otherwise, the return value is a
 condition of type ‘http-status’."
-  (check-type status-code (or null (integer 0)))
-  (check-type reason-phrase (or null string))
-  (make-condition (cond ((null status-code)
+  (check-type code (or null (integer 0)))
+  (check-type reason (or null string))
+  (make-condition (cond ((null code)
 			 'http-status)
-			((<= 100 status-code 199)
+			((<= 100 code 199)
 			 'http-informational)
-			((<= 200 status-code 299)
+			((<= 200 code 299)
 			 'http-successful)
-			((<= 300 status-code 399)
+			((<= 300 code 399)
 			 'http-redirection)
-			((<= 400 status-code 499)
+			((<= 400 code 499)
 			 'http-client-error)
-			((<= 500 status-code 599)
+			((<= 500 code 599)
 			 'http-server-error)
 			('http-status))
-		  :code status-code
-		  :reason reason-phrase))
+		  :code code :reason reason))
 
 ;;; http.lisp ends here
