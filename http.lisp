@@ -105,7 +105,7 @@ List elements are cons cells of the form ‘(CODE . REASON)’
 where CODE is the HTTP status code (a non-negative integer)
 and REASON is the associated reason phrase (a string).")
 
-(define-condition http-status ()
+(define-condition http-status (condition)
   ((code
     :initarg :code
     :initform nil
@@ -116,24 +116,90 @@ and REASON is the associated reason phrase (a string).")
     :initarg :reason
     :initform nil
     :type (or null string)
-    :reader http-reason-phrase
+    :reader http-status-reason
     :documentation "The HTTP status reason phrase."))
-  (:documentation "HTTP status information.")
+  (:documentation "HTTP status information.
+The base class for all HTTP status conditions.
+
+Class precedence list:
+
+     ‘http-status’, ‘condition’, ...")
   (:report (lambda (condition stream)
 	     (let* ((code (http-status-code condition))
-		    (reason (or (http-reason-phrase condition)
+		    (reason (or (http-status-reason condition)
 				(cdr (assoc code http-status-code-alist)))))
 	       (format stream "HTTP status code ~A~@[ ‘~A’~]."
 		       (or code "not available") reason)))))
 
-(define-condition http-informational (http-status) ())
-(define-condition http-successful (http-status) ())
-(define-condition http-redirection (http-status) ())
-(define-condition http-client-error (http-status) ())
-(define-condition http-server-error (http-status) ())
+(define-condition http-informational (http-status)
+  ()
+  (:documentation "HTTP status for an informational response.
+A ‘http-informational’ condition indicates an interim response
+for communicating connection status or request progress prior to
+completing the requested action and sending a final response.
+The status code should be in the range from 100 to 199.
 
-(defun make-http-status (status-code &optional reason-phrase)
-  "Create a ‘http-status’ condition."
+Class precedence list:
+
+     ‘http-informational’, ‘http-status’, ..."))
+
+(define-condition http-successful (http-status)
+  ()
+  (:documentation "HTTP status for a successful response.
+A ‘http-successful’ condition indicates that the client's request
+was successfully received, understood, and accepted.  The status
+code should be in the range from 200 to 299.
+
+Class precedence list:
+
+     ‘http-successful’, ‘http-status’, ..."))
+
+(define-condition http-redirection (http-status)
+  ()
+  (:documentation "HTTP status for a redirection response.
+A ‘http-redirection’ condition indicates that further action needs
+to be taken by the user agent in order to fulfill the request.
+The status code should be in the range from 300 to 399.
+
+Class precedence list:
+
+     ‘http-redirection’, ‘http-status’, ..."))
+
+(define-condition http-client-error (http-status error)
+  ()
+  (:documentation "HTTP status for a client error response.
+A ‘http-client-error’ condition indicates that the client seems to
+have erred.  The status code should be in the range from 400 to 499.
+
+Class precedence list:
+
+     ‘http-client-error’, ‘http-status’, ‘error’, ..."))
+
+(define-condition http-server-error (http-status error)
+  ()
+  (:documentation "HTTP status for a server error response.
+A ‘http-server-error’ condition indicates that the server failed to
+fulfill an apparently valid request.  The status code should be in
+the range from 500 to 599.
+
+Class precedence list:
+
+     ‘http-server-error’, ‘http-status’, ‘error’, ..."))
+
+(defun make-http-status (code &optional reason)
+  "Create a ‘http-status’ condition.
+
+First argument CODE is the HTTP status code.  Value should
+ be a non-negative integer in the range from 100 to 599.
+
+Optional second argument REASON is the HTTP status reason
+ phrase.  Value has to be a string.  If argument REASON is
+ omitted or ‘nil’, attempt to determine the reason phrase
+ from the status code.
+
+The returned condition is a subtype of ‘http-status’ if CODE is
+in the range from 100 to 599.  Otherwise, the return value is a
+condition of type ‘http-status’."
   (check-type status-code (or null (integer 0)))
   (check-type reason-phrase (or null string))
   (make-condition (cond ((null status-code)
