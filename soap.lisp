@@ -104,7 +104,11 @@ name (a string).")
     :type boolean
     :accessor soap-fault-detail
     :documentation "Whether or not the fault message has a detail entry."))
-  (:documentation "Condition type for a SOAP fault.")
+  (:documentation "Condition type for a SOAP fault.
+
+Class precedence list:
+
+     ‘soap-fault’, ‘error’, ...")
   (:report (lambda (condition stream)
 	     (let ((code (soap-fault-code condition))
 		   (reason (soap-fault-reason condition))
