@@ -68,6 +68,6 @@ management system."))
 			       :cookie-jar (oauth1-cookie-jar client)
 			       :want-stream t)
 	(unless (= status-code 200)
-	  (error 'program-error))))))
+	  (error (make-http-status status-code)))))))
 
 ;;; doors.lisp ends here
