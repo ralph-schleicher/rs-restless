@@ -133,7 +133,7 @@ The base URL must not end with a slash."
 	 (wilbur:*db* (with-drakma-response (body status-code)
 			  (drakma:http-request root-url :want-stream t)
 			(unless (= status-code 200)
-			  (error 'program-error))
+			  (error (make-http-status status-code)))
 			(wilbur-parse-rdf/xml body root-url)))
 	 ;; Query the OAuth URLs.
 	 (request-token-url (wilbur:node-uri
