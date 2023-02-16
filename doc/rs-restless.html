@@ -51,6 +51,42 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
    <div class="contents-listing">
     <ul>
      <li>
+      <a href="#_c5bbb450-0064-5fab-8890-5ee41c6bf2a2">
+       <span class="category">Condition</span>
+       <span class="symbol">http-client-error</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_78df2eed-c7a5-5146-aeda-9e57bb40b49f">
+       <span class="category">Condition</span>
+       <span class="symbol">http-informational</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_3a469702-d7e8-5849-8f2e-adce4badd3f3">
+       <span class="category">Condition</span>
+       <span class="symbol">http-redirection</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_0e435c03-006e-59bc-beca-7477c2c8c24e">
+       <span class="category">Condition</span>
+       <span class="symbol">http-server-error</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_815b5968-bd14-52cf-b9a7-9384525719aa">
+       <span class="category">Condition</span>
+       <span class="symbol">http-status</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_b7bb0c39-d6f6-52ac-ba99-2e77943631f6">
+       <span class="category">Condition</span>
+       <span class="symbol">http-successful</span>
+      </a>
+     </li>
+     <li>
       <a href="#_f14f4e55-5052-5675-ac52-ab087b68d57f">
        <span class="category">Class</span>
        <span class="symbol">doors-client</span>
@@ -60,6 +96,12 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       <a href="#_0cfb262d-d2e9-544f-b375-13aa4331f096">
        <span class="category">Class</span>
        <span class="symbol">oauth1-client</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_07df7bca-2f51-58d6-bee2-4d3da50839af">
+       <span class="category">Condition</span>
+       <span class="symbol">soap-fault</span>
       </a>
      </li>
      <li>
@@ -117,6 +159,20 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       </a>
      </li>
      <li>
+      <a href="#_d72b2b40-7515-5edf-a9b6-0b94a5fc9d7f">
+       <span class="category">Method</span>
+       <span class="symbol">http-status-code</span>
+       <span class="method-specializers">(<span class="method-specializer">http-status</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_cc381ac5-0572-54aa-92eb-86dd9ae7234c">
+       <span class="category">Method</span>
+       <span class="symbol">http-status-reason</span>
+       <span class="method-specializers">(<span class="method-specializer">http-status</span>)</span>
+      </a>
+     </li>
+     <li>
       <a href="#_88fec919-8d62-51a5-a92d-75012a12ea6a">
        <span class="category">Function</span>
        <span class="symbol">json-decode</span>
@@ -147,6 +203,12 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       </a>
      </li>
      <li>
+      <a href="#_e579340f-960e-58f7-bb40-95be7246b4fb">
+       <span class="category">Function</span>
+       <span class="symbol">make-http-status</span>
+      </a>
+     </li>
+     <li>
       <a href="#_0a1a728a-7a8e-59d2-8665-2bb7d3f95831">
        <span class="category">Function</span>
        <span class="symbol">make-oauth1-client</span>
@@ -156,6 +218,12 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       <a href="#_ebaaa7d5-0854-5af6-87f7-1782ac441b6c">
        <span class="category">Function</span>
        <span class="symbol">make-oslc-client</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_1d072aec-4a4b-5d5f-a9c2-3697e29e253c">
+       <span class="category">Function</span>
+       <span class="symbol">make-soap-fault</span>
       </a>
      </li>
      <li>
@@ -267,6 +335,61 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       </a>
      </li>
      <li>
+      <a href="#_0a48e49c-3210-5c9e-ab7a-cd3d13609b5e">
+       <span class="category">Method</span>
+       <span class="symbol">soap-fault-code</span>
+       <span class="method-specializers">(<span class="method-specializer">soap-fault</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_bb356e41-c8c4-5c2d-aa0c-399c5e842a67">
+       <span class="category">Method</span>
+       <span class="symbol">soap-fault-detail</span>
+       <span class="method-specializers">(<span class="method-specializer">soap-fault</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_ba9d0e00-bf93-5c2d-8890-0d5bfeb709e7">
+       <span class="category">Method</span>
+       <span class="symbol">soap-fault-message</span>
+       <span class="method-specializers">(<span class="method-specializer">soap-fault</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_c9a516fa-d718-5b4f-9c1a-25337a9569d6">
+       <span class="category">Method</span>
+       <span class="symbol">soap-fault-node</span>
+       <span class="method-specializers">(<span class="method-specializer">soap-fault</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_0ffdd3ee-1f1a-5c7c-b74d-ba4cb90259ab">
+       <span class="category">Method</span>
+       <span class="symbol">soap-fault-reason</span>
+       <span class="method-specializers">(<span class="method-specializer">soap-fault</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_94bf12da-8e23-546a-bcc7-d9c48cdffeb2">
+       <span class="category">Method</span>
+       <span class="symbol">soap-fault-role</span>
+       <span class="method-specializers">(<span class="method-specializer">soap-fault</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_fe80849a-d54c-594b-a3b5-61dc25dbfd6c">
+       <span class="category">Method</span>
+       <span class="symbol">soap-fault-version</span>
+       <span class="method-specializers">(<span class="method-specializer">soap-fault</span>)</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_349f75fa-74cb-5578-bd32-cad7a8776512">
+       <span class="category">Function</span>
+       <span class="symbol">soap-http-request</span>
+      </a>
+     </li>
+     <li>
       <a href="#_42faaaa6-1eb1-5f9f-83bb-7e7dedf6c707">
        <span class="category">Method</span>
        <span class="symbol">string-from-uri</span>
@@ -333,6 +456,172 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
    </div>
   </div>
   <div class="dictionary">
+   <div class="definition" id="_c5bbb450-0064-5fab-8890-5ee41c6bf2a2">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-client-error</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>HTTP status for a client error response.
+A ‘http-client-error’ condition indicates that the client seems to
+have erred.  The status code should be in the range from 400 to 499.
+
+Class precedence list:
+
+     ‘http-client-error’, ‘http-status’, ‘error’, ...</pre>
+    </div>
+   </div>
+   <div class="definition" id="_78df2eed-c7a5-5146-aeda-9e57bb40b49f">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-informational</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>HTTP status for an informational response.
+A ‘http-informational’ condition indicates an interim response
+for communicating connection status or request progress prior to
+completing the requested action and sending a final response.
+The status code should be in the range from 100 to 199.
+
+Class precedence list:
+
+     ‘http-informational’, ‘http-status’, ...</pre>
+    </div>
+   </div>
+   <div class="definition" id="_3a469702-d7e8-5849-8f2e-adce4badd3f3">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-redirection</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>HTTP status for a redirection response.
+A ‘http-redirection’ condition indicates that further action needs
+to be taken by the user agent in order to fulfill the request.
+The status code should be in the range from 300 to 399.
+
+Class precedence list:
+
+     ‘http-redirection’, ‘http-status’, ...</pre>
+    </div>
+   </div>
+   <div class="definition" id="_0e435c03-006e-59bc-beca-7477c2c8c24e">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-server-error</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>HTTP status for a server error response.
+A ‘http-server-error’ condition indicates that the server failed to
+fulfill an apparently valid request.  The status code should be in
+the range from 500 to 599.
+
+Class precedence list:
+
+     ‘http-server-error’, ‘http-status’, ‘error’, ...</pre>
+    </div>
+   </div>
+   <div class="definition" id="_815b5968-bd14-52cf-b9a7-9384525719aa">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-status</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>HTTP status information.
+The base class for all HTTP status conditions.
+
+Class precedence list:
+
+     ‘http-status’, ‘condition’, ...</pre>
+    </div>
+   </div>
+   <div class="definition" id="_b7bb0c39-d6f6-52ac-ba99-2e77943631f6">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-successful</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>HTTP status for a successful response.
+A ‘http-successful’ condition indicates that the client's request
+was successfully received, understood, and accepted.  The status
+code should be in the range from 200 to 299.
+
+Class precedence list:
+
+     ‘http-successful’, ‘http-status’, ...</pre>
+    </div>
+   </div>
    <div class="definition" id="_f14f4e55-5052-5675-ac52-ab087b68d57f">
     <div class="signature">
      <table class="signature">
@@ -376,6 +665,31 @@ management system.</pre>
     </div>
     <div class="documentation">
      <pre>Base class for OAuth 1.0a clients.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_07df7bca-2f51-58d6-bee2-4d3da50839af">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">soap-fault</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Condition type for a SOAP fault.
+
+Class precedence list:
+
+     ‘soap-fault’, ‘error’, ...</pre>
     </div>
    </div>
    <div class="definition" id="_72c1b577-5839-5ad0-b716-a4572871ef9d">
@@ -592,6 +906,48 @@ Thus, service provider catalogs are lists and service providers are
 cons cells.</pre>
     </div>
    </div>
+   <div class="definition" id="_d72b2b40-7515-5edf-a9b6-0b94a5fc9d7f">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-status-code</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">condition</span>&nbsp;<span class="method-specializer">http-status</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Not documented.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_cc381ac5-0572-54aa-92eb-86dd9ae7234c">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-status-reason</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">condition</span>&nbsp;<span class="method-specializer">http-status</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Not documented.</pre>
+    </div>
+   </div>
    <div class="definition" id="_88fec919-8d62-51a5-a92d-75012a12ea6a">
     <div class="signature">
      <table class="signature">
@@ -701,6 +1057,39 @@ JSON object members are symbols in that package.  Otherwise, keys
 are strings.</pre>
     </div>
    </div>
+   <div class="definition" id="_e579340f-960e-58f7-bb40-95be7246b4fb">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">make-http-status</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">code</span> <span class="lambda-list-keyword">&amp;optional</span> <span class="variable">reason</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Create a ‘http-status’ condition.
+
+First argument CODE is the HTTP status code.  Value should
+ be a non-negative integer in the range from 100 to 599.
+
+Optional second argument REASON is the HTTP status reason
+ phrase.  Value has to be a string.  If argument REASON is
+ omitted or ‘nil’, attempt to determine the reason phrase
+ from the status code.
+
+The returned condition is a subtype of ‘http-status’ if CODE is
+in the range from 100 to 599.  Otherwise, the return value is a
+condition of type ‘http-status’.</pre>
+    </div>
+   </div>
    <div class="definition" id="_0a1a728a-7a8e-59d2-8665-2bb7d3f95831">
     <div class="signature">
      <table class="signature">
@@ -743,6 +1132,37 @@ are strings.</pre>
      <pre>Create an OSLC client.
 
 The base URL must not end with a slash.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_1d072aec-4a4b-5d5f-a9c2-3697e29e253c">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">make-soap-fault</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">datum</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Create a ‘soap-fault’ condition.
+
+Argument DATUM is a SOAP message designator.  Value is either
+ a stream, a string, a pathname, or a DOM node.
+
+If the SOAP message contains a ‘Fault’ element, return value is
+a ‘soap-fault’ condition.  Otherwise, return ‘nil’.
+
+Exceptional situations:
+
+   * Signals an error if DATUM does not designate a SOAP message.</pre>
     </div>
    </div>
    <div class="definition" id="_28bdac74-1f09-55b4-bde9-33ad9ac7806c">
@@ -1129,6 +1549,190 @@ Remaining arguments are passed to the ‘cl-rdfxml:parse-document’
  function.
 
 Value is a list of triples.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_0a48e49c-3210-5c9e-ab7a-cd3d13609b5e">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">soap-fault-code</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">condition</span>&nbsp;<span class="method-specializer">soap-fault</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Not documented.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_bb356e41-c8c4-5c2d-aa0c-399c5e842a67">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">soap-fault-detail</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">condition</span>&nbsp;<span class="method-specializer">soap-fault</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Not documented.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_ba9d0e00-bf93-5c2d-8890-0d5bfeb709e7">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">soap-fault-message</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">condition</span>&nbsp;<span class="method-specializer">soap-fault</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Not documented.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_c9a516fa-d718-5b4f-9c1a-25337a9569d6">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">soap-fault-node</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">condition</span>&nbsp;<span class="method-specializer">soap-fault</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Not documented.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_0ffdd3ee-1f1a-5c7c-b74d-ba4cb90259ab">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">soap-fault-reason</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">condition</span>&nbsp;<span class="method-specializer">soap-fault</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Not documented.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_94bf12da-8e23-546a-bcc7-d9c48cdffeb2">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">soap-fault-role</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">condition</span>&nbsp;<span class="method-specializer">soap-fault</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Not documented.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_fe80849a-d54c-594b-a3b5-61dc25dbfd6c">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">soap-fault-version</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">condition</span>&nbsp;<span class="method-specializer">soap-fault</span>))</span></td>
+	<td class="category"><span class="category">Method</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Not documented.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_349f75fa-74cb-5578-bd32-cad7a8776512">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">soap-http-request</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">request-uri</span> <span class="variable">message</span> <span class="lambda-list-keyword">&amp;rest</span> <span class="variable">options</span> <span class="lambda-list-keyword">&amp;key</span> (<span class="variable">method</span>&nbsp;<span class="init-form">:post</span>) (<span class="variable">fault-error-p</span>&nbsp;<span class="init-form">t</span>) (<span class="variable">if-not-successful</span>&nbsp;<span class="init-form">:error</span>) <span class="lambda-list-keyword">&amp;allow-other-keys</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Send a SOAP message via HTTP.
+
+First argument REQUEST-URI is the SOAP end point.
+Second argument MESSAGE is the SOAP message (a string).  See the
+ ‘with-soap-envelope’ macro for how to serialize a SOAP message.
+Keyword argument METHOD is the HTTP method.  Default is ‘:post’.
+If keyword argument FAULT-ERROR-P is true, signal an error of type
+ ‘soap-fault’ if the HTTP status code is 500.  Enabled by default.
+Keyword argument IF-NOT-SUCCESSFUL specifies the action to be taken
+ if the HTTP status code is not in the range from 200 to 299.  A value
+ of ‘:error’ means to signal an error of type ‘http-status’ and ‘nil’
+ means to do nothing.  Default is ‘:error’.
+
+Remaining keyword arguments are forwarded to the underlying Drakma
+ HTTP request.
+
+Return the values of the Drakma HTTP request.</pre>
     </div>
    </div>
    <div class="definition" id="_42faaaa6-1eb1-5f9f-83bb-7e7dedf6c707">

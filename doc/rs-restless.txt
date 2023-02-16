@@ -6,6 +6,70 @@ The RESTless library provides convenience functions for HTTP
 requests/responses, URI handling, JSON encoding/decoding, RDF/XML
 parsing, OAuth 1.0a user authorization, OSLC clients, and more.
 
+                                                                     [Condition]
+http-client-error
+   HTTP status for a client error response.
+   A ‘http-client-error’ condition indicates that the client seems to
+   have erred.  The status code should be in the range from 400 to 499.
+
+   Class precedence list:
+
+        ‘http-client-error’, ‘http-status’, ‘error’, ...
+
+                                                                     [Condition]
+http-informational
+   HTTP status for an informational response.
+   A ‘http-informational’ condition indicates an interim response
+   for communicating connection status or request progress prior to
+   completing the requested action and sending a final response.
+   The status code should be in the range from 100 to 199.
+
+   Class precedence list:
+
+        ‘http-informational’, ‘http-status’, ...
+
+                                                                     [Condition]
+http-redirection
+   HTTP status for a redirection response.
+   A ‘http-redirection’ condition indicates that further action needs
+   to be taken by the user agent in order to fulfill the request.
+   The status code should be in the range from 300 to 399.
+
+   Class precedence list:
+
+        ‘http-redirection’, ‘http-status’, ...
+
+                                                                     [Condition]
+http-server-error
+   HTTP status for a server error response.
+   A ‘http-server-error’ condition indicates that the server failed to
+   fulfill an apparently valid request.  The status code should be in
+   the range from 500 to 599.
+
+   Class precedence list:
+
+        ‘http-server-error’, ‘http-status’, ‘error’, ...
+
+                                                                     [Condition]
+http-status
+   HTTP status information.
+   The base class for all HTTP status conditions.
+
+   Class precedence list:
+
+        ‘http-status’, ‘condition’, ...
+
+                                                                     [Condition]
+http-successful
+   HTTP status for a successful response.
+   A ‘http-successful’ condition indicates that the client's request
+   was successfully received, understood, and accepted.  The status
+   code should be in the range from 200 to 299.
+
+   Class precedence list:
+
+        ‘http-successful’, ‘http-status’, ...
+
                                                                          [Class]
 doors-client
    DOORS Web Access client.
@@ -16,6 +80,14 @@ doors-client
                                                                          [Class]
 oauth1-client
    Base class for OAuth 1.0a clients.
+
+                                                                     [Condition]
+soap-fault
+   Condition type for a SOAP fault.
+
+   Class precedence list:
+
+        ‘soap-fault’, ‘error’, ...
 
                                                                          [Class]
 oslc-client
@@ -78,6 +150,14 @@ browse-oslc-service-provider-catalog (url &optional (client *oslc-client*))
    Thus, service provider catalogs are lists and service providers are
    cons cells.
 
+                                                                        [Method]
+http-status-code ((condition http-status))
+   Not documented.
+
+                                                                        [Method]
+http-status-reason ((condition http-status))
+   Not documented.
+
                                                                       [Function]
 json-decode (&optional (stream *standard-input*))
    Read a JSON value and return it as Lisp data.
@@ -103,6 +183,22 @@ json-object-key (name)
    are strings.
 
                                                                       [Function]
+make-http-status (code &optional reason)
+   Create a ‘http-status’ condition.
+
+   First argument CODE is the HTTP status code.  Value should
+    be a non-negative integer in the range from 100 to 599.
+
+   Optional second argument REASON is the HTTP status reason
+    phrase.  Value has to be a string.  If argument REASON is
+    omitted or ‘nil’, attempt to determine the reason phrase
+    from the status code.
+
+   The returned condition is a subtype of ‘http-status’ if CODE is
+   in the range from 100 to 599.  Otherwise, the return value is a
+   condition of type ‘http-status’.
+
+                                                                      [Function]
 make-oauth1-client (&key (class 'oauth1-client) user-name password consumer-key
                     secret-key)
    Create an OAuth client.
@@ -113,6 +209,20 @@ make-oslc-client (base-url &rest arguments &key (class 'oslc-client)
    Create an OSLC client.
 
    The base URL must not end with a slash.
+
+                                                                      [Function]
+make-soap-fault (datum)
+   Create a ‘soap-fault’ condition.
+
+   Argument DATUM is a SOAP message designator.  Value is either
+    a stream, a string, a pathname, or a DOM node.
+
+   If the SOAP message contains a ‘Fault’ element, return value is
+   a ‘soap-fault’ condition.  Otherwise, return ‘nil’.
+
+   Exceptional situations:
+
+      * Signals an error if DATUM does not designate a SOAP message.
 
                                                                         [Method]
 oauth1-access-token-url ((oauth1-client oauth1-client))
@@ -230,6 +340,56 @@ parse-rdf/xml (source &rest arguments)
     function.
 
    Value is a list of triples.
+
+                                                                        [Method]
+soap-fault-code ((condition soap-fault))
+   Not documented.
+
+                                                                        [Method]
+soap-fault-detail ((condition soap-fault))
+   Not documented.
+
+                                                                        [Method]
+soap-fault-message ((condition soap-fault))
+   Not documented.
+
+                                                                        [Method]
+soap-fault-node ((condition soap-fault))
+   Not documented.
+
+                                                                        [Method]
+soap-fault-reason ((condition soap-fault))
+   Not documented.
+
+                                                                        [Method]
+soap-fault-role ((condition soap-fault))
+   Not documented.
+
+                                                                        [Method]
+soap-fault-version ((condition soap-fault))
+   Not documented.
+
+                                                                      [Function]
+soap-http-request (request-uri message &rest options &key (method :post)
+                   (fault-error-p t) (if-not-successful :error)
+                   &allow-other-keys)
+   Send a SOAP message via HTTP.
+
+   First argument REQUEST-URI is the SOAP end point.
+   Second argument MESSAGE is the SOAP message (a string).  See the
+    ‘with-soap-envelope’ macro for how to serialize a SOAP message.
+   Keyword argument METHOD is the HTTP method.  Default is ‘:post’.
+   If keyword argument FAULT-ERROR-P is true, signal an error of type
+    ‘soap-fault’ if the HTTP status code is 500.  Enabled by default.
+   Keyword argument IF-NOT-SUCCESSFUL specifies the action to be taken
+    if the HTTP status code is not in the range from 200 to 299.  A value
+    of ‘:error’ means to signal an error of type ‘http-status’ and ‘nil’
+    means to do nothing.  Default is ‘:error’.
+
+   Remaining keyword arguments are forwarded to the underlying Drakma
+    HTTP request.
+
+   Return the values of the Drakma HTTP request.
 
                                                                         [Method]
 string-from-uri ((uri string))
