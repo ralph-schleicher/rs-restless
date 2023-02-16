@@ -167,7 +167,7 @@ Exceptional situations:
 	      (fault (xpath:with-namespaces (("env" name))
 		       (xpath:first-node (xpath:evaluate "/env:Envelope/env:Body/env:Fault" document))))
 	      ;; Looks good, create the condition.
-	      (condition (make-instance 'soap-fault)))
+	      (condition (make-condition 'soap-fault)))
     ;; Common slots.
     (setf (soap-fault-message condition) document
 	  (soap-fault-version condition) version)
