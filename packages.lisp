@@ -51,6 +51,8 @@
   (:export
    ;; http.lisp
    #:http-status
+   #:http-status-code
+   #:http-status-reason
    #:http-informational
    #:http-successful
    #:http-redirection
