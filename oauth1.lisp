@@ -227,9 +227,7 @@ Return the values of the Drakma HTTP request."
       ;; Handle authentication errors, e.g. due to an expired OAuth
       ;; access token.
       (when (and (= status-code 401) (not unsigned))
-	;; Cleanup, see ‘with-drakma-response’.
-	(when (and (streamp body) (open-stream-p body) closep)
-	  (close body))
+	(cleanup-drakma-response body closep)
 	;; Refresh OAuth authentication credentials – once only.
 	(verify-oauth1-client client)
 	;; Retry the request.
