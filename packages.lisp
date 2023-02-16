@@ -49,6 +49,14 @@
    #:~
    #:P)
   (:export
+   ;; http.lisp
+   #:http-status
+   #:http-informational
+   #:http-successful
+   #:http-redirection
+   #:http-client-error
+   #:http-server-error
+   #:make-http-status
    ;; drakma.lisp
    #:trace-drakma-requests
    #:with-drakma-response
@@ -69,7 +77,17 @@
    ;; soap.lisp
    #:*soap-version*
    #:*soap-namespace-prefix*
+   #:soap-fault
+   #:soap-fault-message
+   #:soap-fault-version
+   #:soap-fault-code
+   #:soap-fault-reason
+   #:soap-fault-node
+   #:soap-fault-role
+   #:soap-fault-detail
+   #:make-soap-fault
    #:with-soap-envelope
+   #:soap-http-request
    ;; rdf.lisp
    #:*rdf-triples*
    #:parse-rdf/xml
