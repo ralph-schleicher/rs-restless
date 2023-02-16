@@ -108,7 +108,15 @@ the ‘with-drakma-response’ macro ensures that it will be closed."
                   ,@(when url-var (list (list url-var location)))
                   ,@(when reason-phrase-var (list (list reason-phrase-var reason))))
               ,@forms)
-         (when (and (streamp ,body) (open-stream-p ,body) ,closep)
-           (close ,body))))))
+	 (cleanup-drakma-response ,body ,closep)))))
+
+(defun cleanup-drakma-response (body closep)
+  "Cleanup code for a Drakma HTTP request.
+If the body, i.e. the primary value of a Drakma HTTP request is a
+stream, ensure that it is closed unless the second argument CLOSEP
+is false."
+  (when (and (streamp body) (open-stream-p body) closep)
+    (close body))
+  (values))
 
 ;;; drakma.lisp ends here
