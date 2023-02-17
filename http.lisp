@@ -191,7 +191,6 @@ Class precedence list:
 
 First argument CODE is the HTTP status code.  Value should
  be a non-negative integer in the range from 100 to 599.
-
 Optional second argument REASON is the HTTP status reason
  phrase.  Value has to be a string.  If argument REASON is
  omitted or ‘nil’, attempt to determine the reason phrase
