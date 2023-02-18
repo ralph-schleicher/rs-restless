@@ -125,10 +125,9 @@ Class precedence list:
 
      ‘http-status’, ‘condition’, ...")
   (:report (lambda (condition stream)
-	     (let* ((code (http-status-code condition))
-		    (reason (or (http-status-reason condition)
-				(cdr (assoc code http-status-code-alist)))))
-	       (format stream "HTTP status code ~A~@[ ‘~A’~]."
+	     (let ((code (http-status-code condition))
+		   (reason (http-status-reason condition)))
+	       (format stream "HTTP status code ~A~@[ (~A)~]."
 		       (or code "not available") reason)))))
 
 (define-condition http-informational (http-status)
@@ -196,7 +195,7 @@ Optional second argument REASON is the HTTP status reason
  omitted or ‘nil’, attempt to determine the reason phrase
  from the status code.
 
-The returned condition is a subtype of ‘http-status’ if CODE is
+The returned condition is a sub-type of ‘http-status’ if CODE is
 in the range from 100 to 599.  Otherwise, the return value is a
 condition of type ‘http-status’."
   (check-type code (or null (integer 0)))
@@ -214,6 +213,60 @@ condition of type ‘http-status’."
 			((<= 500 code 599)
 			 'http-server-error)
 			('http-status))
-		  :code code :reason reason))
+		  :code code :reason (or reason (cdr (assoc code http-status-code-alist)))))
+
+(defun ensure-http-status (code &rest arguments)
+  "Check for certain HTTP status codes.
+
+First argument CODE is the HTTP status code to be checked.
+The remaining arguments specify the set of valid HTTP status
+ codes.  Each argument has to be either an integer, a cons cell
+ of the form ‘(LOW . HIGH)’, or the symbol of a ‘http-status’
+ condition.
+
+Return CODE if it is a member of the set of valid HTTP status
+codes.  Otherwise, signal an error with a condition created by
+calling ‘(make-http-status CODE)’.
+
+Exceptional situations:
+
+   * Signals a type error if an argument is not of the correct
+     type."
+  (check-type code (integer 0))
+  (or (iter (for datum :in arguments)
+	    (cond ((integerp datum)
+		   (when (= datum code)
+		     (return code)))
+		  ((typep datum '(cons integer integer))
+		   (when (<= (car datum) code (cdr datum))
+		     (return code)))
+		  ((eq datum 'http-status)
+		   (when (<= 100 code 599)
+		     (return code)))
+		  ((eq datum 'http-informational)
+		   (when (<= 100 code 199)
+		     (return code)))
+		  ((eq datum 'http-successful)
+		   (when (<= 200 code 299)
+		     (return code)))
+		  ((eq datum 'http-redirection)
+		   (when (<= 300 code 399)
+		     (return code)))
+		  ((eq datum 'http-client-error)
+		   (when (<= 400 code 499)
+		     (return code)))
+		  ((eq datum 'http-server-error)
+		   (when (<= 500 code 599)
+		     (return code)))
+		  ((error 'type-error
+			  :datum datum
+			  :expected-type '(or integer
+					      (cons integer integer)
+					      (member http-informational
+						      http-successful
+						      http-redirection
+						      http-client-error
+						      http-server-error))))))
+      (error (make-http-status code))))
 
 ;;; http.lisp ends here
