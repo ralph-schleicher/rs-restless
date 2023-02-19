@@ -59,6 +59,7 @@
    #:http-client-error
    #:http-server-error
    #:make-http-status
+   #:ensure-http-status
    ;; drakma.lisp
    #:trace-drakma-requests
    #:with-drakma-response
