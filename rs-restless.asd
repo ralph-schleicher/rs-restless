@@ -50,6 +50,7 @@
 	       :quri
 	       "rs-restless/json"
 	       :cxml
+	       :cxml-stp
 	       :xpath
 	       :cl-rdfxml
 	       :wilbur)
