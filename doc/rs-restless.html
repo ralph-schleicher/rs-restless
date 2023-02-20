@@ -51,6 +51,12 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
    <div class="contents-listing">
     <ul>
      <li>
+      <a href="#_f14f4e55-5052-5675-ac52-ab087b68d57f">
+       <span class="category">Class</span>
+       <span class="symbol">doors-client</span>
+      </a>
+     </li>
+     <li>
       <a href="#_c5bbb450-0064-5fab-8890-5ee41c6bf2a2">
        <span class="category">Condition</span>
        <span class="symbol">http-client-error</span>
@@ -87,21 +93,15 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       </a>
      </li>
      <li>
-      <a href="#_f14f4e55-5052-5675-ac52-ab087b68d57f">
-       <span class="category">Class</span>
-       <span class="symbol">doors-client</span>
+      <a href="#_07df7bca-2f51-58d6-bee2-4d3da50839af">
+       <span class="category">Condition</span>
+       <span class="symbol">soap-fault</span>
       </a>
      </li>
      <li>
       <a href="#_0cfb262d-d2e9-544f-b375-13aa4331f096">
        <span class="category">Class</span>
        <span class="symbol">oauth1-client</span>
-      </a>
-     </li>
-     <li>
-      <a href="#_07df7bca-2f51-58d6-bee2-4d3da50839af">
-       <span class="category">Condition</span>
-       <span class="symbol">soap-fault</span>
       </a>
      </li>
      <li>
@@ -156,6 +156,12 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       <a href="#_a09b631f-d522-5527-b97a-212b4a7d3704">
        <span class="category">Function</span>
        <span class="symbol">browse-oslc-service-provider-catalog</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_f837d848-ce1c-5c9f-8e99-a813b4a6d84d">
+       <span class="category">Function</span>
+       <span class="symbol">ensure-http-status</span>
       </a>
      </li>
      <li>
@@ -441,6 +447,18 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       </a>
      </li>
      <li>
+      <a href="#_d2fa8c82-891d-5d2d-91b0-5a1c8b877344">
+       <span class="category">Function</span>
+       <span class="symbol">xml-parse</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_e33ce923-4b48-553e-8cb2-9d95000f8c24">
+       <span class="category">Function</span>
+       <span class="symbol">xml-serialize</span>
+      </a>
+     </li>
+     <li>
       <a href="#_49ab58fe-8c25-5c6a-98ec-abdf868b5557">
        <span class="category">Function</span>
        <span class="symbol">xmlns-name</span>
@@ -456,6 +474,30 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
    </div>
   </div>
   <div class="dictionary">
+   <div class="definition" id="_f14f4e55-5052-5675-ac52-ab087b68d57f">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">doors-client</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Class</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>DOORS Web Access client.
+
+DOORS Web Access provides an OSLC interface for the DOORS requirements
+management system.</pre>
+    </div>
+   </div>
    <div class="definition" id="_c5bbb450-0064-5fab-8890-5ee41c6bf2a2">
     <div class="signature">
      <table class="signature">
@@ -622,51 +664,6 @@ Class precedence list:
      ‘http-successful’, ‘http-status’, ...</pre>
     </div>
    </div>
-   <div class="definition" id="_f14f4e55-5052-5675-ac52-ab087b68d57f">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">doors-client</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Class</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>DOORS Web Access client.
-
-DOORS Web Access provides an OSLC interface for the DOORS requirements
-management system.</pre>
-    </div>
-   </div>
-   <div class="definition" id="_0cfb262d-d2e9-544f-b375-13aa4331f096">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">oauth1-client</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Class</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>Base class for OAuth 1.0a clients.</pre>
-    </div>
-   </div>
    <div class="definition" id="_07df7bca-2f51-58d6-bee2-4d3da50839af">
     <div class="signature">
      <table class="signature">
@@ -690,6 +687,27 @@ management system.</pre>
 Class precedence list:
 
      ‘soap-fault’, ‘error’, ...</pre>
+    </div>
+   </div>
+   <div class="definition" id="_0cfb262d-d2e9-544f-b375-13aa4331f096">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">oauth1-client</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Class</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Base class for OAuth 1.0a clients.</pre>
     </div>
    </div>
    <div class="definition" id="_72c1b577-5839-5ad0-b716-a4572871ef9d">
@@ -906,6 +924,42 @@ Thus, service provider catalogs are lists and service providers are
 cons cells.</pre>
     </div>
    </div>
+   <div class="definition" id="_f837d848-ce1c-5c9f-8e99-a813b4a6d84d">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">ensure-http-status</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">code</span> <span class="lambda-list-keyword">&amp;rest</span> <span class="variable">arguments</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Check for certain HTTP status codes.
+
+First argument CODE is the HTTP status code to be checked.
+The remaining arguments specify the set of valid HTTP status
+ codes.  Each argument has to be either an integer, a cons cell
+ of the form ‘(LOW . HIGH)’, or the symbol of a ‘http-status’
+ condition.
+
+Return CODE if it is a member of the set of valid HTTP status
+codes.  Otherwise, signal an error with a condition created by
+calling ‘(make-http-status CODE)’.
+
+Exceptional situations:
+
+   * Signals a type error if an argument is not of the correct
+     type.</pre>
+    </div>
+   </div>
    <div class="definition" id="_d72b2b40-7515-5edf-a9b6-0b94a5fc9d7f">
     <div class="signature">
      <table class="signature">
@@ -1079,13 +1133,12 @@ are strings.</pre>
 
 First argument CODE is the HTTP status code.  Value should
  be a non-negative integer in the range from 100 to 599.
-
 Optional second argument REASON is the HTTP status reason
  phrase.  Value has to be a string.  If argument REASON is
  omitted or ‘nil’, attempt to determine the reason phrase
  from the status code.
 
-The returned condition is a subtype of ‘http-status’ if CODE is
+The returned condition is a sub-type of ‘http-status’ if CODE is
 in the range from 100 to 599.  Otherwise, the return value is a
 condition of type ‘http-status’.</pre>
     </div>
@@ -1968,6 +2021,74 @@ creates this SOAP message:
 
 The indentation is only added for visualization effects.  The actual
 SOAP message does not contain any superfluous whitespace characters.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_d2fa8c82-891d-5d2d-91b0-5a1c8b877344">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">xml-parse</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">source</span> <span class="lambda-list-keyword">&amp;rest</span> <span class="variable">options</span> <span class="lambda-list-keyword">&amp;key</span> (<span class="variable">result-type</span>&nbsp;<span class="init-form">'dom:document</span>) <span class="lambda-list-keyword">&amp;allow-other-keys</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Parse an XML document.
+
+First argument SOURCE is the input object.  Value is either a stream,
+ a string, or a pathname.  The symbol ‘t’ is equal to the value of the
+ ‘*standard-input*’ special variable.
+Keyword argument RESULT-TYPE specifies the Lisp representation of the
+ XML document.  Value is either ‘:dom’ for a ‘dom:document’ or ‘:stp’
+ for a ‘stp:document’.  The default is to create a ‘dom:document’.
+Remaining keyword arguments are forwarded to the underlying
+ ‘cxml:parse’ function.
+
+Return value is the Lisp representation of the XML document.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_e33ce923-4b48-553e-8cb2-9d95000f8c24">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">xml-serialize</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">destination</span> <span class="variable">document</span> <span class="lambda-list-keyword">&amp;rest</span> <span class="variable">options</span> <span class="lambda-list-keyword">&amp;key</span> <span class="variable">encoding</span> <span class="variable">canonical</span> (<span class="variable">declaration</span>&nbsp;<span class="init-form">t</span>) <span class="variable">indentation</span> <span class="lambda-list-keyword">&amp;allow-other-keys</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Serialize the Lisp representation of an XML document.
+
+First argument DESTINATION is the output object.  Value is either
+ a stream, a string, or a pathname.  The symbol ‘t’ is equal to
+ ‘*standard-output*’ and ‘nil’ means to return a string.
+Second argument DOCUMENT is the Lisp representation of the XML
+ document to be serialized.  Value is either a ‘dom:document’ or
+ a ‘stp:document’ object.
+Keyword arguments ENCODING, CANONICAL, DECLARATION, and INDENTATION
+ are used to initialize a CXML sink object.
+Remaining keyword arguments are forwarded to the underlying DOM
+ mapping function.
+
+If DESTINATION is a stream, a string, a pathname, or ‘t’, then the
+result is ‘nil’.  Otherwise, the result is a string containing the
+XML document.</pre>
     </div>
    </div>
    <div class="definition" id="_49ab58fe-8c25-5c6a-98ec-abdf868b5557">

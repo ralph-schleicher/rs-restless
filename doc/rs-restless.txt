@@ -6,6 +6,13 @@ The RESTless library provides convenience functions for HTTP
 requests/responses, URI handling, JSON encoding/decoding, RDF/XML
 parsing, OAuth 1.0a user authorization, OSLC clients, and more.
 
+                                                                         [Class]
+doors-client
+   DOORS Web Access client.
+
+   DOORS Web Access provides an OSLC interface for the DOORS requirements
+   management system.
+
                                                                      [Condition]
 http-client-error
    HTTP status for a client error response.
@@ -70,17 +77,6 @@ http-successful
 
         ‘http-successful’, ‘http-status’, ...
 
-                                                                         [Class]
-doors-client
-   DOORS Web Access client.
-
-   DOORS Web Access provides an OSLC interface for the DOORS requirements
-   management system.
-
-                                                                         [Class]
-oauth1-client
-   Base class for OAuth 1.0a clients.
-
                                                                      [Condition]
 soap-fault
    Condition type for a SOAP fault.
@@ -88,6 +84,10 @@ soap-fault
    Class precedence list:
 
         ‘soap-fault’, ‘error’, ...
+
+                                                                         [Class]
+oauth1-client
+   Base class for OAuth 1.0a clients.
 
                                                                          [Class]
 oslc-client
@@ -150,6 +150,25 @@ browse-oslc-service-provider-catalog (url &optional (client *oslc-client*))
    Thus, service provider catalogs are lists and service providers are
    cons cells.
 
+                                                                      [Function]
+ensure-http-status (code &rest arguments)
+   Check for certain HTTP status codes.
+
+   First argument CODE is the HTTP status code to be checked.
+   The remaining arguments specify the set of valid HTTP status
+    codes.  Each argument has to be either an integer, a cons cell
+    of the form ‘(LOW . HIGH)’, or the symbol of a ‘http-status’
+    condition.
+
+   Return CODE if it is a member of the set of valid HTTP status
+   codes.  Otherwise, signal an error with a condition created by
+   calling ‘(make-http-status CODE)’.
+
+   Exceptional situations:
+
+      * Signals a type error if an argument is not of the correct
+        type.
+
                                                                         [Method]
 http-status-code ((condition http-status))
    Not documented.
@@ -188,13 +207,12 @@ make-http-status (code &optional reason)
 
    First argument CODE is the HTTP status code.  Value should
     be a non-negative integer in the range from 100 to 599.
-
    Optional second argument REASON is the HTTP status reason
     phrase.  Value has to be a string.  If argument REASON is
     omitted or ‘nil’, attempt to determine the reason phrase
     from the status code.
 
-   The returned condition is a subtype of ‘http-status’ if CODE is
+   The returned condition is a sub-type of ‘http-status’ if CODE is
    in the range from 100 to 599.  Otherwise, the return value is a
    condition of type ‘http-status’.
 
@@ -493,6 +511,42 @@ with-soap-envelope ((&rest options &key version namespace-prefix
 
    The indentation is only added for visualization effects.  The actual
    SOAP message does not contain any superfluous whitespace characters.
+
+                                                                      [Function]
+xml-parse (source &rest options &key (result-type 'dom:document)
+           &allow-other-keys)
+   Parse an XML document.
+
+   First argument SOURCE is the input object.  Value is either a stream,
+    a string, or a pathname.  The symbol ‘t’ is equal to the value of the
+    ‘*standard-input*’ special variable.
+   Keyword argument RESULT-TYPE specifies the Lisp representation of the
+    XML document.  Value is either ‘:dom’ for a ‘dom:document’ or ‘:stp’
+    for a ‘stp:document’.  The default is to create a ‘dom:document’.
+   Remaining keyword arguments are forwarded to the underlying
+    ‘cxml:parse’ function.
+
+   Return value is the Lisp representation of the XML document.
+
+                                                                      [Function]
+xml-serialize (destination document &rest options &key encoding canonical
+               (declaration t) indentation &allow-other-keys)
+   Serialize the Lisp representation of an XML document.
+
+   First argument DESTINATION is the output object.  Value is either
+    a stream, a string, or a pathname.  The symbol ‘t’ is equal to
+    ‘*standard-output*’ and ‘nil’ means to return a string.
+   Second argument DOCUMENT is the Lisp representation of the XML
+    document to be serialized.  Value is either a ‘dom:document’ or
+    a ‘stp:document’ object.
+   Keyword arguments ENCODING, CANONICAL, DECLARATION, and INDENTATION
+    are used to initialize a CXML sink object.
+   Remaining keyword arguments are forwarded to the underlying DOM
+    mapping function.
+
+   If DESTINATION is a stream, a string, a pathname, or ‘t’, then the
+   result is ‘nil’.  Otherwise, the result is a string containing the
+   XML document.
 
                                                                       [Function]
 xmlns-name (object)
