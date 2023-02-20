@@ -77,6 +77,8 @@
    #:*xml-namespaces*
    #:xmlns-prefix
    #:xmlns-name
+   #:xml-parse
+   #:xml-serialize
    ;; soap.lisp
    #:*soap-version*
    #:*soap-namespace-prefix*

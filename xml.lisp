@@ -100,4 +100,87 @@ Exceptional situations:
       (error 'type-error :datum name :expected-type 'string))
     name))
 
+(defun xml-parse (source &rest options &key (result-type 'dom:document) &allow-other-keys)
+  "Parse an XML document.
+
+First argument SOURCE is the input object.  Value is either a stream,
+ a string, or a pathname.  The symbol ‘t’ is equal to the value of the
+ ‘*standard-input*’ special variable.
+Keyword argument RESULT-TYPE specifies the Lisp representation of the
+ XML document.  Value is either ‘:dom’ for a ‘dom:document’ or ‘:stp’
+ for a ‘stp:document’.  The default is to create a ‘dom:document’.
+Remaining keyword arguments are forwarded to the underlying
+ ‘cxml:parse’ function.
+
+Return value is the Lisp representation of the XML document."
+  ;; Remove known keys.
+  (iter (while (remf options :result-type)))
+  (apply #'cxml:parse
+	 (if (eq source t) *standard-input* source)
+	 (ecase result-type
+	   ((:dom dom:document)
+	    (cxml-dom:make-dom-builder))
+	   ((:stp stp:document)
+	    (stp:make-builder)))
+	 options))
+
+(defun xml-serialize (destination document &rest options &key encoding canonical (declaration t) indentation &allow-other-keys)
+  "Serialize the Lisp representation of an XML document.
+
+First argument DESTINATION is the output object.  Value is either
+ a stream, a string, or a pathname.  The symbol ‘t’ is equal to
+ ‘*standard-output*’ and ‘nil’ means to return a string.
+Second argument DOCUMENT is the Lisp representation of the XML
+ document to be serialized.  Value is either a ‘dom:document’ or
+ a ‘stp:document’ object.
+Keyword arguments ENCODING, CANONICAL, DECLARATION, and INDENTATION
+ are used to initialize a CXML sink object.
+Remaining keyword arguments are forwarded to the underlying DOM
+ mapping function.
+
+If DESTINATION is a stream, a string, a pathname, or ‘t’, then the
+result is ‘nil’.  Otherwise, the result is a string containing the
+XML document."
+  ;; Remove known keys.
+  (iter (for key :in '(:encoding :canonical :declaration :indentation))
+	(iter (while (remf options key))))
+  (flet ((%print (stream)
+	   (let* ((sink-options (nconc (when encoding
+					 (list :encoding encoding))
+				       (when canonical
+					 (list :canonical canonical))
+				       (when (null declaration)
+					 (list :omit-xml-declaration-p t))
+				       (when indentation
+					 (list :indentation indentation))))
+		  (sink (if (null stream)
+			    (apply #'cxml:make-string-sink sink-options)
+			  (let ((element-type (stream-element-type stream)))
+			    (cond ((subtypep element-type 'character)
+				   (apply #'cxml:make-character-stream-sink stream sink-options))
+				  ((subtypep element-type '(unsigned-byte 8))
+				   (apply #'cxml:make-octet-stream-sink stream sink-options))
+				  ((error 'type-error :datum element-type :expected-type '(or character (unsigned-byte 8)))))))))
+	     (etypecase document
+	       (dom:document
+		(apply #'dom:map-document sink document
+ 		       (nconc (when canonical
+				(list :include-doctype :canonical-notations))
+			      options)))
+	       (stp:document
+		(stp:serialize document sink))))))
+    (etypecase destination
+      (stream
+       (%print destination) nil)
+      (string
+       (with-output-to-string (stream destination)
+	 (%print stream) nil))
+      (pathname
+       (with-open-file (stream destination :direction :output :element-type '(unsigned-byte 8) :if-exists :supersede :if-does-not-exist :create)
+	 (%print stream) nil))
+      ((member t)
+       (%print *standard-output*) nil)
+      (null
+       (%print nil)))))
+
 ;;; xml.lisp ends here
