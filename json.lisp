@@ -52,10 +52,10 @@
 
 (in-package :rs-restless)
 
-(declaim (type (or null package) *json-keyword-package*))
 (defvar *json-keyword-package* nil
   "Home package for the keys of JSON object members.
 A value of ‘nil’ means that keys are strings.")
+(declaim (type (or null package) *json-keyword-package*))
 
 (defun json-object-key (name)
   "Return the JSON object key for the string NAME.
@@ -69,11 +69,13 @@ are strings."
 
 (defun json-decode (&optional (stream *standard-input*))
   "Read a JSON value and return it as Lisp data."
-  (rs-json:parse stream))
+  (let ((rs-json:*object-key-decoder* #'json-object-key))
+    (rs-json:parse stream)))
 
 (defun json-decode-from-string (string)
   "Like ‘json-decode’ but read the JSON value from STRING."
-  (rs-json:parse string))
+  (let ((rs-json:*object-key-decoder* #'json-object-key))
+    (rs-json:parse string)))
 
 (defun json-encode (data &optional (stream *standard-output*))
   "Print Lisp data as a JSON value.
