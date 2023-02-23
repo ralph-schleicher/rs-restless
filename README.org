@@ -40,7 +40,6 @@ follows:
 The other popular data format for data exchange with web services is
 XML.  The RESTless library relies on Closure XML (CXML) and related
 packages for XML processing.
-https://www.w3.org/XML/
 
 *** RDF/XML
 
