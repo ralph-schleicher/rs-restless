@@ -8,6 +8,54 @@ messages, RDF/XML parsing, OAuth 1.0a user authorization, OSLC
 clients, and more.
 
 
+** Technologies
+
+*** HTTP
+
+Most web services use HTTP for data transfer.  The RESTless library
+always uses the Drakma HTTP client for this task.
+
+*** JSON
+
+A popular data format for data exchange with web services is JSON.
+The RESTless library provides its own JSON decoder/encoder in the
+‘rs-json’ package.  The implementation is RFC 8259 compliant and has
+adequate performance.  The default configuration is round-trip safe,
+i.e. you can read a JSON value and write it back without loss of
+information.  The mapping between JSON values and Lisp data is as
+follows:
+
+- JSON objects are represented as associated lists.  This has two
+  benefits compared to hash tables; there is a reader syntax and the
+  printer shows the complete JSON object.
+- JSON arrays are represented as vectors.  Similar benefits as for
+  objects and the element access is indexed based.
+- JSON strings and numbers are Lisp strings and numbers respectively.
+- The JSON values ‘true’, ‘false’, and ‘null’ are represented by the
+  keywords ‘:true’, ‘:false’, and ‘:null’ respectively.  This is due
+  to the round-trip safety.
+
+*** XML
+
+The other popular data format for data exchange with web services is
+XML.  The RESTless library relies on Closure XML (CXML) and related
+packages for XML processing.
+https://www.w3.org/XML/
+
+*** RDF/XML
+
+RDF/XML is the data exchange format for the semantic web.  The
+CL-RDFXML library is based on Closure XML and thus fits well into the
+ecosystem of the RESTless library.  RDF graphs are read into a Wilbur
+database and then you use Wilbur commands to query the data.
+
+*** OSLC
+
+OSLC (Open Services for Lifecycle Collaboration) combines RDF/XML with
+OAuth 1.0a user authorization.  Thus, everything said about RDF/XML
+also applies to OSLC.
+
+
 ** Dependencies
 
 - Drakma :: HTTP Client
