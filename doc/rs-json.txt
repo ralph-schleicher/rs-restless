@@ -9,7 +9,7 @@ The main differences are listed below.
      However, you can tweak the behavior of the parser to suite your
      needs.
 
-   * The printer does not support indentation.
+   * The serializer only supports a compact pretty printing format.
 
    * JSON objects can be represented as hash-tables, associated lists,
      or property lists.  The default is to use alists.
@@ -155,112 +155,112 @@ syntax-error
    Default is ‘:true’, but ‘t’ may be appropriate, too.
 
                                                               [Generic Function]
-encode (object)
+encode (data)
    Encode Lisp data as a JSON value.
 
-   Argument OBJECT is the Lisp data to be serialized.
+   Argument DATA is the Lisp data to be serialized.
 
    The JSON output is written to the ‘*standard-output*’ stream.
    The return value of an ‘encode’ method is ignored.
 
                                                                         [Method]
-encode ((object list))
+encode ((data list))
    Encode a list by calling ‘*list-encoder*’.
 
                                                                         [Method]
-encode ((object (eql nil)))
+encode ((data (eql nil)))
    Encode ‘nil’ by calling ‘*nil-encoder*’.
 
                                                                         [Method]
-encode ((object (eql t)))
+encode ((data (eql t)))
    Encode ‘t’ as a JSON ‘true’ value.
 
                                                                         [Method]
-encode ((object (eql :null)))
+encode ((data (eql :null)))
    Encode ‘:null’ as a JSON ‘null’ value.
 
                                                                         [Method]
-encode ((object (eql :false)))
+encode ((data (eql :false)))
    Encode ‘:false’ as a JSON ‘false’ value.
 
                                                                         [Method]
-encode ((object (eql :true)))
+encode ((data (eql :true)))
    Encode ‘:true’ as a JSON ‘true’ value.
 
                                                                         [Method]
-encode ((object real))
+encode ((data real))
    Encode a floating-point number as a JSON number.
 
                                                                         [Method]
-encode ((object rational))
+encode ((data rational))
    Encode a rational number as a JSON number.
    Affected by ‘*read-default-float-format*’.
 
                                                                         [Method]
-encode ((object integer))
+encode ((data integer))
    Encode an integer as a JSON number.
 
                                                                         [Method]
-encode ((object character))
+encode ((data character))
    Encode a character as a JSON string.
 
                                                                         [Method]
-encode ((object symbol))
+encode ((data symbol))
    Encode a symbol as a JSON string.
    Affected by ‘*print-case*’.
 
                                                                         [Method]
-encode ((object string))
+encode ((data string))
    Encode a string as a JSON string.
 
                                                                         [Method]
-encode ((object vector))
+encode ((data vector))
    Encode a vector as a JSON array.
 
                                                                         [Method]
-encode ((object hash-table))
+encode ((data hash-table))
    Encode a hash table as a JSON object.
 
                                                                         [Method]
-encode (object)
+encode (data)
    The default encoding method.
    Signals an ‘encoding-error’.
 
                                                                       [Function]
-encode-array (object)
+encode-array (data)
    Encode Lisp data as a JSON array.
 
-   Argument OBJECT is the Lisp data to be serialized as a JSON array.
+   Argument DATA is the Lisp data to be serialized as a JSON array.
     Value has to be a sequence, i.e. a vector or a list.
 
    Mostly useful for binding ‘*list-encoder*’.
 
                                                                       [Function]
-encode-false (object)
+encode-false (data)
    Constantly print a JSON ‘false’ value.
 
    Mostly useful for binding ‘*nil-encoder*’.
 
                                                                       [Function]
-encode-list (object)
+encode-list (data)
    Encode a list by calling ‘*list-encoder*’.
 
    Mostly useful for binding ‘*nil-encoder*’.
 
                                                                       [Function]
-encode-null (object)
+encode-null (data)
    Constantly print a JSON ‘null’ value.
 
    Mostly useful for binding ‘*nil-encoder*’.
 
                                                                       [Function]
-encode-object (object)
+encode-object (data)
    Encode Lisp data as a JSON object.
 
-   Argument OBJECT is the Lisp data to be serialized as a JSON object.
+   Argument DATA is the Lisp data to be serialized as a JSON object.
     Value has to be a hash table, an associated list, or a property list.
-   If OBJECT is a list, the value of the ‘*object-as*’ special variable
-    affects the interpretation of OBJECT.
+   If DATA is a list, the value of the ‘*object-as*’ special variable
+    affects the interpretation of DATA.
 
    Mostly useful for binding the ‘*list-encoder*’ special variable.
 
@@ -297,13 +297,16 @@ parse (source &key junk-allowed)
         is not a symbol, number, or character.
 
                                                                       [Function]
-serialize (destination object)
+serialize (destination data &key (pretty *print-pretty*))
    Print a Lisp data structure as a JSON value.
 
    First argument DESTINATION is the output object.  Value is either a
     stream, a string, or a pathname.  The special value ‘t’ is equal to
     ‘*standard-output*’ and ‘nil’ means to return a string.
-   Second argument OBJECT is the Lisp data to be serialized.
+   Second argument DATA is the Lisp data to be serialized.
+   If keyword argument PRETTY is true, pretty print the JSON value in a
+    compact format.  Default is the value of the ‘*print-pretty*’ special
+    variable.
 
    The actual serialization of Lisp data as a JSON value is performed
    by the ‘encode’ methods (which see).

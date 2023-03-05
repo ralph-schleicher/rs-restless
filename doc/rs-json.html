@@ -49,7 +49,7 @@ The main differences are listed below.
      However, you can tweak the behavior of the parser to suite your
      needs.
 
-   * The printer does not support indentation.
+   * The serializer only supports a compact pretty printing format.
 
    * JSON objects can be represented as hash-tables, associated lists,
      or property lists.  The default is to use alists.
@@ -775,7 +775,7 @@ Default is ‘:true’, but ‘t’ may be appropriate, too.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">data</span>)</span></td>
 	<td class="category"><span class="category">Generic Function</span></td>
        </tr>
       </tbody>
@@ -784,7 +784,7 @@ Default is ‘:true’, but ‘t’ may be appropriate, too.</pre>
     <div class="documentation">
      <pre>Encode Lisp data as a JSON value.
 
-Argument OBJECT is the Lisp data to be serialized.
+Argument DATA is the Lisp data to be serialized.
 
 The JSON output is written to the ‘*standard-output*’ stream.
 The return value of an ‘encode’ method is ignored.</pre>
@@ -801,7 +801,7 @@ The return value of an ‘encode’ method is ignored.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">list</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">list</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -822,7 +822,7 @@ The return value of an ‘encode’ method is ignored.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">(eql nil)</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">(eql nil)</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -843,7 +843,7 @@ The return value of an ‘encode’ method is ignored.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">(eql t)</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">(eql t)</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -864,7 +864,7 @@ The return value of an ‘encode’ method is ignored.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">(eql :null)</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">(eql :null)</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -885,7 +885,7 @@ The return value of an ‘encode’ method is ignored.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">(eql :false)</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">(eql :false)</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -906,7 +906,7 @@ The return value of an ‘encode’ method is ignored.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">(eql :true)</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">(eql :true)</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -927,7 +927,7 @@ The return value of an ‘encode’ method is ignored.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">real</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">real</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -948,7 +948,7 @@ The return value of an ‘encode’ method is ignored.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">rational</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">rational</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -970,7 +970,7 @@ Affected by ‘*read-default-float-format*’.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">integer</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">integer</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -991,7 +991,7 @@ Affected by ‘*read-default-float-format*’.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">character</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">character</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -1012,7 +1012,7 @@ Affected by ‘*read-default-float-format*’.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">symbol</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">symbol</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -1034,7 +1034,7 @@ Affected by ‘*print-case*’.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">string</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">string</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -1055,7 +1055,7 @@ Affected by ‘*print-case*’.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">vector</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">vector</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -1076,7 +1076,7 @@ Affected by ‘*print-case*’.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">((<span class="variable">object</span>&nbsp;<span class="method-specializer">hash-table</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">((<span class="variable">data</span>&nbsp;<span class="method-specializer">hash-table</span>))</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -1097,7 +1097,7 @@ Affected by ‘*print-case*’.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">data</span>)</span></td>
 	<td class="category"><span class="category">Method</span></td>
        </tr>
       </tbody>
@@ -1119,7 +1119,7 @@ Signals an ‘encoding-error’.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode-array</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">data</span>)</span></td>
 	<td class="category"><span class="category">Function</span></td>
        </tr>
       </tbody>
@@ -1128,7 +1128,7 @@ Signals an ‘encoding-error’.</pre>
     <div class="documentation">
      <pre>Encode Lisp data as a JSON array.
 
-Argument OBJECT is the Lisp data to be serialized as a JSON array.
+Argument DATA is the Lisp data to be serialized as a JSON array.
  Value has to be a sequence, i.e. a vector or a list.
 
 Mostly useful for binding ‘*list-encoder*’.</pre>
@@ -1145,7 +1145,7 @@ Mostly useful for binding ‘*list-encoder*’.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode-false</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">data</span>)</span></td>
 	<td class="category"><span class="category">Function</span></td>
        </tr>
       </tbody>
@@ -1168,7 +1168,7 @@ Mostly useful for binding ‘*nil-encoder*’.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode-list</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">data</span>)</span></td>
 	<td class="category"><span class="category">Function</span></td>
        </tr>
       </tbody>
@@ -1191,7 +1191,7 @@ Mostly useful for binding ‘*nil-encoder*’.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode-null</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">data</span>)</span></td>
 	<td class="category"><span class="category">Function</span></td>
        </tr>
       </tbody>
@@ -1214,7 +1214,7 @@ Mostly useful for binding ‘*nil-encoder*’.</pre>
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">encode-object</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">data</span>)</span></td>
 	<td class="category"><span class="category">Function</span></td>
        </tr>
       </tbody>
@@ -1223,10 +1223,10 @@ Mostly useful for binding ‘*nil-encoder*’.</pre>
     <div class="documentation">
      <pre>Encode Lisp data as a JSON object.
 
-Argument OBJECT is the Lisp data to be serialized as a JSON object.
+Argument DATA is the Lisp data to be serialized as a JSON object.
  Value has to be a hash table, an associated list, or a property list.
-If OBJECT is a list, the value of the ‘*object-as*’ special variable
- affects the interpretation of OBJECT.
+If DATA is a list, the value of the ‘*object-as*’ special variable
+ affects the interpretation of DATA.
 
 Mostly useful for binding the ‘*list-encoder*’ special variable.</pre>
     </div>
@@ -1308,7 +1308,7 @@ Exceptional situations:
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">serialize</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="variable">destination</span> <span class="variable">object</span>)</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">destination</span> <span class="variable">data</span> <span class="lambda-list-keyword">&amp;key</span> (<span class="variable">pretty</span>&nbsp;<span class="init-form">*print-pretty*</span>))</span></td>
 	<td class="category"><span class="category">Function</span></td>
        </tr>
       </tbody>
@@ -1320,7 +1320,10 @@ Exceptional situations:
 First argument DESTINATION is the output object.  Value is either a
  stream, a string, or a pathname.  The special value ‘t’ is equal to
  ‘*standard-output*’ and ‘nil’ means to return a string.
-Second argument OBJECT is the Lisp data to be serialized.
+Second argument DATA is the Lisp data to be serialized.
+If keyword argument PRETTY is true, pretty print the JSON value in a
+ compact format.  Default is the value of the ‘*print-pretty*’ special
+ variable.
 
 The actual serialization of Lisp data as a JSON value is performed
 by the ‘encode’ methods (which see).
