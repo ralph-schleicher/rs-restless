@@ -29,7 +29,7 @@ follows:
   benefits compared to hash tables; there is a reader syntax and the
   printer shows the complete JSON object.
 - JSON arrays are represented as vectors.  Similar benefits as for
-  objects and the element access is indexed based.
+  objects and the element access is index based.
 - JSON strings and numbers are Lisp strings and numbers respectively.
 - The JSON values ‘true’, ‘false’, and ‘null’ are represented by the
   keywords ‘:true’, ‘:false’, and ‘:null’ respectively.  This is due
@@ -75,7 +75,7 @@ also applies to OSLC.
   - https://plexippus-xpath.common-lisp.dev/
   - https://github.com/sharplispers/xpath/
 - CL-RDFXML :: RDF/XML Parser
-  - http://www.cs.rpi.edu//~tayloj/CL-RDFXML/
+  - http://www.cs.rpi.edu/~tayloj/CL-RDFXML/
   - https://github.com/tayloj/cl-rdfxml/
 - Wilbur :: Semantic Web Toolkit
   - https://wilbur-rdf.sourceforge.net/docs/
