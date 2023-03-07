@@ -50,4 +50,20 @@
 (defmethod string-from-uri ((uri string))
   uri)
 
+(defun puri-designator (uri)
+  "Return either an object of type ‘puri:uri’ or a string."
+  (if (puri:uri-p uri) uri (string-from-uri uri)))
+
+(defun quri-designator (uri)
+  "Return either an object of type ‘quri:uri’ or a string."
+  (if (quri:uri-p uri) uri (string-from-uri uri)))
+
+(defun ensure-puri (uri)
+  "Return an object of type ‘puri:uri’."
+  (if (puri:uri-p uri) uri (puri:uri (string-from-uri uri))))
+
+(defun ensure-quri (uri)
+  "Return an object of type ‘quri:uri’."
+  (if (quri:uri-p uri) uri (quri:uri (string-from-uri uri))))
+
 ;;; uri.lisp ends here
