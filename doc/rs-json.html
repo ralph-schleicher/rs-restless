@@ -170,6 +170,12 @@ The main differences are listed below.
       </a>
      </li>
      <li>
+      <a href="#_c79a73b2-cbb2-5b59-b4a6-209f432c9018">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*pretty-printer*</span>
+      </a>
+     </li>
+     <li>
       <a href="#_7ba0ad70-c88a-5fd2-a299-235f8513ebbc">
        <span class="category">Special Variable</span>
        <span class="symbol">*true*</span>
@@ -332,6 +338,18 @@ The main differences are listed below.
       <a href="#_23135103-3405-595f-9cfb-a572bfa931e6">
        <span class="category">Function</span>
        <span class="symbol">serialize</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_eafd39c9-b0a7-53b9-927a-f232ce28f89b">
+       <span class="category">Constant</span>
+       <span class="symbol">serializer</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_5d59d54c-8a2d-54a2-9af4-994588bf913d">
+       <span class="category">Function</span>
+       <span class="symbol">serializer</span>
       </a>
      </li>
      <li>
@@ -740,6 +758,48 @@ Default is the ‘identity’ function.
 The function is called with one argument, the key string.  The value
 of the function is used as the key for the data structure produced.
 See also the ‘*object-as*’ special variable.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_c79a73b2-cbb2-5b59-b4a6-209f432c9018">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*pretty-printer*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Whether or not to enable the pretty printer for JSON output.
+Default is false.
+
+If the pretty printer is disabled, JSON output is just a flat
+sequence of characters.  For example:
+
+     [{"foo" : 42, "bar" : ["baz", "hack"]}, null]
+
+There is no explicit or implicit line break since all control
+characters are escaped.  While this is fast and machine readable,
+it's difficult for humans to reveal the structure of the data.
+
+If the pretty printer is enabled, JSON output is more visually
+appearing.  Here is the same example as above but pretty printed:
+
+     [{"foo" : 42,
+       "bar" : ["baz",
+                "hack"]},
+      null]
+
+Explicit line breaks occur after object members and array elements
+and the items of these compound structures are lined up nicely.</pre>
     </div>
    </div>
    <div class="definition" id="_7ba0ad70-c88a-5fd2-a299-235f8513ebbc">
@@ -1314,7 +1374,7 @@ Exceptional situations:
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">serialize</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="variable">destination</span> <span class="variable">data</span> <span class="lambda-list-keyword">&amp;key</span> (<span class="variable">pretty</span>&nbsp;<span class="init-form">*print-pretty*</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">destination</span> <span class="variable">data</span> <span class="lambda-list-keyword">&amp;key</span> (<span class="variable">pretty</span>&nbsp;<span class="init-form">*pretty-printer*</span>))</span></td>
 	<td class="category"><span class="category">Function</span></td>
        </tr>
       </tbody>
@@ -1326,10 +1386,10 @@ Exceptional situations:
 First argument DESTINATION is the output object.  Value is either a
  stream, a string, or a pathname.  The special value ‘t’ is equal to
  ‘*standard-output*’ and ‘nil’ means to return a string.
-Second argument DATA is the Lisp data to be serialized.
-If keyword argument PRETTY is true, pretty print the JSON value in a
- compact format.  Default is the value of the ‘*print-pretty*’ special
- variable.
+Second argument DATA is the Lisp data structure to be serialized.
+If keyword argument PRETTY is true, pretty print the JSON value in
+ a compact format.  Default is the value of the ‘*pretty-printer*’
+ special variable.
 
 The actual serialization of Lisp data as a JSON value is performed
 by the ‘encode’ methods (which see).
@@ -1345,6 +1405,94 @@ Exceptional situations:
 
    * May signal an ‘arithmetic-error’ if a rational number is
      converted to a floating-point number.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_eafd39c9-b0a7-53b9-927a-f232ce28f89b">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">serializer</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Constant</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Format control for printing a Lisp data structure as a JSON value.
+The value of the ‘*print-pretty*’ special variable determines if the
+JSON output is pretty printed.  For example,
+
+     (format t "JSON: ~@?~%" serializer #((("foo" . 42) ("bar" . #("baz" "hack"))) :null))
+
+may print
+
+     JSON: [{"foo" : 42,
+             "bar" : ["baz",
+                      "hack"]},
+            null]
+
+The value of this constant is a format control function that follows
+the conventions for a function created by the ‘formatter’ macro.  See
+also the ‘serializer’ function for another method for how to print
+JSON values with the ‘format’ function.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_5d59d54c-8a2d-54a2-9af4-994588bf913d">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">serializer</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">stream</span> <span class="variable">data</span> <span class="lambda-list-keyword">&amp;optional</span> <span class="variable">colonp</span> <span class="variable">at-sign-p</span> <span class="lambda-list-keyword">&amp;rest</span> <span class="variable">parameters</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Format function for printing a Lisp data structure as a JSON value.
+
+First argument STREAM is the output stream.
+Second argument DATA is the Lisp data structure to be serialized.
+If optional third argument COLONP is true, output the JSON value in
+ a pretty printed format.  Default is false.
+The remaining arguments are ignored.
+
+This function is designed so that it can be called by a slash format
+directive, i.e. ‘~/serializer/’.  If the colon modifier is given, use
+the pretty printer.  For example,
+
+     (format t "JSON: ~/serializer/~%" #((("foo" . 42) ("bar" . #("baz" "hack"))) :null))
+
+prints
+
+     JSON: [{"foo" : 42, "bar" : ["baz", "hack"]}, null]
+
+whereas
+
+     (format t "JSON: ~:/serializer/~%" #((("foo" . 42) ("bar" . #("baz" "hack"))) :null))
+
+prints
+
+     JSON: [{"foo" : 42,
+             "bar" : ["baz",
+                      "hack"]},
+            null]
+
+See also the ‘serializer’ constant variable for another method for
+how to print JSON values with the ‘format’ function.</pre>
     </div>
    </div>
    <div class="definition" id="_d7edf775-0102-59fe-adf5-ac133674d751">

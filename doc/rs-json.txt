@@ -150,6 +150,31 @@ syntax-error
    See also the ‘*object-as*’ special variable.
 
                                                               [Special Variable]
+*pretty-printer*
+   Whether or not to enable the pretty printer for JSON output.
+   Default is false.
+
+   If the pretty printer is disabled, JSON output is just a flat
+   sequence of characters.  For example:
+
+        [{"foo" : 42, "bar" : ["baz", "hack"]}, null]
+
+   There is no explicit or implicit line break since all control
+   characters are escaped.  While this is fast and machine readable,
+   it's difficult for humans to reveal the structure of the data.
+
+   If the pretty printer is enabled, JSON output is more visually
+   appearing.  Here is the same example as above but pretty printed:
+
+        [{"foo" : 42,
+          "bar" : ["baz",
+                   "hack"]},
+         null]
+
+   Explicit line breaks occur after object members and array elements
+   and the items of these compound structures are lined up nicely.
+
+                                                              [Special Variable]
 *true*
    The symbol to represent the JSON value ‘true’.
    Default is ‘:true’, but ‘t’ may be appropriate, too.
@@ -303,16 +328,16 @@ parse (source &key junk-allowed)
         is not a symbol, number, or character.
 
                                                                       [Function]
-serialize (destination data &key (pretty *print-pretty*))
+serialize (destination data &key (pretty *pretty-printer*))
    Print a Lisp data structure as a JSON value.
 
    First argument DESTINATION is the output object.  Value is either a
     stream, a string, or a pathname.  The special value ‘t’ is equal to
     ‘*standard-output*’ and ‘nil’ means to return a string.
-   Second argument DATA is the Lisp data to be serialized.
-   If keyword argument PRETTY is true, pretty print the JSON value in a
-    compact format.  Default is the value of the ‘*print-pretty*’ special
-    variable.
+   Second argument DATA is the Lisp data structure to be serialized.
+   If keyword argument PRETTY is true, pretty print the JSON value in
+    a compact format.  Default is the value of the ‘*pretty-printer*’
+    special variable.
 
    The actual serialization of Lisp data as a JSON value is performed
    by the ‘encode’ methods (which see).
@@ -328,6 +353,60 @@ serialize (destination data &key (pretty *print-pretty*))
 
       * May signal an ‘arithmetic-error’ if a rational number is
         converted to a floating-point number.
+
+                                                                      [Constant]
+serializer
+   Format control for printing a Lisp data structure as a JSON value.
+   The value of the ‘*print-pretty*’ special variable determines if the
+   JSON output is pretty printed.  For example,
+
+        (format t "JSON: ~@?~%" serializer #((("foo" . 42) ("bar" . #("baz" "hack"))) :null))
+
+   may print
+
+        JSON: [{"foo" : 42,
+                "bar" : ["baz",
+                         "hack"]},
+               null]
+
+   The value of this constant is a format control function that follows
+   the conventions for a function created by the ‘formatter’ macro.  See
+   also the ‘serializer’ function for another method for how to print
+   JSON values with the ‘format’ function.
+
+                                                                      [Function]
+serializer (stream data &optional colonp at-sign-p &rest parameters)
+   Format function for printing a Lisp data structure as a JSON value.
+
+   First argument STREAM is the output stream.
+   Second argument DATA is the Lisp data structure to be serialized.
+   If optional third argument COLONP is true, output the JSON value in
+    a pretty printed format.  Default is false.
+   The remaining arguments are ignored.
+
+   This function is designed so that it can be called by a slash format
+   directive, i.e. ‘~/serializer/’.  If the colon modifier is given, use
+   the pretty printer.  For example,
+
+        (format t "JSON: ~/serializer/~%" #((("foo" . 42) ("bar" . #("baz" "hack"))) :null))
+
+   prints
+
+        JSON: [{"foo" : 42, "bar" : ["baz", "hack"]}, null]
+
+   whereas
+
+        (format t "JSON: ~:/serializer/~%" #((("foo" . 42) ("bar" . #("baz" "hack"))) :null))
+
+   prints
+
+        JSON: [{"foo" : 42,
+                "bar" : ["baz",
+                         "hack"]},
+               null]
+
+   See also the ‘serializer’ constant variable for another method for
+   how to print JSON values with the ‘format’ function.
 
                                                                       [Function]
 syntax-error (&optional datum &rest arguments)
