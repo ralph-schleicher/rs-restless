@@ -453,7 +453,9 @@ The main differences are listed below.
 If true, the value of an existing object member is replaced by a
 successive object member with the same key.  Special value ‘:ignore’
 means to ignore successive duplicate object members, i.e. the value
-of an existing object member will not be replaced.
+of an existing object member will not be replaced.  Special value
+‘:append’ means to add a duplicate object member to the Lisp data
+structure – this feature is only available for alists and plists.
 If false, signal a ‘syntax-error’.  This is the default.
 
 ECMA-404 says nothing about duplicate object keys.  RFC 8259 says
@@ -1360,7 +1362,11 @@ Exceptional situations:
 
    * Signals a ‘program-error’ if JSON objects are parsed as
      plists and the return value of ‘*object-key-decoder*’
-     is not a symbol, number, or character.</pre>
+     is not a symbol, number, or character.
+
+   * Signals a ‘program-error’ if JSON objects are parsed as
+     hash tables, ‘*allow-duplicate-object-keys*’ is bound to
+     ‘:append’, and a duplicate object member exists.</pre>
     </div>
    </div>
    <div class="definition" id="_23135103-3405-595f-9cfb-a572bfa931e6">
