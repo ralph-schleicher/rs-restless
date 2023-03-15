@@ -73,6 +73,13 @@ syntax-error
    or after the last array element.  Default is false.
 
                                                               [Special Variable]
+*allow-unicode-graphic*
+   Whether or not to escape Unicode graphic characters in JSON strings.
+   If true, any Unicode graphic character is printed as is.  Otherwise,
+   a graphic character is escaped like any other non-graphic character.
+   Thus, the JSON output is plain US-ASCII.  Default is false.
+
+                                                              [Special Variable]
 *allow-unicode-whitespace*
    Whether or not to accept any Unicode whitespace character.
    If true, any character with the Unicode whitespace property is
@@ -85,6 +92,35 @@ syntax-error
    The Lisp data structure used to represent a JSON array.
    Value is either ‘:vector’ or ‘:list’.  The default is to use
    vectors.
+
+                                                              [Special Variable]
+*decode-array-hook*
+   Hook to run after a JSON array has been decoded.
+   Value has to be a function designator.  The function is called with
+   one argument, the Lisp data structure representing the JSON array;
+   see the ‘*array-as*’ special variable.  The return value of the
+   function is used as the actual array value.
+
+                                                              [Special Variable]
+*decode-object-hook*
+   Hook to run after a JSON object has been decoded.
+   Value has to be a function designator.  The function is called with
+   one argument, the Lisp data structure representing the JSON object;
+   see the ‘*object-as*’ special variable.  The return value of the
+   function is used as the actual object value.
+
+                                                              [Special Variable]
+*encode-symbol-hook*
+   Hook to convert a symbol into a string.
+   Value has to be a function designator.  The function is called with
+   the symbol as the only argument.  The return value of the function
+   must be a string.
+
+   Special value ‘:upcase’, ‘:downcase’, ‘:capitalize’, ‘:preserve’, or
+   ‘:invert’ means to change the case of the symbol name respectively.
+   See the ‘*print-case*’ special variable and ‘readtable-case’ function.
+   A value of ‘nil’ means to use the value of the ‘*print-case*’ special
+   variable.
 
                                                               [Special Variable]
 *false*
@@ -152,34 +188,14 @@ syntax-error
    See also the ‘*object-as*’ special variable.
 
                                                               [Special Variable]
-*pretty-printer*
-   Whether or not to enable the pretty printer for JSON output.
-   Default is false.
-
-   If the pretty printer is disabled, JSON output is just a flat
-   sequence of characters.  For example:
-
-        [{"foo" : 42, "bar" : ["baz", "hack"]}, null]
-
-   There is no explicit or implicit line break since all control
-   characters are escaped.  While this is fast and machine readable,
-   it's difficult for humans to reveal the structure of the data.
-
-   If the pretty printer is enabled, JSON output is more visually
-   appearing.  Here is the same example as above but pretty printed:
-
-        [{"foo" : 42,
-          "bar" : ["baz",
-                   "hack"]},
-         null]
-
-   Explicit line breaks occur after object members and array elements
-   and the items of these compound structures are lined up nicely.
-
-                                                              [Special Variable]
 *true*
    The symbol to represent the JSON value ‘true’.
    Default is ‘:true’, but ‘t’ may be appropriate, too.
+
+                                                                      [Function]
+array-element (value)
+   Encode a JSON array element.
+   See the ‘with-array’ macro.
 
                                                               [Generic Function]
 encode (data)
@@ -189,6 +205,32 @@ encode (data)
 
    The JSON output is written to the ‘*standard-output*’ stream.
    The return value of an ‘encode’ method is ignored.
+
+   The ‘with-object’ and ‘with-array’ macros can be used to define JSON
+   encoders for your own Lisp data structures.  For example, define an
+   encoder for a CLOS class:
+
+        (defclass bank-account ()
+          ((iban
+            :initarg :iban
+            :initform (error "Missing IBAN argument."))
+           (balance
+            :initarg :balance
+            :initform 0)))
+
+        (defmethod encode ((object bank-account))
+          "Encode a bank account as a JSON object."
+          (with-object
+            (object-member "iban" (slot-value object 'iban))
+            (object-member "balance" (slot-value object 'balance))))
+
+   After that,
+
+        (serialize t (make-instance 'bank-account :iban "DE75512108001245126199"))
+
+   prints
+
+        {"iban" : "DE75512108001245126199", "balance" : 0}
 
                                                                         [Method]
 encode ((data list))
@@ -234,7 +276,12 @@ encode ((data character))
                                                                         [Method]
 encode ((data symbol))
    Encode a symbol as a JSON string.
-   Affected by ‘*print-case*’.
+   Affected by ‘*encode-symbol-hook*’.
+
+   Exceptional situations:
+
+      * Signals a ‘program-error’ if the value returned by the
+        ‘*encode-symbol-hook*’ function is not a string.
 
                                                                         [Method]
 encode ((data string))
@@ -296,6 +343,11 @@ encoding-error (&optional datum &rest arguments)
    Signal an encoding error.
 
                                                                       [Function]
+object-member (key value)
+   Encode a JSON object member.
+   See the ‘with-object’ macro.
+
+                                                                      [Function]
 parse (source &key junk-allowed)
    Read a JSON value.
 
@@ -334,7 +386,7 @@ parse (source &key junk-allowed)
         ‘:append’, and a duplicate object member exists.
 
                                                                       [Function]
-serialize (destination data &key (pretty *pretty-printer*))
+serialize (destination data &key pretty)
    Print a Lisp data structure as a JSON value.
 
    First argument DESTINATION is the output object.  Value is either a
@@ -342,8 +394,7 @@ serialize (destination data &key (pretty *pretty-printer*))
     ‘*standard-output*’ and ‘nil’ means to return a string.
    Second argument DATA is the Lisp data structure to be serialized.
    If keyword argument PRETTY is true, pretty print the JSON value in
-    a compact format.  Default is the value of the ‘*pretty-printer*’
-    special variable.
+    a compact format.  Default is false.
 
    The actual serialization of Lisp data as a JSON value is performed
    by the ‘encode’ methods (which see).
@@ -359,6 +410,28 @@ serialize (destination data &key (pretty *pretty-printer*))
 
       * May signal an ‘arithmetic-error’ if a rational number is
         converted to a floating-point number.
+
+   Notes:
+
+   If the pretty printer is disabled, JSON output is just a flat
+   sequence of characters.  For example:
+
+        [{"foo" : 42, "bar" : ["baz", "hack"]}, null]
+
+   There is no explicit or implicit line break since all control
+   characters are escaped.  While this is fast and machine readable,
+   it's difficult for humans to reveal the structure of the data.
+
+   If the pretty printer is enabled, JSON output is more visually
+   appearing.  Here is the same example as above but pretty printed:
+
+        [{"foo" : 42,
+          "bar" : ["baz",
+                   "hack"]},
+         null]
+
+   Explicit line breaks occur after object members and array elements
+   and the items of these compound structures are lined up nicely.
 
                                                                       [Constant]
 serializer
@@ -419,6 +492,19 @@ syntax-error (&optional datum &rest arguments)
    Signal a syntax error.
 
                                                                          [Macro]
+with-array (&body body)
+   Encode a JSON array.
+
+   The BODY calls ‘(array-element VALUE)’ to encode an array element.
+
+                                                                         [Macro]
 with-default-values ((&rest ignored) &body body)
    Establish a lexical environment with all special variables bound
    to their default values.
+
+                                                                         [Macro]
+with-object (&body body)
+   Encode a JSON object.
+
+   The BODY calls ‘(object-member KEY VALUE)’ to encode the key/value
+   pair of an object member.

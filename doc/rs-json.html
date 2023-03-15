@@ -116,6 +116,12 @@ The main differences are listed below.
       </a>
      </li>
      <li>
+      <a href="#_79e99c7d-9549-5c80-a96f-2f17637cab67">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*allow-unicode-graphic*</span>
+      </a>
+     </li>
+     <li>
       <a href="#_64656454-eac8-5604-8291-ed66ff582540">
        <span class="category">Special Variable</span>
        <span class="symbol">*allow-unicode-whitespace*</span>
@@ -125,6 +131,24 @@ The main differences are listed below.
       <a href="#_361c037b-ae47-5a56-b83e-25a174e1de90">
        <span class="category">Special Variable</span>
        <span class="symbol">*array-as*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_9753faa7-5040-50c6-ae56-9c681bf77b8d">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*decode-array-hook*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_d88d63a2-8d63-5968-bd17-d10df7513a9e">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*decode-object-hook*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_c8ba3322-1564-52f4-93d8-cb46c396130c">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*encode-symbol-hook*</span>
       </a>
      </li>
      <li>
@@ -170,15 +194,15 @@ The main differences are listed below.
       </a>
      </li>
      <li>
-      <a href="#_c79a73b2-cbb2-5b59-b4a6-209f432c9018">
-       <span class="category">Special Variable</span>
-       <span class="symbol">*pretty-printer*</span>
-      </a>
-     </li>
-     <li>
       <a href="#_7ba0ad70-c88a-5fd2-a299-235f8513ebbc">
        <span class="category">Special Variable</span>
        <span class="symbol">*true*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_88048376-7151-50d0-8c6d-f583ed4a0949">
+       <span class="category">Function</span>
+       <span class="symbol">array-element</span>
       </a>
      </li>
      <li>
@@ -329,6 +353,12 @@ The main differences are listed below.
       </a>
      </li>
      <li>
+      <a href="#_f4de22ce-8d07-5789-b822-76443e704c1f">
+       <span class="category">Function</span>
+       <span class="symbol">object-member</span>
+      </a>
+     </li>
+     <li>
       <a href="#_17ce9da4-3cf2-5a91-97af-c07bc1b1bb71">
        <span class="category">Function</span>
        <span class="symbol">parse</span>
@@ -359,9 +389,21 @@ The main differences are listed below.
       </a>
      </li>
      <li>
+      <a href="#_55f7e119-528b-5cf5-b448-dddc3d6e37b5">
+       <span class="category">Macro</span>
+       <span class="symbol">with-array</span>
+      </a>
+     </li>
+     <li>
       <a href="#_fb33ec4a-7179-59c7-9969-4b7e5b4dba76">
        <span class="category">Macro</span>
        <span class="symbol">with-default-values</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_713f5213-2181-5943-84aa-90f989fd5aaf">
+       <span class="category">Macro</span>
+       <span class="symbol">with-object</span>
       </a>
      </li>
     </ul>
@@ -530,6 +572,30 @@ Default is false.</pre>
 or after the last array element.  Default is false.</pre>
     </div>
    </div>
+   <div class="definition" id="_79e99c7d-9549-5c80-a96f-2f17637cab67">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*allow-unicode-graphic*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Whether or not to escape Unicode graphic characters in JSON strings.
+If true, any Unicode graphic character is printed as is.  Otherwise,
+a graphic character is escaped like any other non-graphic character.
+Thus, the JSON output is plain US-ASCII.  Default is false.</pre>
+    </div>
+   </div>
    <div class="definition" id="_64656454-eac8-5604-8291-ed66ff582540">
     <div class="signature">
      <table class="signature">
@@ -576,6 +642,86 @@ considered a whitespace character.  Default is false.</pre>
      <pre>The Lisp data structure used to represent a JSON array.
 Value is either ‘:vector’ or ‘:list’.  The default is to use
 vectors.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_9753faa7-5040-50c6-ae56-9c681bf77b8d">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*decode-array-hook*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Hook to run after a JSON array has been decoded.
+Value has to be a function designator.  The function is called with
+one argument, the Lisp data structure representing the JSON array;
+see the ‘*array-as*’ special variable.  The return value of the
+function is used as the actual array value.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_d88d63a2-8d63-5968-bd17-d10df7513a9e">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*decode-object-hook*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Hook to run after a JSON object has been decoded.
+Value has to be a function designator.  The function is called with
+one argument, the Lisp data structure representing the JSON object;
+see the ‘*object-as*’ special variable.  The return value of the
+function is used as the actual object value.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_c8ba3322-1564-52f4-93d8-cb46c396130c">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*encode-symbol-hook*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Hook to convert a symbol into a string.
+Value has to be a function designator.  The function is called with
+the symbol as the only argument.  The return value of the function
+must be a string.
+
+Special value ‘:upcase’, ‘:downcase’, ‘:capitalize’, ‘:preserve’, or
+‘:invert’ means to change the case of the symbol name respectively.
+See the ‘*print-case*’ special variable and ‘readtable-case’ function.
+A value of ‘nil’ means to use the value of the ‘*print-case*’ special
+variable.</pre>
     </div>
    </div>
    <div class="definition" id="_34729410-fc11-591f-8b6f-0af440532707">
@@ -762,48 +908,6 @@ of the function is used as the key for the data structure produced.
 See also the ‘*object-as*’ special variable.</pre>
     </div>
    </div>
-   <div class="definition" id="_c79a73b2-cbb2-5b59-b4a6-209f432c9018">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">*pretty-printer*</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Special Variable</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>Whether or not to enable the pretty printer for JSON output.
-Default is false.
-
-If the pretty printer is disabled, JSON output is just a flat
-sequence of characters.  For example:
-
-     [{"foo" : 42, "bar" : ["baz", "hack"]}, null]
-
-There is no explicit or implicit line break since all control
-characters are escaped.  While this is fast and machine readable,
-it's difficult for humans to reveal the structure of the data.
-
-If the pretty printer is enabled, JSON output is more visually
-appearing.  Here is the same example as above but pretty printed:
-
-     [{"foo" : 42,
-       "bar" : ["baz",
-                "hack"]},
-      null]
-
-Explicit line breaks occur after object members and array elements
-and the items of these compound structures are lined up nicely.</pre>
-    </div>
-   </div>
    <div class="definition" id="_7ba0ad70-c88a-5fd2-a299-235f8513ebbc">
     <div class="signature">
      <table class="signature">
@@ -824,6 +928,28 @@ and the items of these compound structures are lined up nicely.</pre>
     <div class="documentation">
      <pre>The symbol to represent the JSON value ‘true’.
 Default is ‘:true’, but ‘t’ may be appropriate, too.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_88048376-7151-50d0-8c6d-f583ed4a0949">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">array-element</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">value</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a JSON array element.
+See the ‘with-array’ macro.</pre>
     </div>
    </div>
    <div class="definition" id="_1a236ed0-a6aa-5386-ad30-b8b0cb91b997">
@@ -849,7 +975,33 @@ Default is ‘:true’, but ‘t’ may be appropriate, too.</pre>
 Argument DATA is the Lisp data to be serialized.
 
 The JSON output is written to the ‘*standard-output*’ stream.
-The return value of an ‘encode’ method is ignored.</pre>
+The return value of an ‘encode’ method is ignored.
+
+The ‘with-object’ and ‘with-array’ macros can be used to define JSON
+encoders for your own Lisp data structures.  For example, define an
+encoder for a CLOS class:
+
+     (defclass bank-account ()
+       ((iban
+         :initarg :iban
+         :initform (error "Missing IBAN argument."))
+        (balance
+         :initarg :balance
+         :initform 0)))
+
+     (defmethod encode ((object bank-account))
+       "Encode a bank account as a JSON object."
+       (with-object
+         (object-member "iban" (slot-value object 'iban))
+         (object-member "balance" (slot-value object 'balance))))
+
+After that,
+
+     (serialize t (make-instance 'bank-account :iban "DE75512108001245126199"))
+
+prints
+
+     {"iban" : "DE75512108001245126199", "balance" : 0}</pre>
     </div>
    </div>
    <div class="definition" id="_d7ec3bca-022d-53c8-9f7a-b9d82436e8f3">
@@ -1082,7 +1234,12 @@ Affected by ‘*read-default-float-format*’.</pre>
     </div>
     <div class="documentation">
      <pre>Encode a symbol as a JSON string.
-Affected by ‘*print-case*’.</pre>
+Affected by ‘*encode-symbol-hook*’.
+
+Exceptional situations:
+
+   * Signals a ‘program-error’ if the value returned by the
+     ‘*encode-symbol-hook*’ function is not a string.</pre>
     </div>
    </div>
    <div class="definition" id="_663dcfaa-a3f4-5bf5-9af5-3a7cfb688277">
@@ -1314,6 +1471,28 @@ Mostly useful for binding the ‘*list-encoder*’ special variable.</pre>
      <pre>Signal an encoding error.</pre>
     </div>
    </div>
+   <div class="definition" id="_f4de22ce-8d07-5789-b822-76443e704c1f">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">object-member</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">key</span> <span class="variable">value</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a JSON object member.
+See the ‘with-object’ macro.</pre>
+    </div>
+   </div>
    <div class="definition" id="_17ce9da4-3cf2-5a91-97af-c07bc1b1bb71">
     <div class="signature">
      <table class="signature">
@@ -1380,7 +1559,7 @@ Exceptional situations:
       <tbody>
        <tr>
 	<td class="symbol"><a href="#contents"><span class="symbol">serialize</span></a></td>
-	<td class="lambda-list"><span class="lambda-list">(<span class="variable">destination</span> <span class="variable">data</span> <span class="lambda-list-keyword">&amp;key</span> (<span class="variable">pretty</span>&nbsp;<span class="init-form">*pretty-printer*</span>))</span></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">destination</span> <span class="variable">data</span> <span class="lambda-list-keyword">&amp;key</span> <span class="variable">pretty</span>)</span></td>
 	<td class="category"><span class="category">Function</span></td>
        </tr>
       </tbody>
@@ -1394,8 +1573,7 @@ First argument DESTINATION is the output object.  Value is either a
  ‘*standard-output*’ and ‘nil’ means to return a string.
 Second argument DATA is the Lisp data structure to be serialized.
 If keyword argument PRETTY is true, pretty print the JSON value in
- a compact format.  Default is the value of the ‘*pretty-printer*’
- special variable.
+ a compact format.  Default is false.
 
 The actual serialization of Lisp data as a JSON value is performed
 by the ‘encode’ methods (which see).
@@ -1410,7 +1588,29 @@ Exceptional situations:
      encoded as a JSON value.
 
    * May signal an ‘arithmetic-error’ if a rational number is
-     converted to a floating-point number.</pre>
+     converted to a floating-point number.
+
+Notes:
+
+If the pretty printer is disabled, JSON output is just a flat
+sequence of characters.  For example:
+
+     [{"foo" : 42, "bar" : ["baz", "hack"]}, null]
+
+There is no explicit or implicit line break since all control
+characters are escaped.  While this is fast and machine readable,
+it's difficult for humans to reveal the structure of the data.
+
+If the pretty printer is enabled, JSON output is more visually
+appearing.  Here is the same example as above but pretty printed:
+
+     [{"foo" : 42,
+       "bar" : ["baz",
+                "hack"]},
+      null]
+
+Explicit line breaks occur after object members and array elements
+and the items of these compound structures are lined up nicely.</pre>
     </div>
    </div>
    <div class="definition" id="_eafd39c9-b0a7-53b9-927a-f232ce28f89b">
@@ -1522,6 +1722,29 @@ how to print JSON values with the ‘format’ function.</pre>
      <pre>Signal a syntax error.</pre>
     </div>
    </div>
+   <div class="definition" id="_55f7e119-528b-5cf5-b448-dddc3d6e37b5">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">with-array</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="lambda-list-keyword">&amp;body</span> <span class="variable">body</span>)</span></td>
+	<td class="category"><span class="category">Macro</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a JSON array.
+
+The BODY calls ‘(array-element VALUE)’ to encode an array element.</pre>
+    </div>
+   </div>
    <div class="definition" id="_fb33ec4a-7179-59c7-9969-4b7e5b4dba76">
     <div class="signature">
      <table class="signature">
@@ -1542,6 +1765,30 @@ how to print JSON values with the ‘format’ function.</pre>
     <div class="documentation">
      <pre>Establish a lexical environment with all special variables bound
 to their default values.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_713f5213-2181-5943-84aa-90f989fd5aaf">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">with-object</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="lambda-list-keyword">&amp;body</span> <span class="variable">body</span>)</span></td>
+	<td class="category"><span class="category">Macro</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode a JSON object.
+
+The BODY calls ‘(object-member KEY VALUE)’ to encode the key/value
+pair of an object member.</pre>
     </div>
    </div>
   </div>
