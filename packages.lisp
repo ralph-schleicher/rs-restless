@@ -61,6 +61,8 @@
    #:make-http-status
    #:ensure-http-status
    ;; drakma.lisp
+   #:add-text-content-type
+   #:remove-text-content-type
    #:trace-drakma-requests
    #:with-drakma-response
    ;; uri.lisp
