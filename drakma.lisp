@@ -106,6 +106,7 @@
 	  (cookie-jar (getf arguments :cookie-jar)))
       (iter (for key :in '(:method :parameters :additional-headers :cookie-jar))
 	    (iter (while (remf arguments key))))
+      (terpri *trace-output*)
       (format *trace-output* "== REQUEST =============================~%")
       (format *trace-output* (~ "Method: ~S~%"
 				"URI: ~S~%"
