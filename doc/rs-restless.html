@@ -51,18 +51,6 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
    <div class="contents-listing">
     <ul>
      <li>
-      <a href="#_f14f4e55-5052-5675-ac52-ab087b68d57f">
-       <span class="category">Class</span>
-       <span class="symbol">doors-client</span>
-      </a>
-     </li>
-     <li>
-      <a href="#_c5bbb450-0064-5fab-8890-5ee41c6bf2a2">
-       <span class="category">Condition</span>
-       <span class="symbol">http-client-error</span>
-      </a>
-     </li>
-     <li>
       <a href="#_78df2eed-c7a5-5146-aeda-9e57bb40b49f">
        <span class="category">Condition</span>
        <span class="symbol">http-informational</span>
@@ -87,15 +75,21 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       </a>
      </li>
      <li>
-      <a href="#_b7bb0c39-d6f6-52ac-ba99-2e77943631f6">
-       <span class="category">Condition</span>
-       <span class="symbol">http-successful</span>
+      <a href="#_f14f4e55-5052-5675-ac52-ab087b68d57f">
+       <span class="category">Class</span>
+       <span class="symbol">doors-client</span>
       </a>
      </li>
      <li>
-      <a href="#_07df7bca-2f51-58d6-bee2-4d3da50839af">
+      <a href="#_c5bbb450-0064-5fab-8890-5ee41c6bf2a2">
        <span class="category">Condition</span>
-       <span class="symbol">soap-fault</span>
+       <span class="symbol">http-client-error</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_b7bb0c39-d6f6-52ac-ba99-2e77943631f6">
+       <span class="category">Condition</span>
+       <span class="symbol">http-successful</span>
       </a>
      </li>
      <li>
@@ -108,6 +102,12 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       <a href="#_72c1b577-5839-5ad0-b716-a4572871ef9d">
        <span class="category">Class</span>
        <span class="symbol">oslc-client</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_07df7bca-2f51-58d6-bee2-4d3da50839af">
+       <span class="category">Condition</span>
+       <span class="symbol">soap-fault</span>
       </a>
      </li>
      <li>
@@ -150,6 +150,12 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       <a href="#_8d427e5b-57a4-5a57-a9d2-70c8ff679e4a">
        <span class="category">Special Variable</span>
        <span class="symbol">*xml-namespaces*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#_23c9b886-ef75-55dd-9ccb-9869c22e6076">
+       <span class="category">Function</span>
+       <span class="symbol">add-text-content-type</span>
       </a>
      </li>
      <li>
@@ -341,6 +347,12 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       </a>
      </li>
      <li>
+      <a href="#_4bc53990-cc57-599e-83c0-0e87b0e2a009">
+       <span class="category">Function</span>
+       <span class="symbol">remove-text-content-type</span>
+      </a>
+     </li>
+     <li>
       <a href="#_0a48e49c-3210-5c9e-ab7a-cd3d13609b5e">
        <span class="category">Method</span>
        <span class="symbol">soap-fault-code</span>
@@ -474,57 +486,6 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
    </div>
   </div>
   <div class="dictionary">
-   <div class="definition" id="_f14f4e55-5052-5675-ac52-ab087b68d57f">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">doors-client</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Class</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>DOORS Web Access client.
-
-DOORS Web Access provides an OSLC interface for the DOORS requirements
-management system.</pre>
-    </div>
-   </div>
-   <div class="definition" id="_c5bbb450-0064-5fab-8890-5ee41c6bf2a2">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">http-client-error</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Condition</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>HTTP status for a client error response.
-A ‘http-client-error’ condition indicates that the client seems to
-have erred.  The status code should be in the range from 400 to 499.
-
-Class precedence list:
-
-     ‘http-client-error’, ‘http-status’, ‘error’, ...</pre>
-    </div>
-   </div>
    <div class="definition" id="_78df2eed-c7a5-5146-aeda-9e57bb40b49f">
     <div class="signature">
      <table class="signature">
@@ -636,6 +597,57 @@ Class precedence list:
      ‘http-status’, ‘condition’, ...</pre>
     </div>
    </div>
+   <div class="definition" id="_f14f4e55-5052-5675-ac52-ab087b68d57f">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">doors-client</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Class</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>DOORS Web Access client.
+
+DOORS Web Access provides an OSLC interface for the DOORS requirements
+management system.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_c5bbb450-0064-5fab-8890-5ee41c6bf2a2">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-client-error</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>HTTP status for a client error response.
+A ‘http-client-error’ condition indicates that the client seems to
+have erred.  The status code should be in the range from 400 to 499.
+
+Class precedence list:
+
+     ‘http-client-error’, ‘http-status’, ‘error’, ...</pre>
+    </div>
+   </div>
    <div class="definition" id="_b7bb0c39-d6f6-52ac-ba99-2e77943631f6">
     <div class="signature">
      <table class="signature">
@@ -662,31 +674,6 @@ code should be in the range from 200 to 299.
 Class precedence list:
 
      ‘http-successful’, ‘http-status’, ...</pre>
-    </div>
-   </div>
-   <div class="definition" id="_07df7bca-2f51-58d6-bee2-4d3da50839af">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">soap-fault</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Condition</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>Condition type for a SOAP fault.
-
-Class precedence list:
-
-     ‘soap-fault’, ‘error’, ...</pre>
     </div>
    </div>
    <div class="definition" id="_0cfb262d-d2e9-544f-b375-13aa4331f096">
@@ -729,6 +716,31 @@ Class precedence list:
     </div>
     <div class="documentation">
      <pre>Base class for OSLC clients.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_07df7bca-2f51-58d6-bee2-4d3da50839af">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">soap-fault</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Condition type for a SOAP fault.
+
+Class precedence list:
+
+     ‘soap-fault’, ‘error’, ...</pre>
     </div>
    </div>
    <div class="definition" id="_7edff001-3ecb-550f-a9f6-b93f5d396398">
@@ -892,6 +904,27 @@ Default is ‘:soap-1.2’.</pre>
 List elements are cons cells of the form ‘(PREFIX . NAME)’ where
 PREFIX is the common namespace prefix and NAME is the standardized
 namespace name.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_23c9b886-ef75-55dd-9ccb-9869c22e6076">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">add-text-content-type</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">datum</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Register media type DATUM as a text content type.</pre>
     </div>
    </div>
    <div class="definition" id="_a09b631f-d522-5527-b97a-212b4a7d3704">
@@ -1602,6 +1635,27 @@ Remaining arguments are passed to the ‘cl-rdfxml:parse-document’
  function.
 
 Value is a list of triples.</pre>
+    </div>
+   </div>
+   <div class="definition" id="_4bc53990-cc57-599e-83c0-0e87b0e2a009">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">remove-text-content-type</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">datum</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Unregister media type DATUM as a text content type.</pre>
     </div>
    </div>
    <div class="definition" id="_0a48e49c-3210-5c9e-ab7a-cd3d13609b5e">

@@ -6,23 +6,6 @@ The RESTless library provides convenience functions for HTTP
 requests/responses, URI handling, JSON encoding/decoding, RDF/XML
 parsing, OAuth 1.0a user authorization, OSLC clients, and more.
 
-                                                                         [Class]
-doors-client
-   DOORS Web Access client.
-
-   DOORS Web Access provides an OSLC interface for the DOORS requirements
-   management system.
-
-                                                                     [Condition]
-http-client-error
-   HTTP status for a client error response.
-   A ‘http-client-error’ condition indicates that the client seems to
-   have erred.  The status code should be in the range from 400 to 499.
-
-   Class precedence list:
-
-        ‘http-client-error’, ‘http-status’, ‘error’, ...
-
                                                                      [Condition]
 http-informational
    HTTP status for an informational response.
@@ -66,6 +49,23 @@ http-status
 
         ‘http-status’, ‘condition’, ...
 
+                                                                         [Class]
+doors-client
+   DOORS Web Access client.
+
+   DOORS Web Access provides an OSLC interface for the DOORS requirements
+   management system.
+
+                                                                     [Condition]
+http-client-error
+   HTTP status for a client error response.
+   A ‘http-client-error’ condition indicates that the client seems to
+   have erred.  The status code should be in the range from 400 to 499.
+
+   Class precedence list:
+
+        ‘http-client-error’, ‘http-status’, ‘error’, ...
+
                                                                      [Condition]
 http-successful
    HTTP status for a successful response.
@@ -77,14 +77,6 @@ http-successful
 
         ‘http-successful’, ‘http-status’, ...
 
-                                                                     [Condition]
-soap-fault
-   Condition type for a SOAP fault.
-
-   Class precedence list:
-
-        ‘soap-fault’, ‘error’, ...
-
                                                                          [Class]
 oauth1-client
    Base class for OAuth 1.0a clients.
@@ -92,6 +84,14 @@ oauth1-client
                                                                          [Class]
 oslc-client
    Base class for OSLC clients.
+
+                                                                     [Condition]
+soap-fault
+   Condition type for a SOAP fault.
+
+   Class precedence list:
+
+        ‘soap-fault’, ‘error’, ...
 
                                                               [Special Variable]
 *json-keyword-package*
@@ -136,6 +136,10 @@ oslc-client
    List elements are cons cells of the form ‘(PREFIX . NAME)’ where
    PREFIX is the common namespace prefix and NAME is the standardized
    namespace name.
+
+                                                                      [Function]
+add-text-content-type (datum)
+   Register media type DATUM as a text content type.
 
                                                                       [Function]
 browse-oslc-service-provider-catalog (url &optional (client *oslc-client*))
@@ -358,6 +362,10 @@ parse-rdf/xml (source &rest arguments)
     function.
 
    Value is a list of triples.
+
+                                                                      [Function]
+remove-text-content-type (datum)
+   Unregister media type DATUM as a text content type.
 
                                                                         [Method]
 soap-fault-code ((condition soap-fault))
