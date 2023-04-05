@@ -36,7 +36,66 @@
 (in-package :rs-restless)
 
 (eval-when (:load-toplevel :execute)
-  (setf drakma:*drakma-default-external-format* :utf-8))
+  (setf drakma:*drakma-default-external-format*
+	(uiop:encoding-external-format :utf-8)))
+
+(eval-when (:load-toplevel :execute)
+  (setf drakma:*text-content-types*
+	`(("text")
+	  ;; Application types.
+	  ("application" . "iges")
+	  ("application" . "json")
+	  ("application" . "mathml+xml")
+	  ("application" . "mathml-content+xml")
+	  ("application" . "mathml-presentation+xml")
+	  ("application" . "n-triples")
+	  ("application" . "rdf+xml")
+	  ("application" . "soap+xml")
+	  ("application" . "vcard+json")
+	  ("application" . "vcard+xml")
+	  ("application" . "xml")
+	  ;; Miscellaneous types.
+	  ("image" . "svg+xml")
+	  ("model" . "iges")
+	  ("model" . "step+xml"))))
+
+(defconst media-type-names '("application" "audio" "example" "font" "image" "message" "model" "multipart" "text" "video")
+  "List of known media type names.")
+
+(defun canonical-media-type (datum)
+  "Return the canonical media type representation for media type DATUM."
+  (etypecase datum
+    (string
+     (let ((slash (position #\/ datum :test #'char=)))
+       (when (null slash)
+	 (error "Malformed media type ‘~A’, missing slash character" datum))
+       (setf datum (cons (subseq datum 0 slash) (subseq datum (1+ slash))))))
+    (cons
+     (check-type datum (cons string (or null string)))))
+  ;; Check media type.
+  (unless (member (car datum) media-type-names :test #'string-equal)
+    (error "Unknown media type ‘~A’" (car datum)))
+  ;; Check media subtype.
+  (cond ((null (cdr datum)))
+	((string= (cdr datum) "*")
+	 (setf (cdr datum) nil))
+	((zerop (length (cdr datum)))
+	 (error "Malformed media type ‘~A/’, missing subtype" (car datum))))
+  ;; Return value.
+  datum)
+
+(defun add-text-content-type (datum)
+  "Register media type DATUM as a text content type."
+  (setf datum (canonical-media-type datum))
+  (unless (member datum drakma:*text-content-types* :test #'equalp)
+    (setf drakma:*text-content-types* (nconc drakma:*text-content-types* (list datum)))
+    datum))
+
+(defun remove-text-content-type (datum)
+  "Unregister media type DATUM as a text content type."
+  (setf datum (canonical-media-type datum))
+  (setf drakma:*text-content-types* (delete datum drakma:*text-content-types* :test #'equalp))
+  (values))
 
 (defun around-drakma-http-request (next-function request-uri &rest arguments)
   (multiple-value-bind (body status-code headers effective-uri stream closep reason-phrase)
