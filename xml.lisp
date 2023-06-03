@@ -50,7 +50,12 @@
   "Alist of well known XML namespaces.
 List elements are cons cells of the form ‘(PREFIX . NAME)’ where
 PREFIX is the common namespace prefix and NAME is the standardized
-namespace name.")
+namespace name.
+
+The predefined namespace prefixes are ‘xml’ for the XML namespace,
+‘xs’ and ‘xsd’ for the XML schema namespace, ‘xsi’ for the XML schema
+instance namespace, and ‘xsl’ and ‘xslt’ for the XSL transformation
+namespace.")
 
 (defgeneric xmlns-get-prefix (object)
   (:documentation
