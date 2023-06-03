@@ -35,25 +35,27 @@
 
 (in-package :common-lisp-user)
 
-(quicklisp:quickload :rs-restless)
-(quicklisp:quickload :rs-doc) ;private
+(quicklisp:quickload "rs-restless")
+(quicklisp:quickload "rs-doc") ;private
 
-(let ((data (rs-doc:gather-doc
+(in-package :rs-doc-user)
+
+(let ((data (gather-doc
+             :title "RS-RESTLESS"
 	     :package :rs-restless
 	     :generic-functions nil
-	     :undocumented t)))
-  (rs-doc:generate-doc
+	     :undocumented t))
+      (doc-dir (merge-pathnames
+		(make-pathname :directory '(:relative "doc"))
+		(asdf:system-source-directory "rs-restless"))))
+  (generate-doc
    :data data
    :output-format :html
-   :output (make-pathname :directory '(:relative "doc")
-			  :name "rs-restless"
-			  :type "html"))
-  (rs-doc:generate-doc
+   :output (merge-pathnames "rs-restless.html" doc-dir))
+  (generate-doc
    :data data
    :output-format :text
-   :output (make-pathname :directory '(:relative "doc")
-			  :name "rs-restless"
-			  :type "txt"))
+   :output (merge-pathnames "rs-restless.txt" doc-dir))
   (values))
 
 ;;; generate-doc.lisp ends here
