@@ -31,6 +31,20 @@
 ;; ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 ;; POSSIBILITY OF SUCH DAMAGE.
 
+;;; Commentary:
+
+;; Here are some useful links.
+;;
+;; - SOAP 1.1
+;;   - https://www.w3.org/TR/2000/NOTE-SOAP-20000508/
+;; - SOAP 1.2
+;;   - https://www.w3.org/TR/soap/
+;;   - https://www.w3.org/TR/soap12/
+;;   - https://www.w3.org/TR/wsdl20/
+;; - Miscellaneous
+;;   - https://en.wikipedia.org/wiki/SOAP
+;;   - https://blog.postman.com/soap-api-definition/
+
 ;;; Code:
 
 (in-package :rs-restless)
