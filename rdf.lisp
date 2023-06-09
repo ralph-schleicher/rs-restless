@@ -43,6 +43,10 @@
 (defvar *rdf-triples* nil
   "Convenience variable for binding RDF triples.")
 
+(defun parse-rdf/xml-emit-triple (subject predicate object)
+  "Helper function for ‘parse-rdf/xml’."
+  (push (list subject predicate object) *rdf-triples*))
+
 (defun parse-rdf/xml (source &rest arguments)
   "Parse an RDF/XML document.
 
@@ -52,10 +56,8 @@ Remaining arguments are passed to the ‘cl-rdfxml:parse-document’
  function.
 
 Value is a list of triples."
-  (let (triples)
-    (labels ((emit (subject predicate object)
-	       (push (list subject predicate object) triples)))
-      (apply #'cl-rdfxml:parse-document #'emit source arguments))
-    (nreverse triples)))
+  (let ((*rdf-triples* ()))
+    (apply #'cl-rdfxml:parse-document #'parse-rdf/xml-emit-triple source arguments)
+    (nreverse *rdf-triples*)))
 
 ;;; rdf.lisp ends here
