@@ -44,9 +44,15 @@
     ("jd" . "http://jazz.net/xmlns/prod/jazz/discovery/1.0/")
     ;; Jazz Foundation Services XML namespace.
     ("jfs" . "http://jazz.net/xmlns/prod/jazz/jfs/1.0/")
-    ;; OSLC 2.0 namespaces.
+    ;; OSLC namespaces.
     ("oslc" . "http://open-services.net/ns/core#")
-    ("oslc_rm" . "http://open-services.net/ns/rm#")
+    ("oslc_am" . "http://open-services.net/ns/am#") ;architecture management
+    ("oslc_asset" . "http://open-services.net/ns/asset#") ;asset management
+    ("oslc_auto" . "http://open-services.net/ns/auto#") ;automation
+    ("oslc_cm" . "http://open-services.net/ns/cm#") ;change management
+    ("oslc_config" . "http://open-services.net/ns/config#") ;configuration management
+    ("oslc_qm" . "http://open-services.net/ns/qm#") ;quality management
+    ("oslc_rm" . "http://open-services.net/ns/rm#") ;requirements management
     ;; Web Ontology Language namespace.
     ("owl" . "http://www.w3.org/2002/07/owl#")
     ;; RDF/XML namespaces.
