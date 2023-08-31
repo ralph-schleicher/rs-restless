@@ -66,4 +66,20 @@
   "Return an object of type ‘quri:uri’."
   (if (quri:uri-p uri) uri (quri:uri (string-from-uri uri))))
 
+(defgeneric merge-uri (reference-uri base-uri)
+  (:documentation
+   "Merge a reference URI into the base URI."))
+
+(defmethod merge-uri ((reference-uri puri:uri) base-uri)
+  (puri:merge-uris reference-uri (ensure-puri base-uri)))
+
+(defmethod merge-uri ((reference-uri quri:uri) base-uri)
+  (quri:merge-uris reference-uri (ensure-quri base-uri)))
+
+(defmethod merge-uri ((reference-uri string) (base-uri puri:uri))
+  (puri:merge-uris (puri:uri reference-uri) base-uri))
+
+(defmethod merge-uri ((reference-uri string) (base-uri quri:uri))
+  (quri:merge-uris (quri:uri reference-uri) base-uri))
+
 ;;; uri.lisp ends here
