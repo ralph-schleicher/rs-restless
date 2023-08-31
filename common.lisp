@@ -63,4 +63,18 @@ Null arguments are ignored."
   "Like ‘~’ but return a pathname."
   (parse-namestring (apply #'~ strings)))
 
+;; Iterate driver for XPath node sets.
+(defmacro-driver (for var in-node-set node-set)
+  "Elements of a ‘xpath:node-set’."
+  (let ((node-set-iter (gensym "NODE-SET-ITERATOR-")))
+    `(progn
+       (with ,node-set-iter = (xpath:make-node-set-iterator ,node-set))
+       (,(if generate 'generate 'for) ,var
+        :next (progn
+                (when (xpath:node-set-iterator-end-p ,node-set-iter)
+                  (terminate))
+                (prog1
+                    (xpath:node-set-iterator-current ,node-set-iter)
+                  (xpath:node-set-iterator-next ,node-set-iter)))))))
+
 ;;; common.lisp ends here
