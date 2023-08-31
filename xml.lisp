@@ -188,4 +188,30 @@ XML document."
       (null
        (%print nil)))))
 
+(defun xpath-ensure-node (object)
+  "Ensure that OBJECT is an XML node."
+  (or (typecase object
+        (xpath:node-set
+         (xpath:first-node object))
+        (dom:node
+         object))
+      (error "Object ‘~A’ is not a node." object)))
+
+(defun xpath-required-node (xpath context &optional (value #'identity))
+  "Evaluate an XPath expression and return the first node."
+  (funcall value (xpath-ensure-node (xpath:evaluate xpath context))))
+
+(defun xpath-required-string (xpath context)
+  "Like ‘xpath-required-node’ but return the node's text value."
+  (xpath-required-node xpath context #'xpath:string-value))
+
+(defun xpath-optional-node (xpath context &optional (value #'identity))
+  "Evaluate an XPath expression and return the first node or ‘nil’."
+  (when-let ((node (xpath:first-node (xpath:evaluate xpath context))))
+    (funcall value node)))
+
+(defun xpath-optional-string (xpath context)
+  "Like ‘xpath-optional-node’ but return the node's text value."
+  (xpath-optional-node xpath context #'xpath:string-value))
+
 ;;; xml.lisp ends here
