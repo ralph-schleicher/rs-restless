@@ -35,6 +35,12 @@
 
 (in-package :rs-restless)
 
+(defconst root-puri (puri:uri "/")
+  "Root path URL.")
+
+(defconst root-quri (quri:uri "/")
+  "Root path URL.")
+
 (defgeneric string-from-uri (uri)
   (:documentation
    "Return the string representation of an URI."))
