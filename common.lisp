@@ -53,6 +53,21 @@ for inline expansion by the compiler."
      (defun ,name ,arg-list
        ,@body)))
 
+(defun should-not-happen ()
+  "Signal an impossible condition."
+  (alexandria:simple-program-error "Should not happen."))
+
+(defun missing-initialization-argument ()
+  "Signal a missing initialization argument program error.
+Example usage:
+
+     (defclass foo ()
+       ((bar
+         :initarg :bar
+         :initform (missing-initialization-argument)
+         :documentation \"A required object initialization argument.\")))"
+  (alexandria:simple-program-error "Missing initialization argument."))
+
 (defun ~ (&rest strings)
   "Concatenate all arguments as strings.
 Arguments must be string designators.
