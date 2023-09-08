@@ -489,4 +489,20 @@ Return value is a UPnP device object."
     ;; Return value.
     service))
 
+(defun upnp-find-soap-action (soap-action &optional (device *upnp-device*))
+  "Find an action by its SOAP action tag.
+
+First argument SOAP-ACTION is the SOAP action tag (a string).  The
+ SOAP action tag consists of the service type and the action name
+ separated by a ‘#’ character.
+Optional second argument DEVICE is the UPnP root device.
+
+Return the first matching UPnP action object or ‘nil’ of no matching
+action can be found."
+  (check-type soap-action string)
+  (check-type device upnp-root-device)
+  (find soap-action (%upnp-get device :action-list)
+        :key #'upnp-soap-action
+        :test #'string=))
+
 ;;; upnp.lisp ends here
