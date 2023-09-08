@@ -203,7 +203,8 @@ Return the values of the Drakma HTTP request."
   (:documentation "Return all service provider catalogs for a domain.
 
 First argument SOURCE is the RDF database.
-Second argument DOMAIN is the OSLC domain (a keyword).
+Second argument DOMAIN is the OSLC domain.  Value is a either the OSLC
+ namespace prefix or namespace name of the OSLC domain, or a keyword.
 
 Value is a list of URLs."))
 
@@ -216,25 +217,38 @@ Value is a list of URLs."))
        (wilbur-parse-rdf/xml stream url)))
    domain))
 
+(defmethod oslc-service-provider-catalogs (source (namespace string))
+  ;; Second argument NAMESPACE is either the namespace prefix or
+  ;; namespace name of the OSLC domain.
+  (oslc-service-provider-catalogs
+   source (wilbur:node (or (cdr (assoc namespace *oslc-namespaces* :test #'string=)) namespace))))
+
+(defmethod oslc-service-provider-catalogs ((source wilbur:db) (namespace wilbur:node))
+  (let ((wilbur:*db* source))
+    (let ((type (wilbur:node "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"))
+          (catalog (wilbur:node "http://open-services.net/ns/core#ServiceProviderCatalog"))
+          (domain (wilbur:node "http://open-services.net/ns/core#domain")))
+      (iter (for triple :in (wilbur:query nil type catalog))
+	    (for subject = (wilbur:triple-subject triple))
+	    (when (wilbur:query subject domain namespace)
+	      (collect (wilbur:node-uri subject)))))))
+
 (defmethod oslc-service-provider-catalogs ((source wilbur:db) (domain (eql :rm)))
   "Return all service provider catalogs in the requirements management domain."
-  (let ((wilbur:*db* source))
-    (nunion
-     ;; OSLC Core 3.0 recommends <https://jazz.net/wiki/bin/view/Main/RootServicesSpec>.
-     ;; - An oslc_rm:rmServiceProviders element (optional) locates a
-     ;;   Requirements Management Service Provider Catalog Resource.
-     ;;   See the OSLC Service Provider Catalog 1.0 specification and
-     ;;   the OSLC Requirements Management Specification for details.
+  (nunion
+   ;; OSLC Core 3.0 recommends <https://jazz.net/wiki/bin/view/Main/RootServicesSpec>.
+   ;; - An oslc_rm:rmServiceProviders element (optional) locates a
+   ;;   Requirements Management Service Provider Catalog Resource.
+   ;;   See the OSLC Service Provider Catalog 1.0 specification and
+   ;;   the OSLC Requirements Management Specification for details.
+   (let ((wilbur:*db* source))
      (iter (for triple :in (wilbur:query nil (wilbur:node "http://open-services.net/xmlns/rm/1.0/rmServiceProviders") nil))
-	   (collect (wilbur:node-uri (wilbur:triple-object triple))))
-     ;; As an alternative, find all service provider catalogs in the
-     ;; requirements management domain.  This is the OSLC 2.0 way, I
-     ;; suppose.
-     (iter (for triple :in (wilbur:query nil (wilbur:node "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") (wilbur:node "http://open-services.net/ns/core#ServiceProviderCatalog")))
-	   (for subject = (wilbur:triple-subject triple))
-	   (when (wilbur:query subject (wilbur:node "http://open-services.net/ns/core#domain") (wilbur:node "http://open-services.net/ns/rm#"))
-	     (collect (wilbur:node-uri subject))))
-     :test #'string=)))
+	   (collect (wilbur:node-uri (wilbur:triple-object triple)))))
+   ;; As an alternative, find all service provider catalogs in the
+   ;; requirements management domain.  This is the OSLC 2.0 way, I
+   ;; suppose.
+   (oslc-service-provider-catalogs source (wilbur:node "http://open-services.net/ns/rm#"))
+   :test #'string=))
 
 (defun browse-oslc-service-provider-catalog (url &optional (client *oslc-client*))
   "Browse an OSLC service provider catalog.
