@@ -1,4 +1,4 @@
-DE.RALPH-SCHLEICHER.RESTLESS
+RS-RESTLESS
 
 A Common Lisp library for communicating with web services.
 
@@ -136,6 +136,11 @@ soap-fault
    List elements are cons cells of the form ‘(PREFIX . NAME)’ where
    PREFIX is the common namespace prefix and NAME is the standardized
    namespace name.
+
+   The predefined namespace prefixes are ‘xml’ for the XML namespace,
+   ‘xs’ and ‘xsd’ for the XML schema namespace, ‘xsi’ for the XML schema
+   instance namespace, and ‘xsl’ and ‘xslt’ for the XSL transformation
+   namespace.
 
                                                                       [Function]
 add-text-content-type (datum)
@@ -344,11 +349,32 @@ oslc-service-provider-catalogs ((source wilbur:db) (domain (eql :rm)))
    Return all service provider catalogs in the requirements management domain.
 
                                                                         [Method]
+oslc-service-provider-catalogs ((source wilbur:db) (namespace wilbur:node))
+   Return all service provider catalogs for a domain.
+
+   First argument SOURCE is the RDF database.
+   Second argument DOMAIN is the OSLC domain.  Value is a either the OSLC
+    namespace prefix or namespace name of the OSLC domain, or a keyword.
+
+   Value is a list of URLs.
+
+                                                                        [Method]
+oslc-service-provider-catalogs (source (namespace string))
+   Return all service provider catalogs for a domain.
+
+   First argument SOURCE is the RDF database.
+   Second argument DOMAIN is the OSLC domain.  Value is a either the OSLC
+    namespace prefix or namespace name of the OSLC domain, or a keyword.
+
+   Value is a list of URLs.
+
+                                                                        [Method]
 oslc-service-provider-catalogs ((source oslc-client) domain)
    Return all service provider catalogs for a domain.
 
    First argument SOURCE is the RDF database.
-   Second argument DOMAIN is the OSLC domain (a keyword).
+   Second argument DOMAIN is the OSLC domain.  Value is a either the OSLC
+    namespace prefix or namespace name of the OSLC domain, or a keyword.
 
    Value is a list of URLs.
 
