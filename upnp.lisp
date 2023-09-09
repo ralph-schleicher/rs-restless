@@ -353,11 +353,11 @@ Return either the property value or the default value."))
 
 (defmethod print-object ((object upnp-argument) stream)
   (print-unreadable-object (object stream :type t :identity t)
-    (format stream "~S ~A" (%upnp-get object :name) (%upnp-get object :direction))))
+    (format stream "~S ~(~A~)" (%upnp-get object :name) (%upnp-get object :direction))))
 
 (defmethod print-object ((object upnp-state-variable) stream)
   (print-unreadable-object (object stream :type t :identity t)
-    (format stream "~S ~A" (%upnp-get object :name) (%upnp-get object :data-type))))
+    (format stream "~S ~(~A~)" (%upnp-get object :name) (%upnp-get object :data-type))))
 
 (defgeneric upnp-name (object)
   (:documentation "Unique name to identify an object."))
