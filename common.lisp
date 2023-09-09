@@ -68,6 +68,11 @@ Example usage:
          :documentation \"A required object initialization argument.\")))"
   (alexandria:simple-program-error "Missing initialization argument."))
 
+(defun make-keyword (name)
+  "Create a symbol in the keyword package.
+Argument NAME must be a string designator."
+  (intern (string-upcase (string name)) (find-package :keyword)))
+
 (defun ~ (&rest strings)
   "Concatenate all arguments as strings.
 Arguments must be string designators.
