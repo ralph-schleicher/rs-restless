@@ -68,6 +68,34 @@ Example usage:
          :documentation \"A required object initialization argument.\")))"
   (alexandria:simple-program-error "Missing initialization argument."))
 
+(defun whitespace-char-p (char)
+  "Return true if CHAR is a whitespace character.
+Argument CHAR has to be a character object."
+  (declare (type character char))
+  (or (char= char #\Space)
+      (char= char #\Tab)
+      (char= char #\Linefeed)
+      (char= char #\Return)
+      (char= char #\Newline)))
+
+(defun bounding-indices-if-not (predicate seq &key (start 0) end key)
+  "Return start index of first element in SEQ and end index of last element
+in SEQ not matching PREDICATE.
+
+Keywords START and END are bounding index designators.
+Keyword KEY is a function designator of one argument.
+
+If all elements match PREDICATE, return the start index positions.
+Likewise if SEQ is empty."
+  (when (null end)
+    (setf end (length seq)))
+  (let* ((left (or (position-if-not predicate seq :start start :end end :key key) end))
+	 (right (position-if-not predicate seq :from-end t :start left :end end :key key)))
+    (setf right (if right (1+ right) start))
+    (if (< left right)
+	(values left right)
+      (values start start))))
+
 (defun make-keyword (name)
   "Create a symbol in the keyword package.
 Argument NAME must be a string designator."
