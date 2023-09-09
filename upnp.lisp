@@ -293,7 +293,8 @@ Return either the property value or the default value."))
                         (:name
                          (xpath-required-string "./name[1]" argument-node))
                         (:direction
-                         (xpath-required-string "./direction[1]" argument-node))
+                         (make-keyword
+                          (xpath-required-string "./direction[1]" argument-node)))
                         (:retval
                          (not (null (xpath-optional-node "./retval[1]" argument-node))))
                         (:related-state-variable
@@ -320,7 +321,8 @@ Return either the property value or the default value."))
                         (:name
                          (xpath-required-string "./name[1]" state-node))
                         (:data-type
-                         (xpath-required-string "./dataType[1]" state-node))
+                         (make-keyword
+                          (xpath-required-string "./dataType[1]" state-node)))
                         (:default-value
                          (xpath-optional-string "./defaultValue[1]" state-node))
                         (:allowed-value-list
