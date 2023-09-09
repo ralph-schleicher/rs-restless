@@ -168,6 +168,153 @@ List elements are cons cells of the form ‘(ARGUMENT-NAME . STATE-VARIABLE)’.
     :documentation "XML element of the state variable in the SCPD."))
   (:documentation "UPnP state variable object."))
 
+(defun upnp-type-specifier (data-type)
+  "Return the Lisp type specifier corresponding to a UPnP data type.
+
+Argument DATA-TYPE is the UPnP data type (a keyword).
+
+Return value is a type specifier."
+  (case data-type
+    (:ui1
+     '(integer 0 #.(1- (expt 2 8))))
+    (:ui2
+     '(integer 0 #.(1- (expt 2 16))))
+    (:ui4
+     '(integer 0 #.(1- (expt 2 32))))
+    (:ui8
+     '(integer 0 #.(1- (expt 2 64))))
+    (:i1
+     '(integer #.(- (expt 2 7)) #.(1- (expt 2 7))))
+    (:i2
+     '(integer #.(- (expt 2 15)) #.(1- (expt 2 15))))
+    (:i4
+     '(integer #.(- (expt 2 31)) #.(1- (expt 2 31))))
+    (:i8
+     '(integer #.(- (expt 2 63)) #.(1- (expt 2 63))))
+    (:int
+     'integer)
+    (:r4
+     '(or (float #.least-negative-single-float #.most-positive-single-float)
+          (integer #.(- (expt 2 24)) #.(expt 2 24))))
+    ((:r8 :number :fixed.14.4)
+     '(or (float #.least-negative-double-float #.most-positive-double-float)
+          (integer #.(- (expt 2 53)) #.(expt 2 53))))
+    (:float
+     'real)
+    (:char
+     '(or character (string 1)))
+    (:boolean
+     t)
+    (t
+     'string)))
+
+(defun upnp-print-to-string (value data-type)
+  "Print a Lisp value to a string.
+Signal a type error if the value can not be coerced into the specified
+UPnP data type.
+
+First argument VALUE is the Lisp value.
+Second Argument DATA-TYPE is the UPnP data type (a keyword).
+
+Return value is a string.
+
+Values for integer data types must be integers and the value must be
+ in the range of the data type.
+Values for floating-point number data types must be floats or integers
+ and the value must be in the range of the data type.  Integers must
+ fit without loss of precision.
+Values for the character data type must be characters or strings of
+ length one.
+Values for the boolean data type can be of any type.  Numbers with a
+ value of zero and ‘nil’ are interpreted as false, all other values
+ are interpreted as true.
+Values for other data types must be strings."
+  (let ((type (upnp-type-specifier data-type)))
+    (unless (typep value type)
+      (error 'type-error :datum value :expected-type type))
+    (case data-type
+      (:char
+       (string value))
+      (:boolean
+       (if (if (numberp value) (zerop value) (null value)) "0" "1"))
+      (t
+       (let ((*read-default-float-format* (if (floatp value) (type-of value) 'double-float)))
+         (princ-to-string value))))))
+
+(defun upnp-read-from-string (string data-type)
+  "Read a value from a string.
+Leading and trailing whitespace characters are ignored.  Signal a
+type error if the value can not be coerced into the specified UPnP
+data type.
+
+First argument STRING contains the string representation of the value.
+Second Argument DATA-TYPE is the UPnP data type (a keyword).
+
+Return the Lisp value."
+  (let* ((read-number:*default-plus-sign* "+")
+         (read-number:*default-minus-sign* "-")
+         (read-number:*default-decimal-point* ".")
+         (read-number:*default-exponent-marker* "Ee")
+         (read-number:*default-group-separator* ())
+         (type (upnp-type-specifier data-type))
+         (value (handler-case
+                    (multiple-value-bind (start end)
+                        (bounding-indices-if-not #'whitespace-char-p string)
+                      (case data-type
+                        ((:ui1 :ui2 :ui4 :ui8)
+                         ;; Same format as ‘int’ without leading sign.
+                         (multiple-value-bind (value length)
+                             (with-input-from-string (stream string :start start :end end)
+                               (read-number:read-integer stream t nil nil :unsigned-number t))
+                           (when (< (+ start length) end)
+                             (error 'parse-error))
+                           value))
+                        ((:i1 :i2 :i4 :i8 :int)
+                         (multiple-value-bind (value length)
+                             (with-input-from-string (stream string :start start :end end)
+                               (read-number:read-integer stream t nil nil))
+                           (when (< (+ start length) end)
+                             (error 'parse-error))
+                           value))
+                        ((:r4 :r8 :number :fixed.14.4 :float)
+                         (multiple-value-bind (value length)
+                             (with-input-from-string (stream string :start start :end end)
+                               (read-number:read-float stream t nil nil :float-format (if (eq data-type :r4) 'single-float 'double-float)))
+                           (when (< (+ start length) end)
+                             (error 'parse-error))
+                           value))
+                        (:char
+                         (cond ((= (length string) 1)
+                                (aref string 0))
+                               ((= (- end start) 1)
+                                (aref string start))
+                               ((error 'parse-error))))
+                        (:boolean
+                         (cond ((or (string= string "1" :start1 start :end1 end)
+                                    (string= string "true" :start1 start :end1 end)
+                                    (string= string "yes" :start1 start :end1 end))
+                                t)
+                               ((or (string= string "0" :start1 start :end1 end)
+                                    (string= string "false" :start1 start :end1 end)
+                                    (string= string "no" :start1 start :end1 end))
+                                nil)
+                               ((error 'parse-error))))
+                        ((:date :datetime :datetime.tz :time :time.tz :bin.base64 :bin.hex :uri :uuid)
+                         (if (and (= start 0) (= end (length string)))
+                             string
+                           (subseq string start end)))
+                        (t
+                         string)))
+                  (error ()
+                    upnp-nil))))
+    (cond ((eq value upnp-nil)
+           (error 'type-error :datum string :expected-type type
+                              :context (format nil "Expect a value for UPnP data type ‘~(~A~)’, junk in string." data-type)))
+          ((not (typep value type))
+           (error 'type-error :datum value :expected-type type
+                              :context (format nil "Expect a value for UPnP data type ‘~(~A~)’." data-type))))
+    value))
+
 (defgeneric %upnp-put (object indicator value)
   (:documentation "Update an UPnP object property.
 Lookup a property in the object's property list and set its
@@ -324,15 +471,20 @@ Return either the property value or the default value."))
                          (make-keyword
                           (xpath-required-string "./dataType[1]" state-node)))
                         (:default-value
-                         (xpath-optional-string "./defaultValue[1]" state-node))
+                         (when-let ((string (xpath-optional-string "./defaultValue[1]" state-node)))
+                           (upnp-read-from-string string (%upnp-get state :data-type))))
                         (:allowed-value-list
                          (iter (for node :in-node-set (xpath:evaluate "./allowedValueList/allowedValue" state-node))
                                (collecting (xpath:string-value node))))
                         (:allowed-value-range
                          (when-let ((range-node (xpath-optional-node "./allowedValueRange[1]" state-node)))
-                           (let ((minimum (xpath-required-string "./minimum[1]" range-node))
-                                 (maximum (xpath-required-string "./maximum[1]" range-node))
-                                 (step (xpath-optional-string "./step[1]" range-node)))
+                           (let* ((data-type (%upnp-get state :data-type))
+                                  (minimum (when-let ((string (xpath-required-string "./minimum[1]" range-node)))
+                                             (upnp-read-from-string string data-type)))
+                                  (maximum (when-let ((string (xpath-required-string "./maximum[1]" range-node)))
+                                             (upnp-read-from-string string data-type)))
+                                  (step (when-let ((string (xpath-optional-string "./step[1]" range-node)))
+                                          (upnp-read-from-string string data-type))))
                              (nconc (list :minimum minimum :maximum maximum) (when step (list :step step))))))
                         (t upnp-nil)))))
       (unless (eq value upnp-nil)
