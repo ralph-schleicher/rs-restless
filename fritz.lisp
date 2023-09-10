@@ -48,6 +48,9 @@ or HTTPS on port 49443.")
 (defvar *fritz-realm* "F!Box SOAP-Auth"
   "The realm for content level authentication.")
 
+(defvar *fritz-user-name* nil
+  "The login name of the TR-064 service user.")
+
 (defvar *fritz-secret* nil
   "The secret of the TR-064 service user.
 
