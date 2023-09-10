@@ -53,7 +53,9 @@
 	       :cxml-stp
 	       :xpath
 	       :cl-rdfxml
-	       :wilbur)
+	       :wilbur
+               :read-number
+               :md5)
   :serial t
   :components ((:file "packages")
 	       (:file "common")
@@ -67,6 +69,8 @@
 	       (:file "wilbur")
 	       (:file "oauth1")
 	       (:file "oslc")
-	       (:file "doors")))
+	       (:file "doors")
+	       (:file "upnp")
+	       (:file "fritz")))
 
 ;;; rs-restless.asd ends here
