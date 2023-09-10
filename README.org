@@ -5,7 +5,7 @@ A Common Lisp library for communicating with web services.
 The RESTless library provides convenience functions for HTTP
 requests/responses, URI handling, JSON encoding/decoding, SOAP
 messages, RDF/XML parsing, OAuth 1.0a user authorization, OSLC
-clients, and more.
+clients, UPnP descriptions, and more.
 
 
 ** Technologies
@@ -53,6 +53,11 @@ database and then you use Wilbur commands to query the data.
 OSLC (Open Services for Lifecycle Collaboration) combines RDF/XML with
 OAuth 1.0a user authorization.  Thus, everything said about RDF/XML
 also applies to OSLC.
+
+*** SOAP
+
+SOAP (Simple Object Access Protocol) is a web API standard maintained
+by the W3C.  SOAP uses XML as its message format.
 
 
 ** Dependencies
