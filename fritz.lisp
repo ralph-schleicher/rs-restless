@@ -109,4 +109,59 @@ action can be found."
                  (string= action-name (%upnp-get action :name))
                  (collect action))))))
 
+(defun fritz-invoke (action arguments &key (user-name *fritz-user-name*) (secret *fritz-secret*))
+  "Send a control action.
+
+First argument ACTION is an UPnP action object.
+Second argument ARGUMENTS are the input arguments.  Value is
+ an alist with cons cells of the form ‘(ARGUMENT-NAME . VALUE)’
+ where ARGUMENT-NAME is the name of the input argument (a string)
+ and VALUE is the corresponding input value.
+Keyword arguments USER-NAME and SECRET are the credentials of
+ the TR-064 service user.  Default is to use the values of the
+ ‘*fritz-user-name*’ and ‘*fritz-secret*’ special variables
+ respectively.
+
+Return value is the alist of output arguments with cons cells of
+the form ‘(ARGUMENT-NAME . VALUE)’ where ARGUMENT-NAME is the name
+of the output argument (a string) and VALUE is the corresponding
+output value.
+
+Examples:
+
+     (fritz-invoke (fritz-find-action \"DeviceInfo\" \"GetSecurityPort\") ())
+      ⇒ ((\"NewSecurityPort\" . 49443))"
+  (check-type action upnp-action)
+  (let* ((service (upnp-service action))
+         (device (upnp-device service))
+         (service-type (%upnp-get service :service-type))
+         (action-name (%upnp-get action :name))
+         (document (with-drakma-response (body)
+                       ;; Send the request.
+                       (soap-http-request
+                        (string-from-uri (merge-uri (upnp-control-uri service) (upnp-base-uri device)))
+                        (with-soap-envelope (:version :soap-1.1
+                                             :xml-namespaces `(("serv" . ,service-type))
+                                             :xml-declaration t)
+                          (cxml:with-element* ("serv" action-name)
+                            (iter (for argument :in (upnp-input-arguments action))
+                                  (for argument-name = (%upnp-get argument :name))
+                                  (for value = (let ((cell (assoc argument-name arguments :test #'string=)))
+                                                 (when (null cell)
+                                                   (alexandria:simple-program-error "Missing input argument ‘~A’." argument-name))
+                                                 (cdr cell)))
+                                  (for data-type = (%upnp-get (%upnp-get argument :state-variable) :data-type))
+                                  (for string = (upnp-print-to-string value data-type))
+                                  (collect (cxml:with-element argument-name
+                                             (cxml:text string))))))
+                        :additional-headers `(("SoapAction" . ,(upnp-soap-action action))))
+                     (xml-parse body))))
+    ;; Return output arguments as an alist.
+    (iter (for argument :in (upnp-output-arguments action))
+          (for argument-name = (%upnp-get argument :name))
+          (for string = (xpath-required-string (format nil "//~A[1]" argument-name) document))
+          (for data-type = (%upnp-get (%upnp-get argument :state-variable) :data-type))
+          (for value = (upnp-read-from-string string data-type))
+          (collect (cons argument-name value)))))
+
 ;;; fritz.lisp ends here
