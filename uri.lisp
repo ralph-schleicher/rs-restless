@@ -35,6 +35,10 @@
 
 (in-package :rs-restless)
 
+;; Make Clozure CL happy.
+(defmethod make-load-form ((object quri:uri) &optional environment)
+  (make-load-form-saving-slots object :environment environment))
+
 (defconst root-puri (puri:uri "/")
   "Root path URL.")
 
