@@ -123,13 +123,24 @@
    #:oslc-service-provider-catalogs
    #:browse-oslc-service-provider-catalog
    ;; doors.lisp
-   #:doors-client)
+   #:doors-client
+   ;; upnp.lisp
+   #:*upnp-device*
+   #:upnp-device-description
+   #:upnp-find-soap-action
+   ;; fritz.lisp
+   #:*fritz-user-name*
+   #:*fritz-secret*
+   #:fritz-secret
+   #:fritz-find-action
+   #:fritz-invoke)
   (:documentation
    "A Common Lisp library for communicating with web services.
 
 The RESTless library provides convenience functions for HTTP
-requests/responses, URI handling, JSON encoding/decoding, RDF/XML
-parsing, OAuth 1.0a user authorization, OSLC clients, and more."))
+requests/responses, URI handling, JSON encoding/decoding, SOAP
+messages, RDF/XML parsing, OAuth 1.0a user authorization, OSLC
+clients, UPnP descriptions, and more."))
 
 (defpackage #:de.ralph-schleicher.restless-user
   (:nicknames :rs-restless-user)
