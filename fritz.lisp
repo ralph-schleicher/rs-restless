@@ -137,9 +137,10 @@ Examples:
          (service-type (%upnp-get service :service-type))
          (action-name (%upnp-get action :name))
          (document (with-drakma-response (body)
-                       ;; Send the request.
                        (soap-http-request
+                        ;; Request URI.
                         (string-from-uri (merge-uri (upnp-control-uri service) (upnp-base-uri device)))
+                        ;; SOAP message.
                         (with-soap-envelope (:version :soap-1.1
                                              :xml-namespaces `(("serv" . ,service-type))
                                              :xml-declaration t)
@@ -150,7 +151,7 @@ Examples:
                                                  (when (null cell)
                                                    (alexandria:simple-program-error "Missing input argument ‘~A’." argument-name))
                                                  (cdr cell)))
-                                  (for data-type = (%upnp-get (%upnp-get argument :state-variable) :data-type))
+                                  (for data-type = (%upnp-get* argument :state-variable :data-type))
                                   (for string = (upnp-print-to-string value data-type))
                                   (collect (cxml:with-element argument-name
                                              (cxml:text string))))))
@@ -160,7 +161,7 @@ Examples:
     (iter (for argument :in (upnp-output-arguments action))
           (for argument-name = (%upnp-get argument :name))
           (for string = (xpath-required-string (format nil "//~A[1]" argument-name) document))
-          (for data-type = (%upnp-get (%upnp-get argument :state-variable) :data-type))
+          (for data-type = (%upnp-get* argument :state-variable :data-type))
           (for value = (upnp-read-from-string string data-type))
           (collect (cons argument-name value)))))
 
