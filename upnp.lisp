@@ -343,6 +343,15 @@ Optional third argument DEFAULT is the value to be returned if
 
 Return either the property value or the default value."))
 
+(defmacro %upnp-get* (object indicator &rest indicators)
+  "Convenience macro for ‘%upnp-get’ to chain multiple queries.
+The form ‘(%upnp-get* foo :bar :baz)’ is equivalent to the
+form ‘(%upnp-get (%upnp-get foo :bar) :baz)’."
+  (iter (with form = `(%upnp-get ,object ,indicator))
+        (for ind :in indicators)
+        (setf form `(%upnp-get ,form ,ind))
+        (finally (return form))))
+
 (defmethod %upnp-get ((device upnp-device) indicator &optional default)
   (let ((value (getf (upnp-property-list device) indicator upnp-nil)))
     (when (eq value upnp-nil)
