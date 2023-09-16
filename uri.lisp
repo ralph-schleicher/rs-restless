@@ -35,9 +35,11 @@
 
 (in-package :rs-restless)
 
-;; Make Clozure CL happy.
-(defmethod make-load-form ((object quri:uri) &optional environment)
-  (make-load-form-saving-slots object :environment environment))
+;; Make Clozure CL happy, see ‹https://github.com/fukamachi/quri/issues/82›.
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (unless (ignore-errors (find-method #'make-load-form () (mapcar #'find-class '(quri:uri))))
+    (defmethod make-load-form ((object quri:uri) &optional environment)
+      (make-load-form-saving-slots object :environment environment))))
 
 (defconst root-puri (puri:uri "/")
   "Root path URL.")
