@@ -3,8 +3,19 @@ RS-RESTLESS
 A Common Lisp library for communicating with web services.
 
 The RESTless library provides convenience functions for HTTP
-requests/responses, URI handling, JSON encoding/decoding, RDF/XML
-parsing, OAuth 1.0a user authorization, OSLC clients, and more.
+requests/responses, URI handling, JSON encoding/decoding, SOAP
+messages, RDF/XML parsing, OAuth 1.0a user authorization, OSLC
+clients, UPnP descriptions, and more.
+
+                                                                     [Condition]
+http-client-error
+   HTTP status for a client error response.
+   A ‘http-client-error’ condition indicates that the client seems to
+   have erred.  The status code should be in the range from 400 to 499.
+
+   Class precedence list:
+
+        ‘http-client-error’, ‘http-status’, ‘error’, ...
 
                                                                      [Condition]
 http-informational
@@ -17,6 +28,13 @@ http-informational
    Class precedence list:
 
         ‘http-informational’, ‘http-status’, ...
+
+                                                                         [Class]
+doors-client
+   DOORS Web Access client.
+
+   DOORS Web Access provides an OSLC interface for the DOORS requirements
+   management system.
 
                                                                      [Condition]
 http-redirection
@@ -49,23 +67,6 @@ http-status
 
         ‘http-status’, ‘condition’, ...
 
-                                                                         [Class]
-doors-client
-   DOORS Web Access client.
-
-   DOORS Web Access provides an OSLC interface for the DOORS requirements
-   management system.
-
-                                                                     [Condition]
-http-client-error
-   HTTP status for a client error response.
-   A ‘http-client-error’ condition indicates that the client seems to
-   have erred.  The status code should be in the range from 400 to 499.
-
-   Class precedence list:
-
-        ‘http-client-error’, ‘http-status’, ‘error’, ...
-
                                                                      [Condition]
 http-successful
    HTTP status for a successful response.
@@ -81,10 +82,6 @@ http-successful
 oauth1-client
    Base class for OAuth 1.0a clients.
 
-                                                                         [Class]
-oslc-client
-   Base class for OSLC clients.
-
                                                                      [Condition]
 soap-fault
    Condition type for a SOAP fault.
@@ -92,6 +89,21 @@ soap-fault
    Class precedence list:
 
         ‘soap-fault’, ‘error’, ...
+
+                                                                         [Class]
+oslc-client
+   Base class for OSLC clients.
+
+                                                              [Special Variable]
+*fritz-secret*
+   The secret of the TR-064 service user.
+
+   See the ‘fritz-secret’ function for how to create the content level
+   authentication secret.
+
+                                                              [Special Variable]
+*fritz-user-name*
+   The login name of the TR-064 service user.
 
                                                               [Special Variable]
 *json-keyword-package*
@@ -125,6 +137,10 @@ soap-fault
              see ‹https://www.w3.org/TR/2000/NOTE-SOAP-20000508/›.
 
    Default is ‘:soap-1.2’.
+
+                                                              [Special Variable]
+*upnp-device*
+   The default UPnP device.
 
                                                               [Special Variable]
 *xml-document*
@@ -177,6 +193,54 @@ ensure-http-status (code &rest arguments)
 
       * Signals a type error if an argument is not of the correct
         type.
+
+                                                                      [Function]
+fritz-find-action (service-name action-name &key (device *upnp-device*) all)
+   Find an action by its service and action name.
+
+   First argument SERVICE-NAME is the service type suffix.
+   Second argument ACTION-NAME is the action name.
+   Keyword argument DEVICE is the UPnP root device object; default
+    is the value of the ‘*upnp-device*’ special variable.
+   If keyword argument ALL is true, return all matching UPnP action
+    objects as a list.
+
+   Return the first matching UPnP action object or ‘nil’ of no matching
+   action can be found.
+
+                                                                      [Function]
+fritz-invoke (action arguments &key (user-name *fritz-user-name*)
+              (secret *fritz-secret*))
+   Send a control action.
+
+   First argument ACTION is an UPnP action object.
+   Second argument ARGUMENTS are the input arguments.  Value is
+    an alist with cons cells of the form ‘(ARGUMENT-NAME . VALUE)’
+    where ARGUMENT-NAME is the name of the input argument (a string)
+    and VALUE is the corresponding input value.
+   Keyword arguments USER-NAME and SECRET are the credentials of
+    the TR-064 service user.  Default is to use the values of the
+    ‘*fritz-user-name*’ and ‘*fritz-secret*’ special variables
+    respectively.
+
+   Return value is the alist of output arguments with cons cells of
+   the form ‘(ARGUMENT-NAME . VALUE)’ where ARGUMENT-NAME is the name
+   of the output argument (a string) and VALUE is the corresponding
+   output value.
+
+   Examples:
+
+        (fritz-invoke (fritz-find-action "DeviceInfo" "GetSecurityPort") ())
+         ⇒ (("NewSecurityPort" . 49443))
+
+                                                                      [Function]
+fritz-secret (user-name password &optional (realm *fritz-realm*))
+   Create the content level authentication secret.
+   Arguments USER-NAME, PASSWORD, and REALM are combined and a MD5 hash
+   value is calculated for it.
+
+   Return value is the base 16 encoded string representation of the hash
+   value.
 
                                                                         [Method]
 http-status-code ((condition http-status))
@@ -458,6 +522,32 @@ string-from-uri ((uri puri:uri))
                                                                       [Function]
 trace-drakma-requests (&optional (enable t))
    Enable or disable tracing of Drakma HTTP requests.
+
+                                                                      [Function]
+trace-drakma-requests-p ()
+   Return true if Drakma HTTP requests are traced.
+
+                                                                      [Function]
+upnp-device-description (object)
+   Retrieve a description of a device and its capabilities.
+   Description is step two in UPnP networking.
+
+   Argument OBJECT identifies the device.  Value is the URL to the
+    device's UPnP description.
+
+   Return value is a UPnP device object.
+
+                                                                      [Function]
+upnp-find-soap-action (soap-action &optional (device *upnp-device*))
+   Find an action by its SOAP action tag.
+
+   First argument SOAP-ACTION is the SOAP action tag (a string).  The
+    SOAP action tag consists of the service type and the action name
+    separated by a ‘#’ character.
+   Optional second argument DEVICE is the UPnP root device.
+
+   Return the first matching UPnP action object or ‘nil’ of no matching
+   action can be found.
 
                                                                       [Function]
 wilbur-add-namespaces (namespaces)

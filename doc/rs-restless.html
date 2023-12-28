@@ -43,17 +43,30 @@
    <pre>A Common Lisp library for communicating with web services.
 
 The RESTless library provides convenience functions for HTTP
-requests/responses, URI handling, JSON encoding/decoding, RDF/XML
-parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
+requests/responses, URI handling, JSON encoding/decoding, SOAP
+messages, RDF/XML parsing, OAuth 1.0a user authorization, OSLC
+clients, UPnP descriptions, and more.</pre>
   </div>
   <div class="contents" id="contents">
    <h2>Contents</h2>
    <div class="contents-listing">
     <ul>
      <li>
+      <a href="#nuga3lco">
+       <span class="category">Condition</span>
+       <span class="symbol">http-client-error</span>
+      </a>
+     </li>
+     <li>
       <a href="#fpnezxte">
        <span class="category">Condition</span>
        <span class="symbol">http-informational</span>
+      </a>
+     </li>
+     <li>
+      <a href="#hhdu27ja">
+       <span class="category">Class</span>
+       <span class="symbol">doors-client</span>
       </a>
      </li>
      <li>
@@ -75,18 +88,6 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       </a>
      </li>
      <li>
-      <a href="#hhdu27ja">
-       <span class="category">Class</span>
-       <span class="symbol">doors-client</span>
-      </a>
-     </li>
-     <li>
-      <a href="#nuga3lco">
-       <span class="category">Condition</span>
-       <span class="symbol">http-client-error</span>
-      </a>
-     </li>
-     <li>
       <a href="#elfyin7p">
        <span class="category">Condition</span>
        <span class="symbol">http-successful</span>
@@ -99,15 +100,27 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       </a>
      </li>
      <li>
+      <a href="#ewsrml7k">
+       <span class="category">Condition</span>
+       <span class="symbol">soap-fault</span>
+      </a>
+     </li>
+     <li>
       <a href="#n24nvkps">
        <span class="category">Class</span>
        <span class="symbol">oslc-client</span>
       </a>
      </li>
      <li>
-      <a href="#ewsrml7k">
-       <span class="category">Condition</span>
-       <span class="symbol">soap-fault</span>
+      <a href="#dizji7sb">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*fritz-secret*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#yngnyifi">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*fritz-user-name*</span>
       </a>
      </li>
      <li>
@@ -141,6 +154,12 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       </a>
      </li>
      <li>
+      <a href="#rrvjv5pq">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*upnp-device*</span>
+      </a>
+     </li>
+     <li>
       <a href="#beslacgq">
        <span class="category">Special Variable</span>
        <span class="symbol">*xml-document*</span>
@@ -168,6 +187,24 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       <a href="#bi8b5bmd">
        <span class="category">Function</span>
        <span class="symbol">ensure-http-status</span>
+      </a>
+     </li>
+     <li>
+      <a href="#ncg33j2i">
+       <span class="category">Function</span>
+       <span class="symbol">fritz-find-action</span>
+      </a>
+     </li>
+     <li>
+      <a href="#bf4z8d3k">
+       <span class="category">Function</span>
+       <span class="symbol">fritz-invoke</span>
+      </a>
+     </li>
+     <li>
+      <a href="#yr8k3a5e">
+       <span class="category">Function</span>
+       <span class="symbol">fritz-secret</span>
       </a>
      </li>
      <li>
@@ -449,6 +486,24 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
       </a>
      </li>
      <li>
+      <a href="#zfa4txly">
+       <span class="category">Function</span>
+       <span class="symbol">trace-drakma-requests-p</span>
+      </a>
+     </li>
+     <li>
+      <a href="#d8zr52rh">
+       <span class="category">Function</span>
+       <span class="symbol">upnp-device-description</span>
+      </a>
+     </li>
+     <li>
+      <a href="#ecfaorbb">
+       <span class="category">Function</span>
+       <span class="symbol">upnp-find-soap-action</span>
+      </a>
+     </li>
+     <li>
       <a href="#z5nr37sp">
        <span class="category">Function</span>
        <span class="symbol">wilbur-add-namespaces</span>
@@ -500,6 +555,33 @@ parsing, OAuth 1.0a user authorization, OSLC clients, and more.</pre>
    </div>
   </div>
   <div class="dictionary">
+   <div class="definition" id="nuga3lco">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-client-error</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>HTTP status for a client error response.
+A ‘http-client-error’ condition indicates that the client seems to
+have erred.  The status code should be in the range from 400 to 499.
+
+Class precedence list:
+
+     ‘http-client-error’, ‘<a href="#gw8rouwh"><span class="symbol">http-status</span></a>’, ‘error’, ...</pre>
+    </div>
+   </div>
    <div class="definition" id="fpnezxte">
     <div class="signature">
      <table class="signature">
@@ -527,6 +609,30 @@ The status code should be in the range from 100 to 199.
 Class precedence list:
 
      ‘http-informational’, ‘<a href="#gw8rouwh"><span class="symbol">http-status</span></a>’, ...</pre>
+    </div>
+   </div>
+   <div class="definition" id="hhdu27ja">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">doors-client</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Class</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>DOORS Web Access client.
+
+DOORS Web Access provides an OSLC interface for the DOORS requirements
+management system.</pre>
     </div>
    </div>
    <div class="definition" id="b5zsusu7">
@@ -611,57 +717,6 @@ Class precedence list:
      ‘http-status’, ‘condition’, ...</pre>
     </div>
    </div>
-   <div class="definition" id="hhdu27ja">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">doors-client</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Class</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>DOORS Web Access client.
-
-DOORS Web Access provides an OSLC interface for the DOORS requirements
-management system.</pre>
-    </div>
-   </div>
-   <div class="definition" id="nuga3lco">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">http-client-error</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Condition</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>HTTP status for a client error response.
-A ‘http-client-error’ condition indicates that the client seems to
-have erred.  The status code should be in the range from 400 to 499.
-
-Class precedence list:
-
-     ‘http-client-error’, ‘<a href="#gw8rouwh"><span class="symbol">http-status</span></a>’, ‘error’, ...</pre>
-    </div>
-   </div>
    <div class="definition" id="elfyin7p">
     <div class="signature">
      <table class="signature">
@@ -711,27 +766,6 @@ Class precedence list:
      <pre>Base class for OAuth 1.0a clients.</pre>
     </div>
    </div>
-   <div class="definition" id="n24nvkps">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">oslc-client</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Class</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>Base class for OSLC clients.</pre>
-    </div>
-   </div>
    <div class="definition" id="ewsrml7k">
     <div class="signature">
      <table class="signature">
@@ -755,6 +789,72 @@ Class precedence list:
 Class precedence list:
 
      ‘soap-fault’, ‘error’, ...</pre>
+    </div>
+   </div>
+   <div class="definition" id="n24nvkps">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">oslc-client</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Class</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Base class for OSLC clients.</pre>
+    </div>
+   </div>
+   <div class="definition" id="dizji7sb">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*fritz-secret*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The secret of the TR-064 service user.
+
+See the ‘<a href="#yr8k3a5e"><span class="symbol">fritz-secret</span></a>’ function for how to create the content level
+authentication secret.</pre>
+    </div>
+   </div>
+   <div class="definition" id="yngnyifi">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*fritz-user-name*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The login name of the TR-064 service user.</pre>
     </div>
    </div>
    <div class="definition" id="w355euow">
@@ -873,6 +973,27 @@ following table.
           see ‹https://www.w3.org/TR/2000/NOTE-SOAP-20000508/›.
 
 Default is ‘:soap-1.2’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="rrvjv5pq">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*upnp-device*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The default UPnP device.</pre>
     </div>
    </div>
    <div class="definition" id="beslacgq">
@@ -1010,6 +1131,104 @@ Exceptional situations:
 
    * Signals a type error if an argument is not of the correct
      type.</pre>
+    </div>
+   </div>
+   <div class="definition" id="ncg33j2i">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">fritz-find-action</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">service-name</span> <span class="variable">action-name</span> <span class="lambda-list-keyword">&amp;key</span> (<span class="variable">device</span>&nbsp;<span class="init-form">*upnp-device*</span>) <span class="variable">all</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Find an action by its service and action name.
+
+First argument SERVICE-NAME is the service type suffix.
+Second argument ACTION-NAME is the action name.
+Keyword argument DEVICE is the UPnP root device object; default
+ is the value of the ‘<a href="#rrvjv5pq"><span class="symbol">*upnp-device*</span></a>’ special variable.
+If keyword argument ALL is true, return all matching UPnP action
+ objects as a list.
+
+Return the first matching UPnP action object or ‘nil’ of no matching
+action can be found.</pre>
+    </div>
+   </div>
+   <div class="definition" id="bf4z8d3k">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">fritz-invoke</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">action</span> <span class="variable">arguments</span> <span class="lambda-list-keyword">&amp;key</span> (<span class="variable">user-name</span>&nbsp;<span class="init-form">*fritz-user-name*</span>) (<span class="variable">secret</span>&nbsp;<span class="init-form">*fritz-secret*</span>))</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Send a control action.
+
+First argument ACTION is an UPnP action object.
+Second argument ARGUMENTS are the input arguments.  Value is
+ an alist with cons cells of the form ‘(ARGUMENT-NAME . VALUE)’
+ where ARGUMENT-NAME is the name of the input argument (a string)
+ and VALUE is the corresponding input value.
+Keyword arguments USER-NAME and SECRET are the credentials of
+ the TR-064 service user.  Default is to use the values of the
+ ‘<a href="#yngnyifi"><span class="symbol">*fritz-user-name*</span></a>’ and ‘<a href="#dizji7sb"><span class="symbol">*fritz-secret*</span></a>’ special variables
+ respectively.
+
+Return value is the alist of output arguments with cons cells of
+the form ‘(ARGUMENT-NAME . VALUE)’ where ARGUMENT-NAME is the name
+of the output argument (a string) and VALUE is the corresponding
+output value.
+
+Examples:
+
+     (fritz-invoke (fritz-find-action "DeviceInfo" "GetSecurityPort") ())
+      ⇒ (("NewSecurityPort" . 49443))</pre>
+    </div>
+   </div>
+   <div class="definition" id="yr8k3a5e">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">fritz-secret</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">user-name</span> <span class="variable">password</span> <span class="lambda-list-keyword">&amp;optional</span> (<span class="variable">realm</span>&nbsp;<span class="init-form">*fritz-realm*</span>))</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Create the content level authentication secret.
+Arguments USER-NAME, PASSWORD, and REALM are combined and a MD5 hash
+value is calculated for it.
+
+Return value is the base 16 encoded string representation of the hash
+value.</pre>
     </div>
    </div>
    <div class="definition" id="cjefotcb">
@@ -1998,6 +2217,83 @@ Return the values of the Drakma HTTP request.</pre>
     </div>
     <div class="documentation">
      <pre>Enable or disable tracing of Drakma HTTP requests.</pre>
+    </div>
+   </div>
+   <div class="definition" id="zfa4txly">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">trace-drakma-requests-p</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">()</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Return true if Drakma HTTP requests are traced.</pre>
+    </div>
+   </div>
+   <div class="definition" id="d8zr52rh">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">upnp-device-description</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">object</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Retrieve a description of a device and its capabilities.
+Description is step two in UPnP networking.
+
+Argument OBJECT identifies the device.  Value is the URL to the
+ device's UPnP description.
+
+Return value is a UPnP device object.</pre>
+    </div>
+   </div>
+   <div class="definition" id="ecfaorbb">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">upnp-find-soap-action</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">soap-action</span> <span class="lambda-list-keyword">&amp;optional</span> (<span class="variable">device</span>&nbsp;<span class="init-form">*upnp-device*</span>))</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Find an action by its SOAP action tag.
+
+First argument SOAP-ACTION is the SOAP action tag (a string).  The
+ SOAP action tag consists of the service type and the action name
+ separated by a ‘#’ character.
+Optional second argument DEVICE is the UPnP root device.
+
+Return the first matching UPnP action object or ‘nil’ of no matching
+action can be found.</pre>
     </div>
    </div>
    <div class="definition" id="z5nr37sp">
