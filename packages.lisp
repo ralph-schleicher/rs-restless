@@ -64,6 +64,7 @@
    #:add-text-content-type
    #:remove-text-content-type
    #:trace-drakma-requests
+   #:trace-drakma-requests-p
    #:with-drakma-response
    ;; uri.lisp
    #:string-from-uri
