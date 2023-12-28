@@ -136,7 +136,19 @@
 	(t
 	 (when (cl-advice:advisable-function-p #'drakma:http-request)
 	   (cl-advice:remove-advice :around #'drakma:http-request
-				    'around-drakma-http-request)))))
+				    'around-drakma-http-request)
+           (multiple-value-bind (before around after)
+               (cl-advice:list-advice 'drakma:http-request)
+             (unless (or before around after)
+               (cl-advice:make-unadvisable 'drakma:http-request))))))
+  enable)
+
+(defun trace-drakma-requests-p ()
+  "Return true if Drakma HTTP requests are traced."
+  (and (cl-advice:advisable-function-p #'drakma:http-request)
+       (member 'around-drakma-http-request
+               (cl-advice:list-advice 'drakma:http-request :type :around))
+       t))
 
 (defmacro with-drakma-response ((&optional body-var status-code-var headers-var url-var reason-phrase-var) request &body forms)
   "Wrapper for a Drakma HTTP request.
