@@ -42,12 +42,12 @@
 
 (let ((data (gather-doc
              :title "RS-RESTLESS"
-	     :package :rs-restless
-	     :generic-functions nil
-	     :undocumented t))
+             :package :rs-restless
+             :generic-functions nil
+             :undocumented t))
       (doc-dir (merge-pathnames
-		(make-pathname :directory '(:relative "doc"))
-		(asdf:system-source-directory "rs-restless"))))
+                (make-pathname :directory '(:relative "doc"))
+                (asdf:system-source-directory "rs-restless"))))
   (generate-doc
    :data data
    :output-format :html

@@ -121,13 +121,13 @@ Return value is the Lisp representation of the XML document."
   ;; Remove known keys.
   (iter (while (remf options :result-type)))
   (apply #'cxml:parse
-	 (if (eq source t) *standard-input* source)
-	 (ecase result-type
-	   ((:dom dom:document)
-	    (cxml-dom:make-dom-builder))
-	   ((:stp stp:document)
-	    (stp:make-builder)))
-	 options))
+         (if (eq source t) *standard-input* source)
+         (ecase result-type
+           ((:dom dom:document)
+            (cxml-dom:make-dom-builder))
+           ((:stp stp:document)
+            (stp:make-builder)))
+         options))
 
 (defun xml-serialize (destination document &rest options &key encoding canonical (declaration t) indentation &allow-other-keys)
   "Serialize the Lisp representation of an XML document.
@@ -148,41 +148,41 @@ result is ‘nil’.  Otherwise, the result is a string containing the
 XML document."
   ;; Remove known keys.
   (iter (for key :in '(:encoding :canonical :declaration :indentation))
-	(iter (while (remf options key))))
+        (iter (while (remf options key))))
   (flet ((%print (stream)
-	   (let* ((sink-options (nconc (when encoding
-					 (list :encoding encoding))
-				       (when canonical
-					 (list :canonical canonical))
-				       (when (null declaration)
-					 (list :omit-xml-declaration-p t))
-				       (when indentation
-					 (list :indentation indentation))))
-		  (sink (if (null stream)
-			    (apply #'cxml:make-string-sink sink-options)
-			  (let ((element-type (stream-element-type stream)))
-			    (cond ((subtypep element-type 'character)
-				   (apply #'cxml:make-character-stream-sink stream sink-options))
-				  ((subtypep element-type '(unsigned-byte 8))
-				   (apply #'cxml:make-octet-stream-sink stream sink-options))
-				  ((error 'type-error :datum element-type :expected-type '(or character (unsigned-byte 8)))))))))
-	     (etypecase document
-	       (dom:document
-		(apply #'dom:map-document sink document
- 		       (nconc (when canonical
-				(list :include-doctype :canonical-notations))
-			      options)))
-	       (stp:document
-		(stp:serialize document sink))))))
+           (let* ((sink-options (nconc (when encoding
+                                         (list :encoding encoding))
+                                       (when canonical
+                                         (list :canonical canonical))
+                                       (when (null declaration)
+                                         (list :omit-xml-declaration-p t))
+                                       (when indentation
+                                         (list :indentation indentation))))
+                  (sink (if (null stream)
+                            (apply #'cxml:make-string-sink sink-options)
+                          (let ((element-type (stream-element-type stream)))
+                            (cond ((subtypep element-type 'character)
+                                   (apply #'cxml:make-character-stream-sink stream sink-options))
+                                  ((subtypep element-type '(unsigned-byte 8))
+                                   (apply #'cxml:make-octet-stream-sink stream sink-options))
+                                  ((error 'type-error :datum element-type :expected-type '(or character (unsigned-byte 8)))))))))
+             (etypecase document
+               (dom:document
+                (apply #'dom:map-document sink document
+                       (nconc (when canonical
+                                (list :include-doctype :canonical-notations))
+                              options)))
+               (stp:document
+                (stp:serialize document sink))))))
     (etypecase destination
       (stream
        (%print destination) nil)
       (string
        (with-output-to-string (stream destination)
-	 (%print stream) nil))
+         (%print stream) nil))
       (pathname
        (with-open-file (stream destination :direction :output :element-type '(unsigned-byte 8) :if-exists :supersede :if-does-not-exist :create)
-	 (%print stream) nil))
+         (%print stream) nil))
       ((member t)
        (%print *standard-output*) nil)
       (null

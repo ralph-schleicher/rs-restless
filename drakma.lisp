@@ -37,27 +37,27 @@
 
 (eval-when (:load-toplevel :execute)
   (setf drakma:*drakma-default-external-format*
-	(uiop:encoding-external-format :utf-8)))
+        (uiop:encoding-external-format :utf-8)))
 
 (eval-when (:load-toplevel :execute)
   (setf drakma:*text-content-types*
-	`(("text")
-	  ;; Application types.
-	  ("application" . "iges")
-	  ("application" . "json")
-	  ("application" . "mathml+xml")
-	  ("application" . "mathml-content+xml")
-	  ("application" . "mathml-presentation+xml")
-	  ("application" . "n-triples")
-	  ("application" . "rdf+xml")
-	  ("application" . "soap+xml")
-	  ("application" . "vcard+json")
-	  ("application" . "vcard+xml")
-	  ("application" . "xml")
-	  ;; Miscellaneous types.
-	  ("image" . "svg+xml")
-	  ("model" . "iges")
-	  ("model" . "step+xml"))))
+        `(("text")
+          ;; Application types.
+          ("application" . "iges")
+          ("application" . "json")
+          ("application" . "mathml+xml")
+          ("application" . "mathml-content+xml")
+          ("application" . "mathml-presentation+xml")
+          ("application" . "n-triples")
+          ("application" . "rdf+xml")
+          ("application" . "soap+xml")
+          ("application" . "vcard+json")
+          ("application" . "vcard+xml")
+          ("application" . "xml")
+          ;; Miscellaneous types.
+          ("image" . "svg+xml")
+          ("model" . "iges")
+          ("model" . "step+xml"))))
 
 (defconst media-type-names '("application" "audio" "example" "font" "image" "message" "model" "multipart" "text" "video")
   "List of known media type names.")
@@ -68,7 +68,7 @@
     (string
      (let ((slash (position #\/ datum :test #'char=)))
        (when (null slash)
-	 (error "Malformed media type ‘~A’, missing slash character" datum))
+         (error "Malformed media type ‘~A’, missing slash character" datum))
        (setf datum (cons (subseq datum 0 slash) (subseq datum (1+ slash))))))
     (cons
      (check-type datum (cons string (or null string)))))
@@ -77,10 +77,10 @@
     (error "Unknown media type ‘~A’" (car datum)))
   ;; Check media subtype.
   (cond ((null (cdr datum)))
-	((string= (cdr datum) "*")
-	 (setf (cdr datum) nil))
-	((zerop (length (cdr datum)))
-	 (error "Malformed media type ‘~A/’, missing subtype" (car datum))))
+        ((string= (cdr datum) "*")
+         (setf (cdr datum) nil))
+        ((zerop (length (cdr datum)))
+         (error "Malformed media type ‘~A/’, missing subtype" (car datum))))
   ;; Return value.
   datum)
 
@@ -101,25 +101,25 @@
   (multiple-value-bind (body status-code headers effective-uri stream closep reason-phrase)
       (apply next-function request-uri arguments)
     (let ((method (or (getf arguments :method) :get))
-	  (parameters (getf arguments :parameters))
-	  (headers* (getf arguments :additional-headers))
-	  (cookie-jar (getf arguments :cookie-jar)))
+          (parameters (getf arguments :parameters))
+          (headers* (getf arguments :additional-headers))
+          (cookie-jar (getf arguments :cookie-jar)))
       (iter (for key :in '(:method :parameters :additional-headers :cookie-jar))
-	    (iter (while (remf arguments key))))
+            (iter (while (remf arguments key))))
       (terpri *trace-output*)
       (format *trace-output* "== REQUEST =============================~%")
       (format *trace-output* (~ "Method: ~S~%"
-				"URI: ~S~%"
-				"Parameters: ~S~%"
-				"Headers: ~S~%"
-				"Cookies: ~S~%"
-				"Other: ~S~%")
-	      method request-uri parameters headers* cookie-jar arguments)
+                                "URI: ~S~%"
+                                "Parameters: ~S~%"
+                                "Headers: ~S~%"
+                                "Cookies: ~S~%"
+                                "Other: ~S~%")
+              method request-uri parameters headers* cookie-jar arguments)
       (format *trace-output* "== RESPONSE ============================~%")
       (format *trace-output* (~ "URI: ~S~%"
-				"Status: ~S, ~A~%"
-				"Headers: ~S~%")
-	      effective-uri status-code reason-phrase headers)
+                                "Status: ~S, ~A~%"
+                                "Headers: ~S~%")
+              effective-uri status-code reason-phrase headers)
       (format *trace-output* "== BODY ================================~%")
       (format *trace-output* "~S~%" body)
       (format *trace-output* "========================================~%"))
@@ -129,14 +129,14 @@
 (defun trace-drakma-requests (&optional (enable t))
   "Enable or disable tracing of Drakma HTTP requests."
   (cond (enable
-	 (unless (cl-advice:advisable-function-p #'drakma:http-request)
-	   (cl-advice:make-advisable 'drakma:http-request))
-	 (cl-advice:add-advice :around #'drakma:http-request
-			       'around-drakma-http-request))
-	(t
-	 (when (cl-advice:advisable-function-p #'drakma:http-request)
-	   (cl-advice:remove-advice :around #'drakma:http-request
-				    'around-drakma-http-request)
+         (unless (cl-advice:advisable-function-p #'drakma:http-request)
+           (cl-advice:make-advisable 'drakma:http-request))
+         (cl-advice:add-advice :around #'drakma:http-request
+                               'around-drakma-http-request))
+        (t
+         (when (cl-advice:advisable-function-p #'drakma:http-request)
+           (cl-advice:remove-advice :around #'drakma:http-request
+                                    'around-drakma-http-request)
            (multiple-value-bind (before around after)
                (cl-advice:list-advice 'drakma:http-request)
              (unless (or before around after)
@@ -180,7 +180,7 @@ the ‘with-drakma-response’ macro ensures that it will be closed."
                   ,@(when url-var (list (list url-var location)))
                   ,@(when reason-phrase-var (list (list reason-phrase-var reason))))
               ,@forms)
-	 (cleanup-drakma-response ,body ,closep)))))
+         (cleanup-drakma-response ,body ,closep)))))
 
 (defun cleanup-drakma-response (body closep)
   "Cleanup code for a Drakma HTTP request.

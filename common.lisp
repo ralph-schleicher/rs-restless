@@ -90,10 +90,10 @@ Likewise if SEQ is empty."
   (when (null end)
     (setf end (length seq)))
   (let* ((left (or (position-if-not predicate seq :start start :end end :key key) end))
-	 (right (position-if-not predicate seq :from-end t :start left :end end :key key)))
+         (right (position-if-not predicate seq :from-end t :start left :end end :key key)))
     (setf right (if right (1+ right) start))
     (if (< left right)
-	(values left right)
+        (values left right)
       (values start start))))
 
 (defun make-keyword (name)

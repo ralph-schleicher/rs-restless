@@ -83,12 +83,12 @@
       (check-type user-name string)
       (check-type password string)
       (setf (oauth1-user-name client) user-name
-	    (oauth1-password client) password))
+            (oauth1-password client) password))
     (when (or consumer-key secret-key)
       (check-type consumer-key string)
       (check-type secret-key string)
       (setf (oauth1-consumer-key client) consumer-key
-	    (oauth1-secret-key client) secret-key))
+            (oauth1-secret-key client) secret-key))
     client))
 
 (defgeneric oauth1-user-authorization-setup (client)
@@ -108,23 +108,23 @@
 Value is the verification code (a string).")
   (:method ((client oauth1-client) authorize-uri)
     (with-drakma-response (nil status-code nil effective-uri)
-	(drakma:http-request authorize-uri
-			     :cookie-jar (oauth1-cookie-jar client)
-			     :want-stream t)
+        (drakma:http-request authorize-uri
+                             :cookie-jar (oauth1-cookie-jar client)
+                             :want-stream t)
       (unless (= status-code 200)
-	(error (make-http-status status-code)))
+        (error (make-http-status status-code)))
       (flet ((extract (query)
-	       ;; Extract the verification code from
-	       ;; the query parameters of an URL.
-	       (when (stringp query)
-		 (cdr (assoc "oauth_verifier" (quri:url-decode-params query) :test #'string=)))))
-	(etypecase effective-uri
-	  (puri:uri
-	   (extract (puri:uri-query effective-uri)))
-	  (quri:uri
-	   (extract (quri:uri-query effective-uri)))
-	  (string
-	   effective-uri))))))
+               ;; Extract the verification code from
+               ;; the query parameters of an URL.
+               (when (stringp query)
+                 (cdr (assoc "oauth_verifier" (quri:url-decode-params query) :test #'string=)))))
+        (etypecase effective-uri
+          (puri:uri
+           (extract (puri:uri-query effective-uri)))
+          (quri:uri
+           (extract (quri:uri-query effective-uri)))
+          (string
+           effective-uri))))))
 
 (defmacro with-oauth1-user-authorization (client &body forms)
   "Execute the OAuth user authorization process.
@@ -135,8 +135,8 @@ The body should call ‘oauth1-user-authorization-visit’."
     `(progn
        (oauth1-user-authorization-setup ,client)
        (unwind-protect
-	    (progn ,@forms)
-	 (oauth1-user-authorization-cleanup ,client)))))
+            (progn ,@forms)
+         (oauth1-user-authorization-cleanup ,client)))))
 
 (defgeneric setup-oauth1-client (client)
   (:documentation "Setup the OAuth client for authentication.")
@@ -148,17 +148,17 @@ The body should call ‘oauth1-user-authorization-visit’."
   ;; Perform the authentication.
   (with-oauth1-user-authorization client
     (let* ((north-client (oauth1-north-client client))
-	   (authorize-uri (north:initiate-authentication north-client))
-	   (oauth-verifier (oauth1-user-authorization-visit client authorize-uri)))
+           (authorize-uri (north:initiate-authentication north-client))
+           (oauth-verifier (oauth1-user-authorization-visit client authorize-uri)))
       (unless (stringp oauth-verifier)
-	(error 'program-error))
+        (error 'program-error))
       (north:complete-authentication north-client oauth-verifier)))
   (values))
 
 (defun oauth1-http-request (request-uri
-			    &rest arguments
-			    &key client unsigned (method :get) parameters headers
-			    &allow-other-keys)
+                            &rest arguments
+                            &key client unsigned (method :get) parameters headers
+                            &allow-other-keys)
   "Issue an OAuth 1.0a authorized HTTP request.
 
 First argument REQUEST-URI is the requested URI.
@@ -182,57 +182,57 @@ Return the values of the Drakma HTTP request."
     (setup-oauth1-client client)
     ;; Create the North OAuth client.
     (setf (oauth1-north-client client)
-	  (make-instance 'north:client
-	    :key (oauth1-consumer-key client)
-	    :secret (oauth1-secret-key client)
-	    :request-token-uri (oauth1-request-token-url client)
-	    :authorize-uri (oauth1-user-authorization-url client)
-	    :access-token-uri (oauth1-access-token-url client)))
+          (make-instance 'north:client
+            :key (oauth1-consumer-key client)
+            :secret (oauth1-secret-key client)
+            :request-token-uri (oauth1-request-token-url client)
+            :authorize-uri (oauth1-user-authorization-url client)
+            :access-token-uri (oauth1-access-token-url client)))
     (verify-oauth1-client client))
   ;; Remove known keys – don't want to disable keyword argument
   ;; checking when calling ‘drakma:http-request’.
   (iter (for key :in '(:client :unsigned :method :parameters :headers))
-	(iter (while (remf arguments key))))
+        (iter (while (remf arguments key))))
   (labels ((http-request ()
-	     ;; Like ‘north:make-signed-request’, but simply return
-	     ;; all Drakma values instead of signaling an error.
-	     (let* ((north-client (oauth1-north-client client))
-		    (request (north:make-request
-			      request-uri method
-			      :headers headers
-			      :oauth (when (not unsigned)
-				       `((:oauth_consumer_key . ,(north:key north-client))
-					 (:oauth_token . ,(north:token north-client)))))))
-	       (unless (eq method :post)
-		 ;; Parameters are part of the request URI.
-		 (setf (north:parameters request) parameters))
-	       (unless unsigned
-		 (north:make-signed request (north:secret north-client) (north:token-secret north-client))
-		 (north:make-authorized request))
-	       (when (eq method :post)
-		 ;; Parameters comprise the body of the request.
-		 (setf (north:parameters request) parameters))
-	       ;; Issue the HTTP request.
-	       (apply #'drakma:http-request (north:url request)
-		      :method method
-		      :parameters (north:parameters request)
-		      :url-encoder #'north:url-encode
-		      :form-data (eq method :post)
-		      :cookie-jar (oauth1-cookie-jar client)
-		      :additional-headers (north:headers request)
-		      arguments))))
+             ;; Like ‘north:make-signed-request’, but simply return
+             ;; all Drakma values instead of signaling an error.
+             (let* ((north-client (oauth1-north-client client))
+                    (request (north:make-request
+                              request-uri method
+                              :headers headers
+                              :oauth (when (not unsigned)
+                                       `((:oauth_consumer_key . ,(north:key north-client))
+                                         (:oauth_token . ,(north:token north-client)))))))
+               (unless (eq method :post)
+                 ;; Parameters are part of the request URI.
+                 (setf (north:parameters request) parameters))
+               (unless unsigned
+                 (north:make-signed request (north:secret north-client) (north:token-secret north-client))
+                 (north:make-authorized request))
+               (when (eq method :post)
+                 ;; Parameters comprise the body of the request.
+                 (setf (north:parameters request) parameters))
+               ;; Issue the HTTP request.
+               (apply #'drakma:http-request (north:url request)
+                      :method method
+                      :parameters (north:parameters request)
+                      :url-encoder #'north:url-encode
+                      :form-data (eq method :post)
+                      :cookie-jar (oauth1-cookie-jar client)
+                      :additional-headers (north:headers request)
+                      arguments))))
     ;; Initial HTTP request.
     (multiple-value-bind (body status-code headers effective-uri stream closep reason-phrase)
-	(http-request)
+        (http-request)
       ;; Handle authentication errors, e.g. due to an expired OAuth
       ;; access token.
       (when (and (= status-code 401) (not unsigned))
-	(cleanup-drakma-response body closep)
-	;; Refresh OAuth authentication credentials – once only.
-	(verify-oauth1-client client)
-	;; Retry the request.
-	(multiple-value-setq (body status-code headers effective-uri stream closep reason-phrase)
-	  (http-request)))
+        (cleanup-drakma-response body closep)
+        ;; Refresh OAuth authentication credentials – once only.
+        (verify-oauth1-client client)
+        ;; Retry the request.
+        (multiple-value-setq (body status-code headers effective-uri stream closep reason-phrase)
+          (http-request)))
       ;; Return values.
       (values body status-code headers effective-uri stream closep reason-phrase))))
 

@@ -50,19 +50,19 @@ and replace any intermediate sequence of whitespace characters
 with a single space character."
   (with-output-to-string (stream)
     (loop :for char :across string
-	  :with state = :start
-	  :do (cond ((eq state :parse)
-		     (if (unicode-whitespace-char-p char)
-			 (setf state :space)
-		       (princ char stream)))
-		    ((not (unicode-whitespace-char-p char))
-		     ;; Found a non-whitespace character after skipping
-		     ;; a sequence of whitespace characters.
-		     (when (eq state :space)
-		       (princ #\Space stream))
-		     (princ char stream)
-		     (setf state :parse))
-		    ))))
+          :with state = :start
+          :do (cond ((eq state :parse)
+                     (if (unicode-whitespace-char-p char)
+                         (setf state :space)
+                       (princ char stream)))
+                    ((not (unicode-whitespace-char-p char))
+                     ;; Found a non-whitespace character after skipping
+                     ;; a sequence of whitespace characters.
+                     (when (eq state :space)
+                       (princ #\Space stream))
+                     (princ char stream)
+                     (setf state :parse))
+                    ))))
 
 (in-package :rs-restless)
 
@@ -73,10 +73,10 @@ Argument NAMESPACES is an alist with cons cells of the
 form ‘(PREFIX . URI)’."
   (dolist (namespace namespaces)
     (destructuring-bind (prefix . uri)
-	namespace
+        namespace
       (when (and (stringp prefix) (stringp uri))
-	(wilbur:del-namespace prefix)
-	(wilbur:add-namespace prefix uri)))))
+        (wilbur:del-namespace prefix)
+        (wilbur:add-namespace prefix uri)))))
 
 (defun wilbur-parse-rdf/xml (source source-uri &key destination (parser :cl-rdfxml))
   "Parse an RDF/XML document into a Wilbur database.
@@ -99,20 +99,20 @@ Return value is the Wilbur database."
   (ecase parser
     (:wilbur
      (labels ((parse (stream)
-		(let ((database (wilbur:parse-db-from-stream stream source-uri)))
-		  (if destination
-		      (wilbur:db-merge destination database source-uri)
-		    (setf destination database))
-		  destination)))
+                (let ((database (wilbur:parse-db-from-stream stream source-uri)))
+                  (if destination
+                      (wilbur:db-merge destination database source-uri)
+                    (setf destination database))
+                  destination)))
        (typecase source
-	 (pathname
-	  (with-open-file (stream source)
-	    (parse stream)))
-	 (string
-	  (with-input-from-string (stream source)
-	    (parse stream)))
-	 (t
-	  (parse source)))))
+         (pathname
+          (with-open-file (stream source)
+            (parse stream)))
+         (string
+          (with-input-from-string (stream source)
+            (parse stream)))
+         (t
+          (parse source)))))
     (:cl-rdfxml
      ;; The ‘cl-rdfxml:parse-document’ function provides a
      ;; ‘:coerce-datatyped-empty-properties’ option to handle
@@ -120,38 +120,38 @@ Return value is the Wilbur database."
      ;; literals, e.g. literals of the form ‘""^^xsd:dateTime’.
      (let ((source-node (when source-uri (wilbur:node (string-from-uri source-uri)))))
        (labels ((thing (thing)
-		  (etypecase thing
-		    (null
-		     (wilbur:node nil))
-		    (puri:uri
-		     (wilbur:node (string-from-uri thing)))
-		    (cl-rdfxml:plain-literal
-		     (let ((language (cl-rdfxml:literal-language thing)))
-		       (wilbur:literal (cl-rdfxml:literal-string thing)
-				       :language language)))
-		    (cl-rdfxml:typed-literal
-		     (let ((datatype (wilbur:node
-				      (string-from-uri
-				       (cl-rdfxml:literal-datatype thing)))))
-		       (wilbur:literal (cl-rdfxml:literal-string thing)
-				       :datatype datatype)))
-		    (cl-rdfxml:blank-node
-		     (wilbur:node nil))))
-		(emit (subject predicate object)
-		  (wilbur:add-triple (wilbur:triple
-				      (thing subject)
-				      (thing predicate)
-				      (thing object))))
-		(emit* (subject predicate object)
-		  (wilbur:add-triple (wilbur:triple
-				      (thing subject)
-				      (thing predicate)
-				      (thing object)
-				      source-node))))
-	 (let ((wilbur:*db* (or destination (make-instance 'wilbur:db))))
-	   (cl-rdfxml:parse-document (if source-node #'emit* #'emit) source
-				     :coerce-datatyped-empty-properties t)
-	   wilbur:*db*))))
+                  (etypecase thing
+                    (null
+                     (wilbur:node nil))
+                    (puri:uri
+                     (wilbur:node (string-from-uri thing)))
+                    (cl-rdfxml:plain-literal
+                     (let ((language (cl-rdfxml:literal-language thing)))
+                       (wilbur:literal (cl-rdfxml:literal-string thing)
+                                       :language language)))
+                    (cl-rdfxml:typed-literal
+                     (let ((datatype (wilbur:node
+                                      (string-from-uri
+                                       (cl-rdfxml:literal-datatype thing)))))
+                       (wilbur:literal (cl-rdfxml:literal-string thing)
+                                       :datatype datatype)))
+                    (cl-rdfxml:blank-node
+                     (wilbur:node nil))))
+                (emit (subject predicate object)
+                  (wilbur:add-triple (wilbur:triple
+                                      (thing subject)
+                                      (thing predicate)
+                                      (thing object))))
+                (emit* (subject predicate object)
+                  (wilbur:add-triple (wilbur:triple
+                                      (thing subject)
+                                      (thing predicate)
+                                      (thing object)
+                                      source-node))))
+         (let ((wilbur:*db* (or destination (make-instance 'wilbur:db))))
+           (cl-rdfxml:parse-document (if source-node #'emit* #'emit) source
+                                     :coerce-datatyped-empty-properties t)
+           wilbur:*db*))))
     ))
 
 ;;; wilbur.lisp ends here

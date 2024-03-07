@@ -78,16 +78,16 @@
 
 (defparameter *oslc-text-content-types*
   (list* '("text" . nil)
-	 ;; For OAuth.
-	 '("application" . "x-www-form-urlencoded")
-	 ;; For OSLC.
-	 *oslc-media-types*)
+         ;; For OAuth.
+         '("application" . "x-www-form-urlencoded")
+         ;; For OSLC.
+         *oslc-media-types*)
   "Well known text content types.")
 
 (defmacro with-oslc-defaults (&body forms)
   `(let ((north:*external-format* :utf-8)
-	 (drakma:*drakma-default-external-format* :utf-8)
-	 (drakma:*text-content-types* *oslc-text-content-types*))
+         (drakma:*drakma-default-external-format* :utf-8)
+         (drakma:*text-content-types* *oslc-text-content-types*))
      ,@forms))
 
 (defvar *oslc-client* nil
@@ -135,31 +135,31 @@ The base URL must not end with a slash."
 
 (defmethod setup-oauth1-client ((client oslc-client))
   (let* ((root-url (oslc-root-services-url client))
-	 ;; Fetch the OSLC root services document and parse the RDF triples.
-	 (wilbur:*db* (with-drakma-response (body status-code)
-			  (drakma:http-request root-url :want-stream t)
-			(unless (= status-code 200)
-			  (error (make-http-status status-code)))
-			(wilbur-parse-rdf/xml body root-url)))
-	 ;; Query the OAuth URLs.
-	 (request-token-url (wilbur:node-uri
-			     (wilbur:triple-object
-			      (first (wilbur:query nil (wilbur:node (oauth-request-token-tag client)) nil)))))
-	 (user-authorization-url (wilbur:node-uri
-				  (wilbur:triple-object
-				   (first (wilbur:query nil (wilbur:node (oauth-user-authorization-tag client)) nil)))))
-	 (access-token-url (wilbur:node-uri
-			    (wilbur:triple-object
-			     (first (wilbur:query nil (wilbur:node (oauth-access-token-tag client)) nil))))))
+         ;; Fetch the OSLC root services document and parse the RDF triples.
+         (wilbur:*db* (with-drakma-response (body status-code)
+                          (drakma:http-request root-url :want-stream t)
+                        (unless (= status-code 200)
+                          (error (make-http-status status-code)))
+                        (wilbur-parse-rdf/xml body root-url)))
+         ;; Query the OAuth URLs.
+         (request-token-url (wilbur:node-uri
+                             (wilbur:triple-object
+                              (first (wilbur:query nil (wilbur:node (oauth-request-token-tag client)) nil)))))
+         (user-authorization-url (wilbur:node-uri
+                                  (wilbur:triple-object
+                                   (first (wilbur:query nil (wilbur:node (oauth-user-authorization-tag client)) nil)))))
+         (access-token-url (wilbur:node-uri
+                            (wilbur:triple-object
+                             (first (wilbur:query nil (wilbur:node (oauth-access-token-tag client)) nil))))))
     ;; Configure the OAuth client.
     (setf (oauth1-request-token-url client) request-token-url
-	  (oauth1-user-authorization-url client) user-authorization-url
-	  (oauth1-access-token-url client) access-token-url)))
+          (oauth1-user-authorization-url client) user-authorization-url
+          (oauth1-access-token-url client) access-token-url)))
 
 (defun oslc-invoke (method request-uri
-		    &rest arguments
-		    &key (client *oslc-client*) parameters headers (accept "application/rdf+xml") (oslc-core-version "2.0")
-		    &allow-other-keys)
+                    &rest arguments
+                    &key (client *oslc-client*) parameters headers (accept "application/rdf+xml") (oslc-core-version "2.0")
+                    &allow-other-keys)
   "Invoke an OSLC REST method.
 
 First argument METHOD is the HTTP method, e.g. ‘:get’ or ‘:put’.
@@ -189,15 +189,15 @@ Return the values of the Drakma HTTP request."
   ;; Remove known keys – don't want to disable keyword argument
   ;; checking when calling ‘oauth1-http-request’.
   (iter (for key :in '(:client :parameters :headers :accept :oslc-core-version))
-	(iter (while (remf arguments key))))
+        (iter (while (remf arguments key))))
   (with-oslc-defaults
     (apply #'oauth1-http-request request-uri
-	   :client client
-	   :method method
-	   :parameters parameters
-	   :headers headers
-	   :accept accept
-	   arguments)))
+           :client client
+           :method method
+           :parameters parameters
+           :headers headers
+           :accept accept
+           arguments)))
 
 (defgeneric oslc-service-provider-catalogs (source domain)
   (:documentation "Return all service provider catalogs for a domain.
@@ -213,7 +213,7 @@ Value is a list of URLs."))
   (oslc-service-provider-catalogs
    (let ((url (oslc-root-services-url source)))
      (with-drakma-response (stream)
-	 (oslc-invoke :get url :client source :unsigned t :want-stream t)
+         (oslc-invoke :get url :client source :unsigned t :want-stream t)
        (wilbur-parse-rdf/xml stream url)))
    domain))
 
@@ -229,9 +229,9 @@ Value is a list of URLs."))
           (catalog (wilbur:node "http://open-services.net/ns/core#ServiceProviderCatalog"))
           (domain (wilbur:node "http://open-services.net/ns/core#domain")))
       (iter (for triple :in (wilbur:query nil type catalog))
-	    (for subject = (wilbur:triple-subject triple))
-	    (when (wilbur:query subject domain namespace)
-	      (collect (wilbur:node-uri subject)))))))
+            (for subject = (wilbur:triple-subject triple))
+            (when (wilbur:query subject domain namespace)
+              (collect (wilbur:node-uri subject)))))))
 
 (defmethod oslc-service-provider-catalogs ((source wilbur:db) (domain (eql :rm)))
   "Return all service provider catalogs in the requirements management domain."
@@ -243,7 +243,7 @@ Value is a list of URLs."))
    ;;   the OSLC Requirements Management Specification for details.
    (let ((wilbur:*db* source))
      (iter (for triple :in (wilbur:query nil (wilbur:node "http://open-services.net/xmlns/rm/1.0/rmServiceProviders") nil))
-	   (collect (wilbur:node-uri (wilbur:triple-object triple)))))
+           (collect (wilbur:node-uri (wilbur:triple-object triple)))))
    ;; As an alternative, find all service provider catalogs in the
    ;; requirements management domain.  This is the OSLC 2.0 way, I
    ;; suppose.
@@ -263,34 +263,34 @@ Thus, service provider catalogs are lists and service providers are
 cons cells."
   (let (haystack)
     (labels ((make-leaf (url title)
-	       (cons url title))
-	     (make-branch (url title leafs)
-	       (list (cons url title) leafs))
-	     (node-title (subject)
-	       (let ((title (wilbur:query subject (wilbur:node "http://purl.org/dc/terms/title") nil)))
-		 (when (= (length title) 1)
-		   ;; Value should be a string literal.
-		   (wilbur:triple-object (first title)))))
-	     (browse-catalog (url)
-	       (let ((wilbur:*db* (with-drakma-response (stream)
-				      (oslc-invoke :get url :client client :want-stream t)
-				    (wilbur-parse-rdf/xml stream url))))
-		 ;; Mark catalog as visited.
-		 (push url haystack)
-		 (make-branch
-		  url (node-title (wilbur:node url))
-		  (nconc
-		   (iter (for triple :in (wilbur:query nil (wilbur:node "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") (wilbur:node "http://open-services.net/ns/core#ServiceProviderCatalog")))
-			 (for subject = (wilbur:triple-subject triple))
-			 (for needle = (wilbur:node-uri subject))
-			 ;; Avoid infinite recursion.
-			 (unless (find needle haystack :test #'string=)
-			   (collect (browse-catalog needle))))
-		   (iter (for triple :in (wilbur:query nil (wilbur:node "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") (wilbur:node "http://open-services.net/ns/core#ServiceProvider")))
-			 (for subject = (wilbur:triple-subject triple))
-			 (collect (make-leaf
-				   (wilbur:node-uri subject)
-				   (node-title subject)))))))))
+               (cons url title))
+             (make-branch (url title leafs)
+               (list (cons url title) leafs))
+             (node-title (subject)
+               (let ((title (wilbur:query subject (wilbur:node "http://purl.org/dc/terms/title") nil)))
+                 (when (= (length title) 1)
+                   ;; Value should be a string literal.
+                   (wilbur:triple-object (first title)))))
+             (browse-catalog (url)
+               (let ((wilbur:*db* (with-drakma-response (stream)
+                                      (oslc-invoke :get url :client client :want-stream t)
+                                    (wilbur-parse-rdf/xml stream url))))
+                 ;; Mark catalog as visited.
+                 (push url haystack)
+                 (make-branch
+                  url (node-title (wilbur:node url))
+                  (nconc
+                   (iter (for triple :in (wilbur:query nil (wilbur:node "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") (wilbur:node "http://open-services.net/ns/core#ServiceProviderCatalog")))
+                         (for subject = (wilbur:triple-subject triple))
+                         (for needle = (wilbur:node-uri subject))
+                         ;; Avoid infinite recursion.
+                         (unless (find needle haystack :test #'string=)
+                           (collect (browse-catalog needle))))
+                   (iter (for triple :in (wilbur:query nil (wilbur:node "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") (wilbur:node "http://open-services.net/ns/core#ServiceProvider")))
+                         (for subject = (wilbur:triple-subject triple))
+                         (collect (make-leaf
+                                   (wilbur:node-uri subject)
+                                   (node-title subject)))))))))
       (browse-catalog url))))
 
 ;;; oslc.lisp ends here

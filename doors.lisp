@@ -46,28 +46,28 @@ management system."))
   (declare (ignore arguments))
   ;; DOORS uses non-standard XML tags in the root services document.
   (setf (oauth-request-token-tag client)
-	"http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthRequestTokenUrl"
-	(oauth-user-authorization-tag client)
-	"http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthUserAuthorizationUrl"
-	(oauth-access-token-tag client)
-	"http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthAccessTokenUrl"))
+        "http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthRequestTokenUrl"
+        (oauth-user-authorization-tag client)
+        "http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthUserAuthorizationUrl"
+        (oauth-access-token-tag client)
+        "http://jazz.net/xmlns/prod/jazz/jfs/1.0/oauthAccessTokenUrl"))
 
 (defmethod oauth1-user-authorization-setup ((client doors-client))
   ;; Non-interactive user sign on.  See the source code of the DOORS
   ;; Web Access login page.  This has to happen in the same session as
   ;; the rest of the OAuth user authorization.
   (let ((user-name (oauth1-user-name client))
-	(password (oauth1-password client)))
+        (password (oauth1-password client)))
     (when (and (stringp user-name)
-	       (stringp password))
+               (stringp password))
       (with-drakma-response (nil status-code)
-	  (drakma:http-request (~ (base-url client) "/j_acegi_security_check")
-			       :method :post
-			       :parameters `(("j_username" . ,user-name)
-					     ("j_password" . ,password))
-			       :cookie-jar (oauth1-cookie-jar client)
-			       :want-stream t)
-	(unless (= status-code 200)
-	  (error (make-http-status status-code)))))))
+          (drakma:http-request (~ (base-url client) "/j_acegi_security_check")
+                               :method :post
+                               :parameters `(("j_username" . ,user-name)
+                                             ("j_password" . ,password))
+                               :cookie-jar (oauth1-cookie-jar client)
+                               :want-stream t)
+        (unless (= status-code 200)
+          (error (make-http-status status-code)))))))
 
 ;;; doors.lisp ends here

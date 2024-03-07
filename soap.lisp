@@ -124,36 +124,36 @@ Class precedence list:
 
      ‘soap-fault’, ‘error’, ...")
   (:report (lambda (condition stream)
-	     (let ((code (soap-fault-code condition))
-		   (reason (soap-fault-reason condition))
-		   (node (soap-fault-node condition))
-		   (role (soap-fault-role condition))
-		   (detail (soap-fault-detail condition))
-		   (message (soap-fault-message condition)))
-	       (format stream "SOAP fault")
-	       (when code
-		 (if (consp code)
-		     (format stream " ‘~{~A~^.~}’" code)
-		   (format stream " ‘~A’" code)))
-	       (when detail
-		 (format stream " in detail"))
-	       (when node
-		 (format stream " on node ‘~A’" node)
-		 (when role
-		   (format stream " as ‘~A’" role)))
-	       (format stream ".")
-	       (when reason
-		 (terpri stream)
-		 (format stream "Reason: ~A" reason))
-	       (when message
-		 (terpri stream)
-		 (format stream "Message:~%~A"
-			 (typecase message
-			   (dom:document
-			    (dom:map-document (cxml:make-rod-sink :omit-xml-declaration-p t :indentation 1) message))
-			   (t
-			    message))))
-	       ()))))
+             (let ((code (soap-fault-code condition))
+                   (reason (soap-fault-reason condition))
+                   (node (soap-fault-node condition))
+                   (role (soap-fault-role condition))
+                   (detail (soap-fault-detail condition))
+                   (message (soap-fault-message condition)))
+               (format stream "SOAP fault")
+               (when code
+                 (if (consp code)
+                     (format stream " ‘~{~A~^.~}’" code)
+                   (format stream " ‘~A’" code)))
+               (when detail
+                 (format stream " in detail"))
+               (when node
+                 (format stream " on node ‘~A’" node)
+                 (when role
+                   (format stream " as ‘~A’" role)))
+               (format stream ".")
+               (when reason
+                 (terpri stream)
+                 (format stream "Reason: ~A" reason))
+               (when message
+                 (terpri stream)
+                 (format stream "Message:~%~A"
+                         (typecase message
+                           (dom:document
+                            (dom:map-document (cxml:make-rod-sink :omit-xml-declaration-p t :indentation 1) message))
+                           (t
+                            message))))
+               ()))))
 
 (defun make-soap-fault (datum)
   "Create a ‘soap-fault’ condition.
@@ -168,75 +168,75 @@ Exceptional situations:
 
    * Signals an error if DATUM does not designate a SOAP message."
   (when-let* ((document (typecase datum
-			  (dom:document
-			   datum)
-			  (dom:node
-			   (dom:owner-document datum))
-			  (t
-			   (cxml:parse datum (cxml-dom:make-dom-builder)))))
-	      ;; Lookup the SOAP version from the namespace
-	      ;; name of the document element.
-	      (name (dom:namespace-uri (dom:document-element document)))
-	      (version (let ((tem (rassoc name soap-namespace-alist :test #'string=)))
-			 (when (null tem)
-			   (error "Unknown SOAP namespace name ‘~A’." name))
-			 (car tem)))
-	      ;; Lookup the ‘Fault’ element.
-	      (fault (xpath:with-namespaces (("env" name))
-		       (xpath:first-node (xpath:evaluate "/env:Envelope/env:Body/env:Fault" document))))
-	      ;; Looks good, create the condition.
-	      (condition (make-condition 'soap-fault)))
+                          (dom:document
+                           datum)
+                          (dom:node
+                           (dom:owner-document datum))
+                          (t
+                           (cxml:parse datum (cxml-dom:make-dom-builder)))))
+              ;; Lookup the SOAP version from the namespace
+              ;; name of the document element.
+              (name (dom:namespace-uri (dom:document-element document)))
+              (version (let ((tem (rassoc name soap-namespace-alist :test #'string=)))
+                         (when (null tem)
+                           (error "Unknown SOAP namespace name ‘~A’." name))
+                         (car tem)))
+              ;; Lookup the ‘Fault’ element.
+              (fault (xpath:with-namespaces (("env" name))
+                       (xpath:first-node (xpath:evaluate "/env:Envelope/env:Body/env:Fault" document))))
+              ;; Looks good, create the condition.
+              (condition (make-condition 'soap-fault)))
     ;; Common slots.
     (setf (soap-fault-message condition) document
-	  (soap-fault-version condition) version)
+          (soap-fault-version condition) version)
     ;; Decompose the fault.
     (ecase version
       (:soap-1.2
        (xpath:with-namespaces (("env" name))
-	 (let ((codes (iter (with node = (xpath:first-node (xpath:evaluate "env:Code" fault)))
-			    (while node)
-			    (for value = (xpath:first-node (xpath:evaluate "env:Value" node)))
-			    (while value)
-			    ;; Get the local name of the code.
-			    (let* ((code (xpath:string-value value))
-				   (pos (position #\: code)))
-			      (when pos
-				(setf code (subseq code (1+ pos))))
-			      (collecting code))
-			    ;; Recurse on the sub-codes.
-			    (setf node (xpath:first-node (xpath:evaluate "env:Subcode" node))))))
-	   (setf (soap-fault-code condition) codes))
-	 ;; Prefer reason phrase in English.
-	 (when-let ((node (or (xpath:first-node (xpath:evaluate "env:Reason/env:Text[@xml:lang=\"en-US\"]" fault))
-			      (xpath:first-node (xpath:evaluate "env:Reason/env:Text[@xml:lang=\"en\"]" fault))
-			      (xpath:first-node (xpath:evaluate "env:Reason/env:Text[@xml:lang=\"\"]" fault))
-			      (xpath:first-node (xpath:evaluate "env:Reason/env:Text" fault)))))
-	   (let ((reason (xpath:string-value node)))
-	     (when (plusp (length reason))
-	       (setf (soap-fault-reason condition) reason))))
-	 (when-let ((node (xpath:first-node (xpath:evaluate "env:Node" fault))))
-	   (setf (soap-fault-node condition) (xpath:string-value node)))
-	 (when-let ((node (xpath:first-node (xpath:evaluate "env:Role" fault))))
-	   (setf (soap-fault-role condition) (xpath:string-value node)))
-	 (when-let ((node (xpath:first-node (xpath:evaluate "env:Detail" fault))))
-	   (setf (soap-fault-detail condition) t))))
+         (let ((codes (iter (with node = (xpath:first-node (xpath:evaluate "env:Code" fault)))
+                            (while node)
+                            (for value = (xpath:first-node (xpath:evaluate "env:Value" node)))
+                            (while value)
+                            ;; Get the local name of the code.
+                            (let* ((code (xpath:string-value value))
+                                   (pos (position #\: code)))
+                              (when pos
+                                (setf code (subseq code (1+ pos))))
+                              (collecting code))
+                            ;; Recurse on the sub-codes.
+                            (setf node (xpath:first-node (xpath:evaluate "env:Subcode" node))))))
+           (setf (soap-fault-code condition) codes))
+         ;; Prefer reason phrase in English.
+         (when-let ((node (or (xpath:first-node (xpath:evaluate "env:Reason/env:Text[@xml:lang=\"en-US\"]" fault))
+                              (xpath:first-node (xpath:evaluate "env:Reason/env:Text[@xml:lang=\"en\"]" fault))
+                              (xpath:first-node (xpath:evaluate "env:Reason/env:Text[@xml:lang=\"\"]" fault))
+                              (xpath:first-node (xpath:evaluate "env:Reason/env:Text" fault)))))
+           (let ((reason (xpath:string-value node)))
+             (when (plusp (length reason))
+               (setf (soap-fault-reason condition) reason))))
+         (when-let ((node (xpath:first-node (xpath:evaluate "env:Node" fault))))
+           (setf (soap-fault-node condition) (xpath:string-value node)))
+         (when-let ((node (xpath:first-node (xpath:evaluate "env:Role" fault))))
+           (setf (soap-fault-role condition) (xpath:string-value node)))
+         (when-let ((node (xpath:first-node (xpath:evaluate "env:Detail" fault))))
+           (setf (soap-fault-detail condition) t))))
       (:soap-1.1
        (when-let ((node (xpath:first-node (xpath:evaluate "faultcode" fault))))
-	 (let* ((code (xpath:string-value node))
-		(pos (position #\: code)))
-	   (when pos
-	     (setf code (subseq code (1+ pos))))
-	   (setf (soap-fault-code condition) code)))
+         (let* ((code (xpath:string-value node))
+                (pos (position #\: code)))
+           (when pos
+             (setf code (subseq code (1+ pos))))
+           (setf (soap-fault-code condition) code)))
        (when-let ((node (xpath:first-node (xpath:evaluate "faultstring" fault))))
-	 (let ((reason (xpath:string-value node)))
-	   (when (plusp (length reason))
-	     (setf (soap-fault-reason condition) reason))))
+         (let ((reason (xpath:string-value node)))
+           (when (plusp (length reason))
+             (setf (soap-fault-reason condition) reason))))
        (when-let ((node (xpath:first-node (xpath:evaluate "faultactor" fault))))
-	 (let ((actor (xpath:string-value node)))
-	   (when (plusp (length actor))
-	     (setf (soap-fault-node condition) actor))))
+         (let ((actor (xpath:string-value node)))
+           (when (plusp (length actor))
+             (setf (soap-fault-node condition) actor))))
        (when-let ((node (xpath:first-node (xpath:evaluate "detail" fault))))
-	 (setf (soap-fault-detail condition) t))))
+         (setf (soap-fault-detail condition) t))))
     ;; Return value.
     condition))
 
@@ -287,44 +287,44 @@ SOAP message does not contain any superfluous whitespace characters."
   `(invoke-soap-envelope (lambda () ,@header) (lambda () ,@body) ,@options))
 
 (defun invoke-soap-envelope (header body
-			     &key
-			       (version *soap-version*)
-			       (namespace-prefix *soap-namespace-prefix*)
-			       xml-declaration
-			       xml-namespaces
-			       xml-indentation
-			     &allow-other-keys)
+                             &key
+                               (version *soap-version*)
+                               (namespace-prefix *soap-namespace-prefix*)
+                               xml-declaration
+                               xml-namespaces
+                               xml-indentation
+                             &allow-other-keys)
   "Helper function for the ‘with-soap-envelope’ macro."
   (check-type version soap-version)
   (check-type namespace-prefix string)
   (let* ((env namespace-prefix)
-	 (form `(cxml:with-element* (,env "Envelope")
-		  (cxml:with-element* (,env "Header") (funcall ,header))
-		  (cxml:with-element* (,env "Body") (funcall ,body)))))
+         (form `(cxml:with-element* (,env "Envelope")
+                  (cxml:with-element* (,env "Header") (funcall ,header))
+                  (cxml:with-element* (,env "Body") (funcall ,body)))))
     ;; Add XML namespaces; preserving the given order.
     (dolist (namespace (reverse xml-namespaces))
       ;; Resolve a namespace prefix via ‘*xml-namespaces*’.
       (when (stringp namespace)
-	(let ((tem (assoc namespace *xml-namespaces* :test #'string=)))
-	  (when (null tem)
-	    (error "Unknown namespace prefix ‘~A’." namespace))
-	  (setf namespace tem)))
+        (let ((tem (assoc namespace *xml-namespaces* :test #'string=)))
+          (when (null tem)
+            (error "Unknown namespace prefix ‘~A’." namespace))
+          (setf namespace tem)))
       (setf form `(cxml:with-namespace (,(xmlns-prefix namespace) ,(xmlns-name namespace))
-		    ,form)))
+                    ,form)))
     ;; Finish the XML document.
     (setf form `(cxml:with-xml-output (cxml:make-rod-sink :omit-xml-declaration-p (not ,xml-declaration) :indentation ,xml-indentation)
-		  (cxml:with-namespace (,env (xmlns-name (assoc ,version soap-namespace-alist)))
-		    ,form)))
+                  (cxml:with-namespace (,env (xmlns-name (assoc ,version soap-namespace-alist)))
+                    ,form)))
     ;; Create it.
     (eval form)))
 
 (defun soap-http-request (request-uri message
-			  &rest options
-			  &key
-			    (method :post)
-			    (fault-error-p t)
-			    (if-not-successful :error)
-			  &allow-other-keys)
+                          &rest options
+                          &key
+                            (method :post)
+                            (fault-error-p t)
+                            (if-not-successful :error)
+                          &allow-other-keys)
   "Send a SOAP message via HTTP.
 
 First argument REQUEST-URI is the SOAP end point.
@@ -345,22 +345,22 @@ Return the values of the Drakma HTTP request."
   (check-type if-not-successful (member nil :error))
   ;; Remove known keys.
   (iter (for key :in '(:method :fault-error-p :if-not-successful))
-	(iter (while (remf options key))))
+        (iter (while (remf options key))))
   (multiple-value-bind (body status-code headers effective-uri stream closep reason-phrase)
       (apply #'drakma:http-request request-uri
-	     :method method
-	     :content message
-	     :content-type "text/xml" ;or "application/soap+xml"
-	     options)
+             :method method
+             :content message
+             :content-type "text/xml" ;or "application/soap+xml"
+             options)
     (cond ((and fault-error-p (= status-code 500))
-	   (let ((fault (or (make-soap-fault body)
-			    (make-http-status status-code reason-phrase))))
-	     (cleanup-drakma-response body closep)
-	     (error fault)))
-	  ((and (eq if-not-successful :error)
-		(not (<= 200 status-code 299)))
-	   (cleanup-drakma-response body closep)
-	   (error (make-http-status status-code reason-phrase))))
+           (let ((fault (or (make-soap-fault body)
+                            (make-http-status status-code reason-phrase))))
+             (cleanup-drakma-response body closep)
+             (error fault)))
+          ((and (eq if-not-successful :error)
+                (not (<= 200 status-code 299)))
+           (cleanup-drakma-response body closep)
+           (error (make-http-status status-code reason-phrase))))
     ;; Return values.
     (values body status-code headers effective-uri stream closep reason-phrase)))
 
