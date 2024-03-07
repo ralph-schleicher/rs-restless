@@ -73,6 +73,7 @@
    #:trace-drakma-requests
    #:trace-drakma-requests-p
    #:with-drakma-response
+   #:cleanup-drakma-response
    ;; uri.lisp
    #:string-from-uri
    ;; json.lisp
