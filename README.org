@@ -4,8 +4,9 @@ A Common Lisp library for communicating with web services.
 
 The RESTless library provides convenience functions for HTTP
 requests/responses, URI handling, JSON encoding/decoding, SOAP
-messages, RDF/XML parsing, OAuth 1.0a user authorization, OSLC
-clients, UPnP descriptions, and more.
+messages, RDF/XML parsing, integrated Windows authentication,
+OAuth 1.0a user authorization, OSLC clients, UPnP descriptions,
+and more.
 
 
 ** Technologies
@@ -59,12 +60,20 @@ also applies to OSLC.
 SOAP (Simple Object Access Protocol) is a web API standard maintained
 by the W3C.  SOAP uses XML as its message format.
 
+*** UPnP
+
+UPnP (Universal Plug and Pray) is a set of networking protocols for
+consumer electronics.  It is based on SOAP 1.1.  The TR-064 protocol
+of AVM FRITZ!Box devices uses this technology.
+
 
 ** Dependencies
 
 - Drakma :: HTTP Client
   - https://edicl.github.io/drakma/
   - https://github.com/edicl/drakma/
+- Cerberus :: Kerberos authentication
+  - https://github.com/fjames86/cerberus
 - North :: OAuth 1.0a
   - https://shinmera.github.io/north/
   - https://github.com/Shinmera/north/
