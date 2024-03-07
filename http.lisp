@@ -288,6 +288,15 @@ See also the ‘*http-cookies*’ special variable."
 (defvar *basic-authentication* nil
   "The default HTTP basic authentication credentials.")
 
+(defun make-basic-authentication (user-name password)
+  "Encode HTTP basic authentication credentials.
+
+First argument USER-NAME is the user name (a string).
+Second argument PASSWORD is the password (a string).
+
+Return value is a string."
+  (cl-base64:string-to-base64-string (~ user-name ":" password)))
+
 (defun http-request (request-uri
                      &rest
                        arguments
