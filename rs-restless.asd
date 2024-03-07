@@ -41,36 +41,39 @@
   :license "Modified BSD License"
   :version (:read-file-line "VERSION")
   :depends-on (:alexandria
-	       :iterate
-	       :cl-advice
-	       :cl-unicode
-	       :drakma
-	       :north-drakma
-	       :puri
-	       :quri
-	       "rs-json"
-	       :cxml
-	       :cxml-stp
-	       :xpath
-	       :cl-rdfxml
-	       :wilbur
+               :iterate
+               :cl-advice
+               :cl-unicode
+               :usocket
+               :cerberus
+               :drakma
+               :north-drakma
+               :puri
+               :quri
+               "rs-json"
+               :cxml
+               :cxml-stp
+               :xpath
+               :cl-rdfxml
+               :wilbur
                :read-number
                :md5)
   :serial t
   :components ((:file "packages")
-	       (:file "common")
-	       (:file "http")
-	       (:file "drakma")
-	       (:file "uri")
-	       (:file "json")
-	       (:file "xml")
-	       (:file "soap")
-	       (:file "rdf")
-	       (:file "wilbur")
-	       (:file "oauth1")
-	       (:file "oslc")
-	       (:file "doors")
-	       (:file "upnp")
-	       (:file "fritz")))
+               (:file "common")
+               (:file "http")
+               (:file "kerberos")
+               (:file "drakma")
+               (:file "uri")
+               (:file "json")
+               (:file "xml")
+               (:file "soap")
+               (:file "rdf")
+               (:file "wilbur")
+               (:file "oauth1")
+               (:file "oslc")
+               (:file "doors")
+               (:file "upnp")
+               (:file "fritz")))
 
 ;;; rs-restless.asd ends here
