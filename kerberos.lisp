@@ -53,6 +53,9 @@ supported encryption types.
 
 See also ‘https://web.mit.edu/kerberos/krb5-current/doc/admin/enctypes.html’.")
 
+(defvar *kerberos-realm* nil
+  "The Kerberos realm (a string).")
+
 (defvar *kerberos-kdc* nil
   "The Kerberos key distribution center.
 Value is either the host name (a string) or the IP address (a vector
