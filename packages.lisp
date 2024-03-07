@@ -60,6 +60,13 @@
    #:http-server-error
    #:make-http-status
    #:ensure-http-status
+   ;; kerberos.lisp
+   #:*kerberos-enctypes*
+   #:*kerberos-kdc*
+   #:*kerberos-spn*
+   #:*kerberos-login-token*
+   #:kerberos-login-token
+   #:make-kerberos-user
    ;; drakma.lisp
    #:add-text-content-type
    #:remove-text-content-type
