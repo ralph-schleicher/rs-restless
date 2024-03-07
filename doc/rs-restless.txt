@@ -29,13 +29,6 @@ http-informational
 
         ‘http-informational’, ‘http-status’, ...
 
-                                                                         [Class]
-doors-client
-   DOORS Web Access client.
-
-   DOORS Web Access provides an OSLC interface for the DOORS requirements
-   management system.
-
                                                                      [Condition]
 http-redirection
    HTTP status for a redirection response.
@@ -91,8 +84,23 @@ soap-fault
         ‘soap-fault’, ‘error’, ...
 
                                                                          [Class]
+doors-client
+   DOORS Web Access client.
+
+   DOORS Web Access provides an OSLC interface for the DOORS requirements
+   management system.
+
+                                                                          [Type]
+kerberos-login-token
+   The type of a Kerberos login token.
+
+                                                                         [Class]
 oslc-client
    Base class for OSLC clients.
+
+                                                              [Special Variable]
+*basic-authentication*
+   The default HTTP basic authentication credentials.
 
                                                               [Special Variable]
 *fritz-secret*
@@ -106,9 +114,84 @@ oslc-client
    The login name of the TR-064 service user.
 
                                                               [Special Variable]
+*http-cookies*
+   A collection of HTTP cookies.
+
+                                                              [Special Variable]
 *json-keyword-package*
    Home package for the keys of JSON object members.
    A value of ‘nil’ means that keys are strings.
+
+                                                              [Special Variable]
+*kerberos-enctypes*
+   A list of encryption types in decreasing order of preference.
+   The encryption type aes256-cts-hmac-sha1-96 should be included in
+   this list since it is supported by all Kerberos implementations.
+   Call the ‘cerberus:list-all-profiles’ function to get a list of
+   supported encryption types.
+
+   See also ‘https://web.mit.edu/kerberos/krb5-current/doc/admin/enctypes.html’.
+
+                                                              [Special Variable]
+*kerberos-kdc*
+   The Kerberos key distribution center.
+   Value is either the host name (a string) or the IP address (a vector
+   of integers) of the KDC.  On Windows, the KDC is an Active Directory
+   domain controller.
+
+   How to find out the host name or IP address of the KDC?
+
+        C:> nslookup.exe -type=srv _kerberos._tcp.example.com
+        Server:  ns1.example.com
+        Address:  10.1.1.1
+
+        _kerberos._tcp.example.com      SRV service location:
+                  priority       = 0
+                  weight         = 100
+                  port           = 88
+                  svr hostname   = dc1.example.com
+        dc1.example.com                 internet address = 10.1.1.3
+
+                                                              [Special Variable]
+*kerberos-login-token*
+   The default Kerberos login token.
+
+                                                              [Special Variable]
+*kerberos-spn*
+   The default service principal name.
+
+   How to find out the SPN for ‘https://app.example.com:8443/rest-api/’
+   on Windows?
+
+        C:> setspn.exe -Q */app.example.com
+        Checking domain DC=example,DC=com
+
+        No such SPN found.
+
+   Hmm, examine the host name:
+
+        C:> nslookup.exe app.example.com
+        Server:  ns1.example.com
+        Address:  10.1.1.1
+
+        Name:    host.example.com
+        Address:  10.1.3.23
+        Aliases:  app.example.com
+
+   Try again with the canonical host name:
+
+        C:> setspn.exe -Q */host.example.com
+        Checking domain DC=example,DC=com
+        CN=...,DC=example,DC=com
+                RestrictedKrbHost/host.example.com
+                HOST/host.example.com
+                RestrictedKrbHost/host
+                HOST/host
+
+        Existing SPN found!
+
+   So, the SPN is, e.g. ‘HOST/host.example.com@EXAMPLE.COM’.
+   You have to check which SPN actually works.
 
                                                               [Special Variable]
 *oslc-client*
@@ -174,6 +257,21 @@ browse-oslc-service-provider-catalog (url &optional (client *oslc-client*))
    service providers.  A service provider has the form ‘(URL . TITLE)’.
    Thus, service provider catalogs are lists and service providers are
    cons cells.
+
+                                                                      [Function]
+cleanup-drakma-response (body closep)
+   Cleanup code for a Drakma HTTP request.
+   If the body, i.e. the primary value of a Drakma HTTP request is a
+   stream, ensure that it is closed unless the second argument CLOSEP
+   is false.
+
+                                                                      [Function]
+clear-http-cookies ()
+   Unconditionally delete all stored HTTP cookies.
+
+   Return the empty cookie jar.
+
+   See also the ‘*http-cookies*’ special variable.
 
                                                                       [Function]
 ensure-http-status (code &rest arguments)
@@ -242,6 +340,37 @@ fritz-secret (user-name password &optional (realm *fritz-realm*))
    Return value is the base 16 encoded string representation of the hash
    value.
 
+                                                                      [Function]
+http-request (request-uri &rest arguments &key authentication-scheme
+              (basic-authentication *basic-authentication*)
+              (kerberos-login-token *kerberos-login-token*)
+              (kerberos-spn *kerberos-spn*) (cookie-jar *http-cookies*)
+              additional-headers &allow-other-keys)
+   Issue an HTTP request.
+
+   First argument REQUEST-URI is the requested URI.
+   Keyword argument AUTHENTICATION-SCHEME defines the HTTP authentication
+    scheme for the request.  Value is either ‘nil’ for no authentication,
+    ‘:basic’ for basic authentication, or ‘:negotiate’ for integrated
+    Windows authentication.  Default is ‘nil’, i.e. an unauthorized HTTP
+    request.
+   Keyword argument BASIC-AUTHENTICATION are the basic authentication
+    credentials.  Default is the value of the ‘*basic-authentication*’
+    special variable.
+   Keyword argument KERBEROS-LOGIN-TOKEN is the Kerberos login token
+    for integrated Windows authentication.  Default is the value of
+    the ‘*kerberos-login-token*’ special variable.
+   Keyword argument KERBEROS-SPN is the service principal name (SPN),
+    i.e. the unique name of the service instance.  Default is the value
+    of the ‘*kerberos-spn*’ special variable.
+   Keyword argument ADDITIONAL-HEADERS is an alist of HTTP headers.
+    This is used to merge the ‘Authorization’ header of the selected
+    authentication scheme.
+   Remaining keyword arguments are forwarded to the underlying Drakma
+    HTTP request.
+
+   Return the values of the HTTP request.
+
                                                                         [Method]
 http-status-code ((condition http-status))
    Not documented.
@@ -288,6 +417,25 @@ make-http-status (code &optional reason)
    The returned condition is a sub-type of ‘http-status’ if CODE is
    in the range from 100 to 599.  Otherwise, the return value is a
    condition of type ‘http-status’.
+
+                                                                      [Function]
+make-kerberos-user (principal password &key enctype)
+   Create a Kerberos login token for a user.
+
+   First argument PRINCIPAL is the principal name of the user.  Value is
+    a string of the form USER@REALM where USER is the user's login name
+    and REALM is the name of the Kerberos realm.  The later is usually
+    equal to the domain name in uppercase letters.
+   Second argument PASSWORD is the user's login password.
+   Keyword argument ENCTYPE defines the encryption type.  Default is to
+    try all encryption types listed in the ‘*kerberos-enctypes*’ special
+    variable.
+
+   The value of the ‘*kerberos-kdc*’ special variable defines the key
+   distribution center.
+
+   Return value is the Kerberos login token.  Signal an error if the
+   request fails.
 
                                                                       [Function]
 make-oauth1-client (&key (class 'oauth1-client) user-name password consumer-key

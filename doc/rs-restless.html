@@ -64,12 +64,6 @@ clients, UPnP descriptions, and more.</pre>
       </a>
      </li>
      <li>
-      <a href="#hhdu27ja">
-       <span class="category">Class</span>
-       <span class="symbol">doors-client</span>
-      </a>
-     </li>
-     <li>
       <a href="#b5zsusu7">
        <span class="category">Condition</span>
        <span class="symbol">http-redirection</span>
@@ -106,9 +100,27 @@ clients, UPnP descriptions, and more.</pre>
       </a>
      </li>
      <li>
+      <a href="#hhdu27ja">
+       <span class="category">Class</span>
+       <span class="symbol">doors-client</span>
+      </a>
+     </li>
+     <li>
+      <a href="#lp5mbxkn">
+       <span class="category">Type</span>
+       <span class="symbol">kerberos-login-token</span>
+      </a>
+     </li>
+     <li>
       <a href="#n24nvkps">
        <span class="category">Class</span>
        <span class="symbol">oslc-client</span>
+      </a>
+     </li>
+     <li>
+      <a href="#lbmsaidx">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*basic-authentication*</span>
       </a>
      </li>
      <li>
@@ -124,9 +136,39 @@ clients, UPnP descriptions, and more.</pre>
       </a>
      </li>
      <li>
+      <a href="#tzwt8wzr">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*http-cookies*</span>
+      </a>
+     </li>
+     <li>
       <a href="#w355euow">
        <span class="category">Special Variable</span>
        <span class="symbol">*json-keyword-package*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#qcicq7ub">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*kerberos-enctypes*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#m28nh4pw">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*kerberos-kdc*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#pbcevw24">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*kerberos-login-token*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#oocsvsbn">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*kerberos-spn*</span>
       </a>
      </li>
      <li>
@@ -184,6 +226,18 @@ clients, UPnP descriptions, and more.</pre>
       </a>
      </li>
      <li>
+      <a href="#rkmxih4l">
+       <span class="category">Function</span>
+       <span class="symbol">cleanup-drakma-response</span>
+      </a>
+     </li>
+     <li>
+      <a href="#d34js5r3">
+       <span class="category">Function</span>
+       <span class="symbol">clear-http-cookies</span>
+      </a>
+     </li>
+     <li>
       <a href="#bi8b5bmd">
        <span class="category">Function</span>
        <span class="symbol">ensure-http-status</span>
@@ -205,6 +259,12 @@ clients, UPnP descriptions, and more.</pre>
       <a href="#yr8k3a5e">
        <span class="category">Function</span>
        <span class="symbol">fritz-secret</span>
+      </a>
+     </li>
+     <li>
+      <a href="#j2hmpliz">
+       <span class="category">Function</span>
+       <span class="symbol">http-request</span>
       </a>
      </li>
      <li>
@@ -255,6 +315,12 @@ clients, UPnP descriptions, and more.</pre>
       <a href="#ubl3hyy7">
        <span class="category">Function</span>
        <span class="symbol">make-http-status</span>
+      </a>
+     </li>
+     <li>
+      <a href="#dlpnyhzm">
+       <span class="category">Function</span>
+       <span class="symbol">make-kerberos-user</span>
       </a>
      </li>
      <li>
@@ -611,30 +677,6 @@ Class precedence list:
      ‘http-informational’, ‘<a href="#gw8rouwh"><span class="symbol">http-status</span></a>’, ...</pre>
     </div>
    </div>
-   <div class="definition" id="hhdu27ja">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">doors-client</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Class</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>DOORS Web Access client.
-
-DOORS Web Access provides an OSLC interface for the DOORS requirements
-management system.</pre>
-    </div>
-   </div>
    <div class="definition" id="b5zsusu7">
     <div class="signature">
      <table class="signature">
@@ -791,6 +833,51 @@ Class precedence list:
      ‘soap-fault’, ‘error’, ...</pre>
     </div>
    </div>
+   <div class="definition" id="hhdu27ja">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">doors-client</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Class</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>DOORS Web Access client.
+
+DOORS Web Access provides an OSLC interface for the DOORS requirements
+management system.</pre>
+    </div>
+   </div>
+   <div class="definition" id="lp5mbxkn">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">kerberos-login-token</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Type</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The type of a Kerberos login token.</pre>
+    </div>
+   </div>
    <div class="definition" id="n24nvkps">
     <div class="signature">
      <table class="signature">
@@ -810,6 +897,27 @@ Class precedence list:
     </div>
     <div class="documentation">
      <pre>Base class for OSLC clients.</pre>
+    </div>
+   </div>
+   <div class="definition" id="lbmsaidx">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*basic-authentication*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The default HTTP basic authentication credentials.</pre>
     </div>
    </div>
    <div class="definition" id="dizji7sb">
@@ -857,6 +965,27 @@ authentication secret.</pre>
      <pre>The login name of the TR-064 service user.</pre>
     </div>
    </div>
+   <div class="definition" id="tzwt8wzr">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*http-cookies*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>A collection of HTTP cookies.</pre>
+    </div>
+   </div>
    <div class="definition" id="w355euow">
     <div class="signature">
      <table class="signature">
@@ -877,6 +1006,145 @@ authentication secret.</pre>
     <div class="documentation">
      <pre>Home package for the keys of JSON object members.
 A value of ‘nil’ means that keys are strings.</pre>
+    </div>
+   </div>
+   <div class="definition" id="qcicq7ub">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*kerberos-enctypes*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>A list of encryption types in decreasing order of preference.
+The encryption type aes256-cts-hmac-sha1-96 should be included in
+this list since it is supported by all Kerberos implementations.
+Call the ‘cerberus:list-all-profiles’ function to get a list of
+supported encryption types.
+
+See also ‘https://web.mit.edu/kerberos/krb5-current/doc/admin/enctypes.html’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="m28nh4pw">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*kerberos-kdc*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The Kerberos key distribution center.
+Value is either the host name (a string) or the IP address (a vector
+of integers) of the KDC.  On Windows, the KDC is an Active Directory
+domain controller.
+
+How to find out the host name or IP address of the KDC?
+
+     C:&gt; nslookup.exe -type=srv _kerberos._tcp.example.com
+     Server:  ns1.example.com
+     Address:  10.1.1.1
+
+     _kerberos._tcp.example.com      SRV service location:
+               priority       = 0
+               weight         = 100
+               port           = 88
+               svr hostname   = dc1.example.com
+     dc1.example.com                 internet address = 10.1.1.3</pre>
+    </div>
+   </div>
+   <div class="definition" id="pbcevw24">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*kerberos-login-token*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The default Kerberos login token.</pre>
+    </div>
+   </div>
+   <div class="definition" id="oocsvsbn">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*kerberos-spn*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The default service principal name.
+
+How to find out the SPN for ‘https://app.example.com:8443/rest-api/’
+on Windows?
+
+     C:&gt; setspn.exe -Q */app.example.com
+     Checking domain DC=example,DC=com
+
+     No such SPN found.
+
+Hmm, examine the host name:
+
+     C:&gt; nslookup.exe app.example.com
+     Server:  ns1.example.com
+     Address:  10.1.1.1
+
+     Name:    host.example.com
+     Address:  10.1.3.23
+     Aliases:  app.example.com
+
+Try again with the canonical host name:
+
+     C:&gt; setspn.exe -Q */host.example.com
+     Checking domain DC=example,DC=com
+     CN=...,DC=example,DC=com
+             RestrictedKrbHost/host.example.com
+             HOST/host.example.com
+             RestrictedKrbHost/host
+             HOST/host
+
+     Existing SPN found!
+
+So, the SPN is, e.g. ‘HOST/host.example.com@EXAMPLE.COM’.
+You have to check which SPN actually works.</pre>
     </div>
    </div>
    <div class="definition" id="md5koh5f">
@@ -1097,6 +1365,55 @@ Thus, service provider catalogs are lists and service providers are
 cons cells.</pre>
     </div>
    </div>
+   <div class="definition" id="rkmxih4l">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">cleanup-drakma-response</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">body</span> <span class="variable">closep</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Cleanup code for a Drakma HTTP request.
+If the body, i.e. the primary value of a Drakma HTTP request is a
+stream, ensure that it is closed unless the second argument CLOSEP
+is false.</pre>
+    </div>
+   </div>
+   <div class="definition" id="d34js5r3">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">clear-http-cookies</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">()</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Unconditionally delete all stored HTTP cookies.
+
+Return the empty cookie jar.
+
+See also the ‘<a href="#tzwt8wzr"><span class="symbol">*http-cookies*</span></a>’ special variable.</pre>
+    </div>
+   </div>
    <div class="definition" id="bi8b5bmd">
     <div class="signature">
      <table class="signature">
@@ -1229,6 +1546,50 @@ value is calculated for it.
 
 Return value is the base 16 encoded string representation of the hash
 value.</pre>
+    </div>
+   </div>
+   <div class="definition" id="j2hmpliz">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-request</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">request-uri</span> <span class="lambda-list-keyword">&amp;rest</span> <span class="variable">arguments</span> <span class="lambda-list-keyword">&amp;key</span> <span class="variable">authentication-scheme</span> (<span class="variable">basic-authentication</span>&nbsp;<span class="init-form">*basic-authentication*</span>) (<span class="variable">kerberos-login-token</span>&nbsp;<span class="init-form">*kerberos-login-token*</span>) (<span class="variable">kerberos-spn</span>&nbsp;<span class="init-form">*kerberos-spn*</span>) (<span class="variable">cookie-jar</span>&nbsp;<span class="init-form">*http-cookies*</span>) <span class="variable">additional-headers</span> <span class="lambda-list-keyword">&amp;allow-other-keys</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Issue an HTTP request.
+
+First argument REQUEST-URI is the requested URI.
+Keyword argument AUTHENTICATION-SCHEME defines the HTTP authentication
+ scheme for the request.  Value is either ‘nil’ for no authentication,
+ ‘:basic’ for basic authentication, or ‘:negotiate’ for integrated
+ Windows authentication.  Default is ‘nil’, i.e. an unauthorized HTTP
+ request.
+Keyword argument BASIC-AUTHENTICATION are the basic authentication
+ credentials.  Default is the value of the ‘<a href="#lbmsaidx"><span class="symbol">*basic-authentication*</span></a>’
+ special variable.
+Keyword argument KERBEROS-LOGIN-TOKEN is the Kerberos login token
+ for integrated Windows authentication.  Default is the value of
+ the ‘<a href="#pbcevw24"><span class="symbol">*kerberos-login-token*</span></a>’ special variable.
+Keyword argument KERBEROS-SPN is the service principal name (SPN),
+ i.e. the unique name of the service instance.  Default is the value
+ of the ‘<a href="#oocsvsbn"><span class="symbol">*kerberos-spn*</span></a>’ special variable.
+Keyword argument ADDITIONAL-HEADERS is an alist of HTTP headers.
+ This is used to merge the ‘Authorization’ header of the selected
+ authentication scheme.
+Remaining keyword arguments are forwarded to the underlying Drakma
+ HTTP request.
+
+Return the values of the HTTP request.</pre>
     </div>
    </div>
    <div class="definition" id="cjefotcb">
@@ -1412,6 +1773,42 @@ Optional second argument REASON is the HTTP status reason
 The returned condition is a sub-type of ‘<a href="#gw8rouwh"><span class="symbol">http-status</span></a>’ if CODE is
 in the range from 100 to 599.  Otherwise, the return value is a
 condition of type ‘<a href="#gw8rouwh"><span class="symbol">http-status</span></a>’.</pre>
+    </div>
+   </div>
+   <div class="definition" id="dlpnyhzm">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">make-kerberos-user</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">principal</span> <span class="variable">password</span> <span class="lambda-list-keyword">&amp;key</span> <span class="variable">enctype</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Create a Kerberos login token for a user.
+
+First argument PRINCIPAL is the principal name of the user.  Value is
+ a string of the form USER@REALM where USER is the user's login name
+ and REALM is the name of the Kerberos realm.  The later is usually
+ equal to the domain name in uppercase letters.
+Second argument PASSWORD is the user's login password.
+Keyword argument ENCTYPE defines the encryption type.  Default is to
+ try all encryption types listed in the ‘<a href="#qcicq7ub"><span class="symbol">*kerberos-enctypes*</span></a>’ special
+ variable.
+
+The value of the ‘<a href="#m28nh4pw"><span class="symbol">*kerberos-kdc*</span></a>’ special variable defines the key
+distribution center.
+
+Return value is the Kerberos login token.  Signal an error if the
+request fails.</pre>
     </div>
    </div>
    <div class="definition" id="vmjw3uys">
