@@ -61,9 +61,9 @@
   :serial t
   :components ((:file "packages")
                (:file "common")
-               (:file "http")
                (:file "kerberos")
                (:file "drakma")
+               (:file "http")
                (:file "uri")
                (:file "json")
                (:file "xml")
