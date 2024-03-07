@@ -125,10 +125,10 @@ Class precedence list:
 
      ‘http-status’, ‘condition’, ...")
   (:report (lambda (condition stream)
-	     (let ((code (http-status-code condition))
-		   (reason (http-status-reason condition)))
-	       (format stream "HTTP status code ~A~@[ (~A)~]."
-		       (or code "not available") reason)))))
+             (let ((code (http-status-code condition))
+                   (reason (http-status-reason condition)))
+               (format stream "HTTP status code ~A~@[ (~A)~]."
+                       (or code "not available") reason)))))
 
 (define-condition http-informational (http-status)
   ()
@@ -201,19 +201,19 @@ condition of type ‘http-status’."
   (check-type code (or null (integer 0)))
   (check-type reason (or null string))
   (make-condition (cond ((null code)
-			 'http-status)
-			((<= 100 code 199)
-			 'http-informational)
-			((<= 200 code 299)
-			 'http-successful)
-			((<= 300 code 399)
-			 'http-redirection)
-			((<= 400 code 499)
-			 'http-client-error)
-			((<= 500 code 599)
-			 'http-server-error)
-			('http-status))
-		  :code code :reason (or reason (cdr (assoc code http-status-code-alist)))))
+                         'http-status)
+                        ((<= 100 code 199)
+                         'http-informational)
+                        ((<= 200 code 299)
+                         'http-successful)
+                        ((<= 300 code 399)
+                         'http-redirection)
+                        ((<= 400 code 499)
+                         'http-client-error)
+                        ((<= 500 code 599)
+                         'http-server-error)
+                        ('http-status))
+                  :code code :reason (or reason (cdr (assoc code http-status-code-alist)))))
 
 (defun ensure-http-status (code &rest arguments)
   "Check for certain HTTP status codes.
@@ -234,39 +234,58 @@ Exceptional situations:
      type."
   (check-type code (integer 0))
   (or (iter (for datum :in arguments)
-	    (cond ((integerp datum)
-		   (when (= datum code)
-		     (return code)))
-		  ((typep datum '(cons integer integer))
-		   (when (<= (car datum) code (cdr datum))
-		     (return code)))
-		  ((eq datum 'http-status)
-		   (when (<= 100 code 599)
-		     (return code)))
-		  ((eq datum 'http-informational)
-		   (when (<= 100 code 199)
-		     (return code)))
-		  ((eq datum 'http-successful)
-		   (when (<= 200 code 299)
-		     (return code)))
-		  ((eq datum 'http-redirection)
-		   (when (<= 300 code 399)
-		     (return code)))
-		  ((eq datum 'http-client-error)
-		   (when (<= 400 code 499)
-		     (return code)))
-		  ((eq datum 'http-server-error)
-		   (when (<= 500 code 599)
-		     (return code)))
-		  ((error 'type-error
-			  :datum datum
-			  :expected-type '(or integer
-					      (cons integer integer)
-					      (member http-informational
-						      http-successful
-						      http-redirection
-						      http-client-error
-						      http-server-error))))))
+            (cond ((integerp datum)
+                   (when (= datum code)
+                     (return code)))
+                  ((typep datum '(cons integer integer))
+                   (when (<= (car datum) code (cdr datum))
+                     (return code)))
+                  ((eq datum 'http-status)
+                   (when (<= 100 code 599)
+                     (return code)))
+                  ((eq datum 'http-informational)
+                   (when (<= 100 code 199)
+                     (return code)))
+                  ((eq datum 'http-successful)
+                   (when (<= 200 code 299)
+                     (return code)))
+                  ((eq datum 'http-redirection)
+                   (when (<= 300 code 399)
+                     (return code)))
+                  ((eq datum 'http-client-error)
+                   (when (<= 400 code 499)
+                     (return code)))
+                  ((eq datum 'http-server-error)
+                   (when (<= 500 code 599)
+                     (return code)))
+                  ((error 'type-error
+                          :datum datum
+                          :expected-type '(or integer
+                                              (cons integer integer)
+                                              (member http-informational
+                                                      http-successful
+                                                      http-redirection
+                                                      http-client-error
+                                                      http-server-error))))))
       (error (make-http-status code))))
+
+(defvar *http-cookies* (make-instance 'drakma:cookie-jar)
+  "A collection of HTTP cookies.")
+
+(defun clear-http-cookies ()
+  "Unconditionally delete all stored HTTP cookies.
+
+Return the empty cookie jar.
+
+See also the ‘*http-cookies*’ special variable."
+  (etypecase *http-cookies*
+    (drakma:cookie-jar
+     (setf (drakma:cookie-jar-cookies *http-cookies*) ()))
+    (null))
+  *http-cookies*)
+
+;; https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication
+(defvar *basic-authentication* nil
+  "The default HTTP basic authentication credentials.")
 
 ;;; http.lisp ends here
