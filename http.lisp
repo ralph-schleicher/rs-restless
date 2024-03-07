@@ -288,4 +288,122 @@ See also the ‘*http-cookies*’ special variable."
 (defvar *basic-authentication* nil
   "The default HTTP basic authentication credentials.")
 
+(defun http-request (request-uri
+                     &rest
+                       arguments
+                     &key
+                       authentication-scheme
+                       (basic-authentication *basic-authentication*)
+                       (kerberos-login-token *kerberos-login-token*)
+                       (kerberos-spn *kerberos-spn*)
+                       (cookie-jar *http-cookies*)
+                       additional-headers
+                     &allow-other-keys)
+  "Issue an HTTP request.
+
+First argument REQUEST-URI is the requested URI.
+Keyword argument AUTHENTICATION-SCHEME defines the HTTP authentication
+ scheme for the request.  Value is either ‘nil’ for no authentication,
+ ‘:basic’ for basic authentication, or ‘:negotiate’ for integrated
+ Windows authentication.  Default is ‘nil’, i.e. an unauthorized HTTP
+ request.
+Keyword argument BASIC-AUTHENTICATION are the basic authentication
+ credentials.  Default is the value of the ‘*basic-authentication*’
+ special variable.
+Keyword argument KERBEROS-LOGIN-TOKEN is the Kerberos login token
+ for integrated Windows authentication.  Default is the value of
+ the ‘*kerberos-login-token*’ special variable.
+Keyword argument KERBEROS-SPN is the service principal name (SPN),
+ i.e. the unique name of the service instance.  Default is the value
+ of the ‘*kerberos-spn*’ special variable.
+Keyword argument ADDITIONAL-HEADERS is an alist of HTTP headers.
+ This is used to merge the ‘Authorization’ header of the selected
+ authentication scheme.
+Remaining keyword arguments are forwarded to the underlying Drakma
+ HTTP request.
+
+Return the values of the HTTP request."
+  (check-type authentication-scheme (member nil :basic :negotiate))
+  ;; Remove known keys.
+  (iter (for key :in '(:authentication-scheme
+                       :basic-authentication
+                       :basic-authorization ;not used
+                       :kerberos-login-token
+                       :kerberos-spn
+                       :cookie-jar
+                       :additional-headers))
+        (iter (while (remf arguments key))))
+  (let (;; For Kerberos authentication.
+        gss-context
+        gss-token
+        ;; Pointer to the ‘Authorization’ header.
+        (authorization (assoc "Authorization" additional-headers :test #'string-equal)))
+    (cond ((null authorization))
+          ((null authentication-scheme)
+           ;; No authentication scheme defined.
+           ;; Remove the ‘Authorization’ header.
+           (setf additional-headers (remove "Authorization" additional-headers :key #'car :test #'string-equal))
+           ;; Clear pointer.
+           (setf authorization nil)))
+    (let ((cerberus:*current-user* kerberos-login-token))
+      (case authentication-scheme
+        (:basic
+         (check-type basic-authentication string))
+        (:negotiate
+         (check-type kerberos-login-token kerberos-login-token)
+         (check-type kerberos-spn string)
+         (multiple-value-setq (gss-context gss-token)
+           (gss:initialize-security-context
+            (gss:acquire-credentials :kerberos kerberos-spn)))))
+      (labels ((%http-request ()
+                 ;; Merge the authorization header.
+                 (let ((credentials (case authentication-scheme
+                                      (:basic
+                                       (~ "Basic " basic-authentication))
+                                      (:negotiate
+                                       (~ "Negotiate " (cl-base64:usb8-array-to-base64-string gss-token))))))
+                   (when credentials
+                     (if authorization
+                         ;; Update the ‘Authorization’ header.
+                         (setf (cdr authorization) credentials)
+                       ;; Add the ‘Authorization’ header.
+                       (progn
+                         (setf authorization (cons "Authorization" credentials))
+                         (push authorization additional-headers)))))
+                 ;; Issue the HTTP request.
+                 (apply #'drakma:http-request request-uri
+                        :additional-headers additional-headers
+                        :cookie-jar cookie-jar
+                        arguments)))
+        ;; Initial HTTP request.
+        (multiple-value-bind (body status-code response-headers effective-uri stream closep reason-phrase)
+            (%http-request)
+          ;; Handle authentication errors, e.g. due to an expired access token.
+          (when (and (= status-code 401) authentication-scheme)
+            (let (retryp)
+              (case authentication-scheme
+                (:basic
+                 ;; Existing credentials do not work.  Give up.
+                 ())
+                (:negotiate
+                 (let* ((auth-data (cdr (assoc "WWW-Authenticate" response-headers :test #'string-equal)))
+                        (buffer (let ((start 10) (end (length auth-data)))
+                                  (when (and (< start end) (string= auth-data "Negotiate " :end1 start))
+                                    (iter (for pos :from start :below end)
+                                          (unless (position (char auth-data pos) "+/0123456789=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+                                            (setf end pos)
+                                            (finish)))
+                                    (when (< start end)
+                                      (cl-base64:base64-string-to-usb8-array (subseq auth-data start end)))))))
+                   (multiple-value-setq (gss-context gss-token)
+                     (gss:initialize-security-context gss-context :buffer buffer))
+                   (setf retryp t))))
+              ;; Retry the request.
+              (when retryp
+                (cleanup-drakma-response body closep)
+                (multiple-value-setq (body status-code response-headers effective-uri stream closep reason-phrase)
+                  (%http-request)))))
+          ;; Return values.
+          (values body status-code response-headers effective-uri stream closep reason-phrase))))))
+
 ;;; http.lisp ends here
