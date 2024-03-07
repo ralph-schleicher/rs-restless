@@ -18,6 +18,33 @@ http-client-error
         ‘http-client-error’, ‘http-status’, ‘error’, ...
 
                                                                      [Condition]
+http-server-error
+   HTTP status for a server error response.
+   A ‘http-server-error’ condition indicates that the server failed to
+   fulfill an apparently valid request.  The status code should be in
+   the range from 500 to 599.
+
+   Class precedence list:
+
+        ‘http-server-error’, ‘http-status’, ‘error’, ...
+
+                                                                     [Condition]
+http-status
+   HTTP status information.
+   The base class for all HTTP status conditions.
+
+   Class precedence list:
+
+        ‘http-status’, ‘condition’, ...
+
+                                                                         [Class]
+doors-client
+   DOORS Web Access client.
+
+   DOORS Web Access provides an OSLC interface for the DOORS requirements
+   management system.
+
+                                                                     [Condition]
 http-informational
    HTTP status for an informational response.
    A ‘http-informational’ condition indicates an interim response
@@ -41,26 +68,6 @@ http-redirection
         ‘http-redirection’, ‘http-status’, ...
 
                                                                      [Condition]
-http-server-error
-   HTTP status for a server error response.
-   A ‘http-server-error’ condition indicates that the server failed to
-   fulfill an apparently valid request.  The status code should be in
-   the range from 500 to 599.
-
-   Class precedence list:
-
-        ‘http-server-error’, ‘http-status’, ‘error’, ...
-
-                                                                     [Condition]
-http-status
-   HTTP status information.
-   The base class for all HTTP status conditions.
-
-   Class precedence list:
-
-        ‘http-status’, ‘condition’, ...
-
-                                                                     [Condition]
 http-successful
    HTTP status for a successful response.
    A ‘http-successful’ condition indicates that the client's request
@@ -75,6 +82,14 @@ http-successful
 oauth1-client
    Base class for OAuth 1.0a clients.
 
+                                                                         [Class]
+oslc-client
+   Base class for OSLC clients.
+
+                                                                          [Type]
+kerberos-login-token
+   The type of a Kerberos login token.
+
                                                                      [Condition]
 soap-fault
    Condition type for a SOAP fault.
@@ -82,21 +97,6 @@ soap-fault
    Class precedence list:
 
         ‘soap-fault’, ‘error’, ...
-
-                                                                         [Class]
-doors-client
-   DOORS Web Access client.
-
-   DOORS Web Access provides an OSLC interface for the DOORS requirements
-   management system.
-
-                                                                          [Type]
-kerberos-login-token
-   The type of a Kerberos login token.
-
-                                                                         [Class]
-oslc-client
-   Base class for OSLC clients.
 
                                                               [Special Variable]
 *basic-authentication*
@@ -155,6 +155,10 @@ oslc-client
                                                               [Special Variable]
 *kerberos-login-token*
    The default Kerberos login token.
+
+                                                              [Special Variable]
+*kerberos-realm*
+   The Kerberos realm (a string).
 
                                                               [Special Variable]
 *kerberos-spn*
@@ -402,6 +406,15 @@ json-object-key (name)
    If the ‘*json-keyword-package*’ parameter is not null, keys for
    JSON object members are symbols in that package.  Otherwise, keys
    are strings.
+
+                                                                      [Function]
+make-basic-authentication (user-name password)
+   Encode HTTP basic authentication credentials.
+
+   First argument USER-NAME is the user name (a string).
+   Second argument PASSWORD is the password (a string).
+
+   Return value is a string.
 
                                                                       [Function]
 make-http-status (code &optional reason)

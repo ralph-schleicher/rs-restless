@@ -58,18 +58,6 @@ clients, UPnP descriptions, and more.</pre>
       </a>
      </li>
      <li>
-      <a href="#fpnezxte">
-       <span class="category">Condition</span>
-       <span class="symbol">http-informational</span>
-      </a>
-     </li>
-     <li>
-      <a href="#b5zsusu7">
-       <span class="category">Condition</span>
-       <span class="symbol">http-redirection</span>
-      </a>
-     </li>
-     <li>
       <a href="#oww8byn5">
        <span class="category">Condition</span>
        <span class="symbol">http-server-error</span>
@@ -79,6 +67,24 @@ clients, UPnP descriptions, and more.</pre>
       <a href="#gw8rouwh">
        <span class="category">Condition</span>
        <span class="symbol">http-status</span>
+      </a>
+     </li>
+     <li>
+      <a href="#hhdu27ja">
+       <span class="category">Class</span>
+       <span class="symbol">doors-client</span>
+      </a>
+     </li>
+     <li>
+      <a href="#fpnezxte">
+       <span class="category">Condition</span>
+       <span class="symbol">http-informational</span>
+      </a>
+     </li>
+     <li>
+      <a href="#b5zsusu7">
+       <span class="category">Condition</span>
+       <span class="symbol">http-redirection</span>
       </a>
      </li>
      <li>
@@ -94,15 +100,9 @@ clients, UPnP descriptions, and more.</pre>
       </a>
      </li>
      <li>
-      <a href="#ewsrml7k">
-       <span class="category">Condition</span>
-       <span class="symbol">soap-fault</span>
-      </a>
-     </li>
-     <li>
-      <a href="#hhdu27ja">
+      <a href="#n24nvkps">
        <span class="category">Class</span>
-       <span class="symbol">doors-client</span>
+       <span class="symbol">oslc-client</span>
       </a>
      </li>
      <li>
@@ -112,9 +112,9 @@ clients, UPnP descriptions, and more.</pre>
       </a>
      </li>
      <li>
-      <a href="#n24nvkps">
-       <span class="category">Class</span>
-       <span class="symbol">oslc-client</span>
+      <a href="#ewsrml7k">
+       <span class="category">Condition</span>
+       <span class="symbol">soap-fault</span>
       </a>
      </li>
      <li>
@@ -163,6 +163,12 @@ clients, UPnP descriptions, and more.</pre>
       <a href="#pbcevw24">
        <span class="category">Special Variable</span>
        <span class="symbol">*kerberos-login-token*</span>
+      </a>
+     </li>
+     <li>
+      <a href="#kkknro5c">
+       <span class="category">Special Variable</span>
+       <span class="symbol">*kerberos-realm*</span>
       </a>
      </li>
      <li>
@@ -309,6 +315,12 @@ clients, UPnP descriptions, and more.</pre>
       <a href="#uvslwbur">
        <span class="category">Function</span>
        <span class="symbol">json-object-key</span>
+      </a>
+     </li>
+     <li>
+      <a href="#voskgof7">
+       <span class="category">Function</span>
+       <span class="symbol">make-basic-authentication</span>
       </a>
      </li>
      <li>
@@ -648,6 +660,84 @@ Class precedence list:
      ‘http-client-error’, ‘<a href="#gw8rouwh"><span class="symbol">http-status</span></a>’, ‘error’, ...</pre>
     </div>
    </div>
+   <div class="definition" id="oww8byn5">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-server-error</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>HTTP status for a server error response.
+A ‘http-server-error’ condition indicates that the server failed to
+fulfill an apparently valid request.  The status code should be in
+the range from 500 to 599.
+
+Class precedence list:
+
+     ‘http-server-error’, ‘<a href="#gw8rouwh"><span class="symbol">http-status</span></a>’, ‘error’, ...</pre>
+    </div>
+   </div>
+   <div class="definition" id="gw8rouwh">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">http-status</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Condition</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>HTTP status information.
+The base class for all HTTP status conditions.
+
+Class precedence list:
+
+     ‘http-status’, ‘condition’, ...</pre>
+    </div>
+   </div>
+   <div class="definition" id="hhdu27ja">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">doors-client</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Class</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>DOORS Web Access client.
+
+DOORS Web Access provides an OSLC interface for the DOORS requirements
+management system.</pre>
+    </div>
+   </div>
    <div class="definition" id="fpnezxte">
     <div class="signature">
      <table class="signature">
@@ -705,60 +795,6 @@ Class precedence list:
      ‘http-redirection’, ‘<a href="#gw8rouwh"><span class="symbol">http-status</span></a>’, ...</pre>
     </div>
    </div>
-   <div class="definition" id="oww8byn5">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">http-server-error</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Condition</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>HTTP status for a server error response.
-A ‘http-server-error’ condition indicates that the server failed to
-fulfill an apparently valid request.  The status code should be in
-the range from 500 to 599.
-
-Class precedence list:
-
-     ‘http-server-error’, ‘<a href="#gw8rouwh"><span class="symbol">http-status</span></a>’, ‘error’, ...</pre>
-    </div>
-   </div>
-   <div class="definition" id="gw8rouwh">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">http-status</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Condition</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>HTTP status information.
-The base class for all HTTP status conditions.
-
-Class precedence list:
-
-     ‘http-status’, ‘condition’, ...</pre>
-    </div>
-   </div>
    <div class="definition" id="elfyin7p">
     <div class="signature">
      <table class="signature">
@@ -808,7 +844,7 @@ Class precedence list:
      <pre>Base class for OAuth 1.0a clients.</pre>
     </div>
    </div>
-   <div class="definition" id="ewsrml7k">
+   <div class="definition" id="n24nvkps">
     <div class="signature">
      <table class="signature">
       <colgroup>
@@ -818,32 +854,7 @@ Class precedence list:
       </colgroup>
       <tbody>
        <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">soap-fault</span></a></td>
-	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Condition</span></td>
-       </tr>
-      </tbody>
-     </table>
-    </div>
-    <div class="documentation">
-     <pre>Condition type for a SOAP fault.
-
-Class precedence list:
-
-     ‘soap-fault’, ‘error’, ...</pre>
-    </div>
-   </div>
-   <div class="definition" id="hhdu27ja">
-    <div class="signature">
-     <table class="signature">
-      <colgroup>
-       <col />
-       <col />
-       <col />
-      </colgroup>
-      <tbody>
-       <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">doors-client</span></a></td>
+	<td class="symbol"><a href="#contents"><span class="symbol">oslc-client</span></a></td>
 	<td class="lambda-list"></td>
 	<td class="category"><span class="category">Class</span></td>
        </tr>
@@ -851,10 +862,7 @@ Class precedence list:
      </table>
     </div>
     <div class="documentation">
-     <pre>DOORS Web Access client.
-
-DOORS Web Access provides an OSLC interface for the DOORS requirements
-management system.</pre>
+     <pre>Base class for OSLC clients.</pre>
     </div>
    </div>
    <div class="definition" id="lp5mbxkn">
@@ -878,7 +886,7 @@ management system.</pre>
      <pre>The type of a Kerberos login token.</pre>
     </div>
    </div>
-   <div class="definition" id="n24nvkps">
+   <div class="definition" id="ewsrml7k">
     <div class="signature">
      <table class="signature">
       <colgroup>
@@ -888,15 +896,19 @@ management system.</pre>
       </colgroup>
       <tbody>
        <tr>
-	<td class="symbol"><a href="#contents"><span class="symbol">oslc-client</span></a></td>
+	<td class="symbol"><a href="#contents"><span class="symbol">soap-fault</span></a></td>
 	<td class="lambda-list"></td>
-	<td class="category"><span class="category">Class</span></td>
+	<td class="category"><span class="category">Condition</span></td>
        </tr>
       </tbody>
      </table>
     </div>
     <div class="documentation">
-     <pre>Base class for OSLC clients.</pre>
+     <pre>Condition type for a SOAP fault.
+
+Class precedence list:
+
+     ‘soap-fault’, ‘error’, ...</pre>
     </div>
    </div>
    <div class="definition" id="lbmsaidx">
@@ -1091,6 +1103,27 @@ How to find out the host name or IP address of the KDC?
     </div>
     <div class="documentation">
      <pre>The default Kerberos login token.</pre>
+    </div>
+   </div>
+   <div class="definition" id="kkknro5c">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">*kerberos-realm*</span></a></td>
+	<td class="lambda-list"></td>
+	<td class="category"><span class="category">Special Variable</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>The Kerberos realm (a string).</pre>
     </div>
    </div>
    <div class="definition" id="oocsvsbn">
@@ -1741,6 +1774,32 @@ This is the inverse of the ‘<a href="#xlbm8n8l"><span class="symbol">json-deco
 If the ‘<a href="#w355euow"><span class="symbol">*json-keyword-package*</span></a>’ parameter is not null, keys for
 JSON object members are symbols in that package.  Otherwise, keys
 are strings.</pre>
+    </div>
+   </div>
+   <div class="definition" id="voskgof7">
+    <div class="signature">
+     <table class="signature">
+      <colgroup>
+       <col />
+       <col />
+       <col />
+      </colgroup>
+      <tbody>
+       <tr>
+	<td class="symbol"><a href="#contents"><span class="symbol">make-basic-authentication</span></a></td>
+	<td class="lambda-list"><span class="lambda-list">(<span class="variable">user-name</span> <span class="variable">password</span>)</span></td>
+	<td class="category"><span class="category">Function</span></td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+    <div class="documentation">
+     <pre>Encode HTTP basic authentication credentials.
+
+First argument USER-NAME is the user name (a string).
+Second argument PASSWORD is the password (a string).
+
+Return value is a string.</pre>
     </div>
    </div>
    <div class="definition" id="ubl3hyy7">
