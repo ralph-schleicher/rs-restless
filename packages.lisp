@@ -49,17 +49,6 @@
    #:~
    #:P)
   (:export
-   ;; http.lisp
-   #:http-status
-   #:http-status-code
-   #:http-status-reason
-   #:http-informational
-   #:http-successful
-   #:http-redirection
-   #:http-client-error
-   #:http-server-error
-   #:make-http-status
-   #:ensure-http-status
    ;; kerberos.lisp
    #:*kerberos-enctypes*
    #:*kerberos-kdc*
@@ -74,6 +63,21 @@
    #:trace-drakma-requests-p
    #:with-drakma-response
    #:cleanup-drakma-response
+   ;; http.lisp
+   #:http-status
+   #:http-status-code
+   #:http-status-reason
+   #:http-informational
+   #:http-successful
+   #:http-redirection
+   #:http-client-error
+   #:http-server-error
+   #:make-http-status
+   #:ensure-http-status
+   #:*http-cookies*
+   #:clear-http-cookies
+   #:*basic-authentication*
+   #:http-request
    ;; uri.lisp
    #:string-from-uri
    ;; json.lisp
@@ -154,12 +158,12 @@ clients, UPnP descriptions, and more."))
 (defpackage #:de.ralph-schleicher.restless-user
   (:nicknames :rs-restless-user)
   (:use :common-lisp :iterate
-	:rs-restless)
+        :rs-restless)
   (:import-from :rs-restless
-		#:defconst
-		#:defsubst
-		#:~
-		#:P)
+   #:defconst
+   #:defsubst
+   #:~
+   #:P)
   (:documentation
    "User package with RESTless bindings."))
 
