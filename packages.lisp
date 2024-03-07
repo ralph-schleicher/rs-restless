@@ -51,6 +51,7 @@
   (:export
    ;; kerberos.lisp
    #:*kerberos-enctypes*
+   #:*kerberos-realm*
    #:*kerberos-kdc*
    #:*kerberos-spn*
    #:*kerberos-login-token*
@@ -77,6 +78,7 @@
    #:*http-cookies*
    #:clear-http-cookies
    #:*basic-authentication*
+   #:make-basic-authentication
    #:http-request
    ;; uri.lisp
    #:string-from-uri
